@@ -1,0 +1,42 @@
+<?php
+/*
+ * landing page: integrações/requests formatados em JSON
+ */
+
+spl_autoload_register(function ($class) {
+    include str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
+});
+
+// precisamos permitir integração de todos os sites?
+header("access-control-allow-origin: *");
+
+include("loader.php");
+
+// puxa as permissões do usuário logado
+$permissoes = new \src\services\UAC\PermissionsDummy();
+
+// instancia conexão global
+global $conexao;
+
+// hack: passe codificação certa para a busca (seria melhor aplicar um array_map?)
+if(isset($_GET["term"])) $_GET["term"] = utf8_decode($_GET["term"]);
+
+// busca página
+if(isset($_GET["pagina"])) {
+    $pag = $_GET["pagina"];
+
+    // você é burro
+    if(strpos($pag, ".php") !== false) {
+        $pag = "src/views/json/{$pag}";
+    }
+    else {
+        $pag = "src/views/json/{$pag}.php";
+    }
+
+    if(file_exists($pag)) {
+        include($pag);
+    }
+    else {
+        echo "Erro interno: arquivo '{$pag}' nao existe";
+    }
+}

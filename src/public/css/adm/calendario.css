@@ -1,0 +1,103 @@
+/*calendario*/
+.dia_mes, .day-name {
+    width: calc(100% / 7);
+    float: left;
+    border-bottom: 1px solid #eeeeee;
+    border-right: 1px solid #eeeeee;
+    text-align: left;
+    padding: 5px;
+    height: 50px;
+    background: #fff;
+    letter-spacing: 1px;
+    font-size: 12px;
+    box-sizing: border-box;
+    color: #98a0a6;
+}
+
+.dia_evento{
+    cursor: pointer;
+}
+
+.dia_evento:hover{
+    transition: all 0.3s ease;
+    box-shadow: inset 0 0 5px #0085BD;
+}
+
+.dia_mes.dia_branco {
+    background: #eeeeee;
+}
+
+.day-name{
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #99a1a7;
+    height: auto;
+    border: none;
+    text-align: center;
+    line-height: 20px;
+    font-weight: 500;
+    background: #eeeeee;
+}
+
+.calendar_contador{
+    line-height: 1.4em;
+    text-align: center;
+    background: #0085BD;
+    border-radius: 7px;
+    font-size: 14px;
+    color: #fff;
+}
+
+/*calendario lateral da pagina (slide)*/
+
+#calendario-log{
+    box-sizing: border-box;
+    position: absolute;
+    width: 400px;
+    height: calc(100% - 61px);
+    top: 60px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 2px;
+    z-index: 3;
+    display: none;
+}
+
+.calendario-wrapper{
+    width: 100%;
+    overflow: scroll;
+    height: calc(100% - 95px);
+}
+
+#lista-calendario li{
+    background: #eee;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+#lista-calendario .clear{
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+#lista-calendario li.danger span{
+    color: #f40;
+    font-weight: 400;
+}
+
+#lista-calendario .warning span{
+    color: #fc940c;
+    font-weight: 400;
+}
+
+#lista-calendario li.info span{
+    color: #0085BD;
+    font-weight: 400;
+}
+
+#lista-calendario li.success span{
+    color: #63AB21;
+    font-weight: 400;
+}

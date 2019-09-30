@@ -1,0 +1,46 @@
+Aqui fica descrito o padrão de pastas e arquivos no diretorio
+
+Usuario acessa a pagina, o parametro é passado para a index2.php;
+Um html é retornado, o javascript pega o parametro e requisita home.php;
+Um Json é retornado, o javascript monta a página;
+Se ouver tabela ou gráfico faz a requisição pro arquivo tabela.php/charts.php
+
+    src
+     |
+     |-->creator
+     |      |
+     |      |-->widget
+     |      |   |
+     |      |   |-->file.php
+     |
+     |-->entity
+     |      |
+     |      |-->ClassETT.php
+     |      |-->ClassFUI.php
+     |
+     |-->public
+     |      |
+     |      |-->js
+     |          |
+     |          |-->modulo
+     |          |   |
+     |          |   |
+     |          |   |-->pagina.js
+     |          |
+     |          |-->js.js
+     |
+     |-->views
+     |      |
+     |      |-->forms
+     |      |   |
+     |      |   |-->fileFORM.php
+     |      |
+     |      |-->controller
+     |      |   |
+     |      |   |-->fileCONTROLLER.php
+     |      |
+     |      |-->Controladora.php
+     |
+     |-->services
+     |      |
+     |      |-->Tools.php

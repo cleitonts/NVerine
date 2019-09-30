@@ -1,0 +1,157 @@
+;<?php
+;/*
+
+; Este eh um template de arquivo de configuracao do Mais Completo e derivados.
+; Para configurar uma nova instalaçao, voce deve editar este arquivo
+; e salvar como config.ini.php.
+; locais possiveis: raiz, /cfg ou /uploads
+; **NAO INCLUA SEU CONFIG.INI.PHP NO VERSIONAMENTO**
+
+; Quando criar novas variaveis de configuracao, lembre-se de incluir
+; no template tambem, pls :)
+
+; > Este arquivo nao possui acentos para facilitar navegacao por terminal
+
+; > Note que o espaco entre variaveis e o operador '=' pode ser importante
+; para scripts que alteram este arquivo
+
+; =====================================================================================
+[Config]
+; Versao do arquivo de configuracao. Mostra uma mensagem para atualizar se nao bater
+versao = 1
+
+; =====================================================================================
+[Suporte]
+; Impede qualquer acesso ao sistema e mostra mensagem de manutencao
+manutencao = false
+
+; Controle global para mensagens de debug. Em producao, deve ser false
+debug = false
+
+; Controle global para modo de desenvolvimento
+developer = false
+
+; E-mail que recebe notificacoes globais do sistema
+log_email = "suporte@maiscompleto.com.br"
+
+; =====================================================================================
+[NFe]
+; Modo homologaçao da nota fiscal eletronica. Em producao, deve ser false
+homologacao = true
+
+; Tipo padrao de nota fiscal: 55 = NF-e, 65 = NFC-e (cupom), 0 = sistema nao fiscal 
+modelo_nf = 55
+
+; =====================================================================================
+[Email]
+; Credenciais de servidor de envio de e-mail vao aqui.
+smtp_host = "smtp.gmail.com"
+smtp_port = 587
+smtp_user = "no-reply@maiscompleto.com.br"
+smtp_pass = "ambientefiscal"
+smtp_secure = "tls"
+
+; =====================================================================================
+[Database]
+; Credenciais de banco de dados vao aqui.
+dbdriver = "@@driver@@"
+dbhost = "@@host@@"
+dbname = "@@database@@"
+dbuser = "@@user@@"
+dbpass = "@@pass@@"
+dbforceutf8 = true
+
+; =====================================================================================
+[Identidade]
+; O titulo que o sistema usa para se identificar aos usuarios.
+nome_sistema = "@@sistema@@"
+
+; Diretorio que contem a identidade visual do sistema (em /imagens/identidade)
+; Isso esta desabilitado nas ultimas versoes da interface grafica.
+dir_identidade = "@@identidade@@"
+
+; =====================================================================================
+[Sistema]
+; Senha mestra para sobrescrever as permissoes do usuario logado
+senha = "@@masterkey@@"
+
+; Abre mao do CPF obrigatorio no cadastro -- use com cuidado!
+; Quando for false, usara o NOME COMPLETO como regra de duplicidade.
+; Voce nao pode desabilitar estas duas regras ao mesmo tempo.
+libera_cpf = false
+
+; Numero de casas depois da virgula para campos monetarios
+; ATENCAO: para sistemas que emitem Nota Fiscal brasileira, use sempre 2 casas.
+casas_decimais = 2
+
+; Define se o processamento de estoque eh feito na expedicao
+processa_expedicao = false
+
+; Venda realizada no PDV faz transferencia de estoque para almoxarifado de reserva
+pdv_reserva_estoque = false
+
+; Define qual tipo de comissao o sistema usa
+; 0 para nenhuma, 1 para a padrao, 2 para a comissao com base no produto
+comissao_parcela = 1
+
+; Dia do mes para pagamento da comissao
+dia_pag_comissao = 10
+
+; Default para a porcentagem do calculo de comissao sobre o valor das vendas (0-1?)
+comissao_perc = 0.1
+
+; Obrigatoriedade do uso de rotinas de caixa (abertura, fechamento...)
+usa_caixa = false
+
+; Habilita o modulo de producao. Isso altera significativamente a tela de vendas
+; Se nao for industria de producao, isso deve ser false.
+producao = false
+
+; Libera a edicao do campo de NUMERO DE NOTA FISCAL para valores manuais
+; Mantido por legado; nao existe NENHUMA RAZAO para voce usar essa regra.
+; O sistema deve sempre controlar a numeracao de notas fiscais.
+edita_num_nf = false
+
+; Libera edicao do campo de DATA DE EMISSAO da nota fiscal
+; Tambem nunca deve ser usado em sistema que emite nota. Isso causa muitos problemas
+libera_data_nota = false
+
+; Libera editor com formatacao html nas informacoes complementares da nota
+; So habilite esta chave se o sistema NAO emitir nota fiscal.
+editor_html = false
+
+; Permite editar condicao de pagamento (numero de parcelas, titulos recorrentes)
+; Se for false, usa apenas as condicoes estabelecidas em cadastro.
+libera_condicao_pagto = false
+
+; Libera baixa de financeiro em qualquer data, futuro ou passado
+libera_data_baixa = false
+
+; Funcionamento de geracao de boletos no CONTRATO. Nao afeta a rotina de vendas
+; true = permite processar uma janela selecionavel entre dois meses
+; false = permite processar varios clientes simultaneos, mas apenas um mes por vez, ou o ano inteiro.
+lote_boletos = false
+
+; Valores de grade de produto para tamanhos e cores.
+; Devem ser definidos como lista separada por virgulas
+grade_tamanhos = "P,M,G,GG"
+grade_cores = "Azul,Amarelo,Vermelho,Preto,Branco"
+
+; Valor do desconto maximo sobre vendas (0-1)
+; 0 para bloquear desconto e 1 para liberar ate 100%
+max_desconto_venda = "0.2"
+
+; Este fator decrementa a comissao fornecida em relacao ao desconto maximo.
+; Por exemplo, com desconto maximo 0.2, percentual de comissao sobre venda 0.1 e fator 0.5,
+; uma venda com 20% de desconto gera comissao sobre 5% do valor total.
+; 1 = o desconto maximo zera a comissao. 0 = nao afeta
+comissao_fator = "0.5"
+
+; Fator de sobrepreco de produtos. 0 = nao afeta
+sobrepreco = "0.3"
+
+; Habilita o lancamento de valores direto no plano de contas.
+; Isso pode ser util, mas para sistemas 100% financeiros, deixe desabilitado.
+libera_lancamento = false
+
+;*/

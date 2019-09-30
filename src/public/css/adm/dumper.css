@@ -1,0 +1,78 @@
+.developer-tools {
+    font-size: 20px;
+}
+
+.developer-tools .btn{
+    font-size: 20px;
+    padding: 8px;
+    opacity: 1;
+}
+
+.developer-tools .btn:hover{
+    background: #eee;
+}
+
+.log-wrapper{
+    display: none;
+    vertical-align: baseline;
+    letter-spacing: normal;
+    border-collapse: collapse;
+    z-index: 100000;
+    background-color: #444;
+    bottom: 50px;
+    color: #F5F5F5;
+    max-height: 480px;
+    word-wrap: break-word;
+    overflow: hidden;
+    overflow-y: auto;
+    width: 100%;
+    position: fixed;
+    box-sizing: border-box;
+    left: 0;
+    min-height: 250px;
+    padding: 10px;
+    font-family: Monospace, Arial, sans-serif;
+    text-transform: none;
+    text-align: left;
+    font-weight: bold;
+    margin: 0;
+    cursor: auto;
+    font-size: 13px;
+}
+
+.active.log-wrapper{
+    display: block;
+}
+
+
+.log-wrapper .log-file{
+    color: #99CDD8;
+    padding: 5px 10px 5px 0;
+    display: block;
+    float: left;
+}
+
+.log-wrapper .log-line{
+    color: #ccc;
+    float: left;
+    display: block;
+    padding: 5px 0 5px 5px;
+}
+
+.log-dump{
+    padding: 10px;
+    background: #000;
+}
+
+.show_dump_item:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.log-dump.child{
+    display: none;
+}
+
+.active > .log-dump.child{
+    display: block;
+}

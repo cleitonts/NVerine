@@ -1,0 +1,180 @@
+
+
+.nag-container{
+    width: 350px;
+    margin-left: calc(100% - 380px);
+    z-index: 13;
+}
+
+.nag-container .animated{
+    width: auto;
+    border-radius: 5px;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+    border: none;
+    color: #eee;
+    padding: 0;
+}
+
+.nag-container .animated .text {
+    padding: 10px;
+    line-height: 22px;
+}
+
+.nag-container .animated .actions {
+    margin-bottom: 10px;
+}
+
+.nag-container .animated .dismiss {
+    padding: 10px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    margin-right: 10px;
+}
+
+.nag-container .animated .dismiss:hover {
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.nag-container.Error{
+    margin-left: calc(50% - 175px);
+}
+
+.nag-container.Error .animated{
+    background: #f40;
+}
+
+.nag-container.Info .animated{
+    background: #0085BD;
+}
+
+.nag-container.Success .animated{
+    background: #63AB21;
+}
+
+.dark-overlay{
+    display: none;
+    width: 100%;
+    height: 100%;
+    z-index: 12;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.chart-wrapper{
+    padding: 10px;
+}
+
+.chart-body{
+    border-radius: 5px;
+    box-shadow: 1px 1px 6px 0 rgba(0,0,0,0.2);
+}
+
+
+
+/* checkbox e radio button */
+/* =====================================================================================================================
+
+/* Customize the label (the container) */
+.check-container {
+    display: block;
+    position: relative;
+    padding: 0px 0 8px 30px;
+    cursor: pointer;
+    font-size: 14px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.check-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    border-radius: 3px;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+}
+
+/* Create a custom radio button */
+.radio-container .checkmark {
+    border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.check-container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.check-container input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.check-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.check-container .checkmark:after {
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+/* Style the indicator (dot/circle) */
+.radio-container .checkmark:after {
+    left: 5px;
+    top: 5px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: white;
+}
+
+.celula.larger {
+    min-width: 300px;
+}
+
+.box-shadow{
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    margin: 5px 0;
+}
+
+.btn-lista{
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.2) !important;
+    border-radius: 50%;
+    font-size: 15px;
+    padding: 5px 7px;
+    position: absolute;
+    margin-left: -23px;
+    margin-top: 26px !important;
+}

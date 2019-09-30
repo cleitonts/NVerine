@@ -1,0 +1,51 @@
+#message-log{
+    box-sizing: border-box;
+    position: absolute;
+    width: 320px;
+    height: calc(100% - 61px);
+    top: 60px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 2px;
+    z-index: 3;
+    display: none;
+}
+
+.messages-wrapper{
+    width: 100%;
+    overflow: scroll;
+    height: calc(100% - 95px);
+}
+
+#lista-mensagens li{
+    background: #eee;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+#lista-mensagens .clear{
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+#lista-mensagens li.danger span{
+    color: #f40;
+    font-weight: 400;
+}
+
+#lista-mensagens .warning span{
+    color: #fc940c;
+    font-weight: 400;
+}
+
+#lista-mensagens li.info span{
+    color: #0085BD;
+    font-weight: 400;
+}
+
+#lista-mensagens li.success span{
+    color: #63AB21;
+    font-weight: 400;
+}
