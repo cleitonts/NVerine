@@ -318,6 +318,7 @@ class Field{
      * @param prefix do campo, ex: pesq_
      */
     static select(obj, val, prefix = ""){
+        console.log(val);
         // gera a parte comum
         var wrapper = Field.common(obj, val);
 

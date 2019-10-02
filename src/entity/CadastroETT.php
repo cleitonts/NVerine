@@ -13,6 +13,8 @@ use src\services\Transact\ExtPDO as PDO;
 
 class CadastroETT extends ObjectETT
 {
+    private $campos_sistema;
+
     // esta lista define as tabelas permitidas de serem acessadas/alteradas por aqui
     const TABELAS_VALIDAS =
         "'K_FN_AREA', 'K_FN_ALMOXARIFADO', 'K_FN_CENTROCUSTO',
@@ -54,6 +56,8 @@ class CadastroETT extends ObjectETT
             $this->mensagem_retorno = "Tabela não foi informada!";
             return;
         }
+
+        $this->campos_sistema = array("envia_cadastro", "url_retorno", "pagina", "tabela", "act", "atualiza", "pesq_cliente", "form_name", "tn");
 
         /* removendo o bloqueio (com return) para uso geral.
          * não deve ser um problema, fazer o tratamento de acesso pelo mensagem_retorno
@@ -203,7 +207,11 @@ class CadastroETT extends ObjectETT
             $stmt->bindValue(":tabela", $nome_tabela);
             $stmt->execute();
 
-            $this->campos = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $f = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+            foreach ($f as $campo) {
+                $this->campos[] = $campo->COLUMN_NAME;
+            }
         }
 
         if (count($this->campos) <= 0) {
@@ -211,11 +219,7 @@ class CadastroETT extends ObjectETT
             return;
         }
 
-        // lista para interface
-        foreach ($this->campos as $campo) {
-            $this->lista_campos[] = $campo;
-        }
-
+        $this->lista_campos = $this->campos;
     }
 
     public static function cadastroLoader()
@@ -227,21 +231,16 @@ class CadastroETT extends ObjectETT
         // alguns aliases
         $retorno["table_enc"] = $_REQUEST["tabela"];
         $retorno["table"] = decrypt($retorno["table_enc"]);
-        $retorno["nome"] = $_REQUEST["tn"];
-        $handle = $_REQUEST["i"];
+        $retorno["nome"] = urldecode($_REQUEST["tn"]);
+        $handle = $_REQUEST["pesq_num"];
         $retorno["retorno"] = "cadastro&tn=" . $retorno['nome'] . "&tabela=" . $_REQUEST["tabela"];
 
         // fallback
         $__MODULO__ = "Cadastros";
-        $__PAGINA__ = !empty($nome) ? $nome : "Cadastro";
+        $__PAGINA__ = !empty($retorno["nome"]) ? $retorno["nome"] : "Cadastro";
 
         // recupera dados da classe genérica
         $cadastro = new CadastroGUI($retorno["table"]);
-
-        // tratamento de erros da instância de tabela
-        if (!empty($cadastro->tabela->mensagem_retorno)) {
-            return Tools::returnError($cadastro->tabela->mensagem_retorno);
-        }
 
         if (!empty($handle)) $cadastro->pesquisa["pesq_num"] = $handle;
         $cadastro->fetch();
@@ -252,7 +251,97 @@ class CadastroETT extends ObjectETT
         // gera uma senha aleatória para o cadastro de usuários
         $retorno["senha"] = left(hash('sha512', rand()), 8);
         $retorno["senha_hash"] = safercrypt($retorno["senha"]);
+        $retorno["cadastro"] = $cadastro;
 
         return $retorno;
+    }
+
+    public function cadastra($obj) {
+        global $conexao;
+
+        // monta string de campos e valores
+        $campos = "";
+        $valores = "";
+
+        // campos
+        foreach($obj as $key => $value) {
+            // filtrar tudo o que pode não ser um valor de campo
+            if(!in_array($key, $this->campos_sistema)) {
+                // é nulo?
+                if(strlen($value) > 0) {
+                    // insere na string
+                    if(!empty($campos)) {
+                        $campos = $campos.", ";
+                        $valores = $valores.", ";
+                    }
+
+                    $campos = $campos.strtoupper(anti_injection($key)); // tem como fazer isso mais seguro?
+
+                    if($value == "")
+                        $valores = $valores."NULL";
+                    else
+                        $valores = $valores."'".anti_injection($value)."'";
+                }
+            }
+        }
+
+        // executa
+        $sql = "INSERT INTO {$_SESSION['tabela']} ({$campos}) VALUES ({$valores})";
+        $stmt = $conexao->prepare($sql);
+        $stmt->execute();
+
+        if(__GLASS_DEBUG__) mensagem($sql, MSG_DEBUG);
+
+        // passa handle para retornoPadrao sem usar bindValue
+
+        $stmt->bound_params["handle"] = intval(anti_injection($obj->HANDLE));
+
+        retornoPadrao($stmt, "Valores inseridos com sucesso!", "Erro na inserção (classe Cadastro)");
+    }
+
+
+    public function atualiza($obj) {
+        global $conexao;
+
+        // monta string de campos e valores
+        $update = "";
+
+        foreach($obj as $key => $value) {
+            // filtrar tudo o que pode não ser um valor de campo
+            if(!in_array($key, $this->campos_sistema)) {
+                if(!empty($update)) { $update .= ", "; }
+
+                if($value == "")
+                    $update .= strtoupper(anti_injection($key))." = NULL";
+                else
+                    $update .= strtoupper(anti_injection($key))." = '".anti_injection($value)."'";
+            }
+        }
+
+        // executa
+        $sql = "UPDATE {$_SESSION['tabela']} SET {$update} WHERE HANDLE = :handle";
+        $stmt = $conexao->prepare($sql);
+        $stmt->bindValue(":handle", intval($obj->HANDLE));
+        $stmt->execute();
+
+        if(__GLASS_DEBUG__) mensagem($sql, MSG_DEBUG);
+
+        retornoPadrao($stmt, "Valores atualizados com sucesso!", "Erro na atualização do registro");
+    }
+
+    public function deleta($obj) {
+        global $conexao;
+
+        if(!empty($handle) && is_numeric($handle)) {
+            $sql = "DELETE FROM {$_SESSION['tabela']} WHERE HANDLE = :handle";
+            $stmt = $conexao->prepare($sql);
+            $stmt->bindValue(":handle", $handle);
+            $stmt->execute();
+
+            retornoPadrao($stmt, "Registro removido com sucesso.", "Este registro não pode ser removido.");
+        }
+        else {
+            mensagem("Handle inválido.", MSG_ERRO);
+        }
     }
 }

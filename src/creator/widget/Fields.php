@@ -120,7 +120,7 @@ class Fields
      * @param string $property
      * @return Fields
      */
-    public static function novo($type, $size, $name, $value = "", $property = "")
+    public static function novo($type, $size, $name, $property = "", $value = "")
     {
         $campo = new Fields();
         $campo->size = $size;
@@ -139,9 +139,10 @@ class Fields
      * @param $labels
      * @param $values
      * @param string $where
+     * @param string $property
      * @return Fields
      */
-    public static function fromTable($type, $size, $name, $tabela, $labels, $values, $where = "")
+    public static function fromTable($type, $size, $name, $tabela, $labels, $values, $where = "", $property = "")
     {
         global $conexao;
 
@@ -155,6 +156,8 @@ class Fields
         $campo = new Fields();
         $campo->size = $size;
         $campo->name = $name;
+        $campo->property = $property;
+        $campo->options[] = new Options("", "");
 
         foreach ($f as $r){
             $campo->options[] = new Options($r->VALUE, $r->LABEL);

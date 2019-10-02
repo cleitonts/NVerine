@@ -9,6 +9,7 @@
 namespace src\views\controller;
 
 use src\creator\widget\Tools;
+use src\entity\CadastroETT;
 use src\views\ControladoraCONTROLLER;
 use src\views\forms\cadastroFORM;
 
@@ -28,7 +29,23 @@ class cadastroCONTROLLER implements ControladoraCONTROLLER
 
     public function persist($obj)
     {
-        dumper($obj);
-        dumper($_REQUEST);
+        global $mensagens;
+
+        // nesse persiste os campos chegam uma salada
+
+        $table_enc = $_REQUEST["tabela"];
+        $table = decrypt($table_enc);
+
+        $mensagens->retorno = '?pagina=cadastro&tn='.$_REQUEST['tn']."&tabela=".$table_enc;
+
+        $cadastro = new CadastroETT($table);
+        if(!empty($obj->HANDLE)){
+            $cadastro->atualiza($obj);
+        }
+        else{
+            $cadastro->cadastra($obj);
+        }
+
+
     }
 }

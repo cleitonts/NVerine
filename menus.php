@@ -1,13 +1,10 @@
 <?php
 $menu = array(
     "Cadastros" => array(
-        "Pessoa" => "index.php?pagina=cadastro_pessoa",
-        "Produto" => "index.php?pagina=cadastro_produto",
-        "Família de produto" => "index.php?pagina=cadastro_familia",
-        "Lista de preço" => "index.php?pagina=cadastro_lista_preco",
-        "Empresa" => "index.php?pagina=cadastro&tn=Empresa&tabela=".encrypt("K_FN_FILIAL"),
+        "Pessoa" => "?pagina=pessoa",
+        "Produto" => "?pagina=produto",
+        "Empresa" => "?pagina=cadastro&tn=Empresa&tabela=".encrypt("K_FN_FILIAL"),
         "Forma de pagamento" => "index.php?pagina=cadastro&tn=Forma de pagamento&tabela=".encrypt("FN_FORMASPAGAMENTO"),
-        "Condição de pagamento" => "index.php?pagina=cadastro_condicao_pagto",
         "Segmento de negócio" => "index.php?pagina=cadastro&tn=Segmento&tabela=".encrypt("K_CRM_SEGMENTOS"),
         "Área" => "index.php?pagina=cadastro&tn=Área&tabela=".encrypt("K_FN_AREA"),
         "Unidade" => "index.php?pagina=cadastro&tn=Unidade&tabela=".encrypt("CM_UNIDADESMEDIDA"),
