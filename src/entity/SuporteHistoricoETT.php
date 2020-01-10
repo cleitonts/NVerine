@@ -17,6 +17,7 @@ class SuporteHistoricoETT extends ObjectETT
 
     // dados do histórico
     public $comentarios;
+    public $observacao_sistema;
     public $anexo;
 
     // dados para controle
@@ -42,7 +43,7 @@ class SuporteHistoricoETT extends ObjectETT
         global $conexao;
 
         // valida status
-        if ($this->status_chamado == SuporteChamadoETT::STATUS_RESOLVIDO && $this->tipo_chamado == SuporteChamadoETT::TIPO_DESENVOLVIMENTO && empty($this->revisao)) {
+        if ($this->status_chamado == SuporteChamadoETT::STATUS_CTRL_QUALIDADE && $this->tipo_chamado == SuporteChamadoETT::TIPO_DESENVOLVIMENTO && empty($this->revisao)) {
             mensagem("Para resolver uma demanda de DESENVOLVIMENTO, por gentileza, informe o número de revisão.", MSG_ERRO);
             finaliza();
         }
@@ -62,19 +63,18 @@ class SuporteHistoricoETT extends ObjectETT
         if (empty($this->cod_usuario)) $this->cod_usuario = $_SESSION["ID"];
         $this->handle = newHandle("K_CHAMADOHISTORICO", $conexao);
 
-
-
         $stmt = $this->insertStatement("K_CHAMADOHISTORICO",
             array(
-                "HANDLE"		    => $this->handle,
-                "CHAMADO"		    => $this->chamado,
-                "USUARIO"			=> validaVazio($this->cod_usuario),
-                "COMENTARIOS"		=> $this->comentarios,
+                "HANDLE" => $this->handle,
+                "CHAMADO" => $this->chamado,
+                "USUARIO" => validaVazio($this->cod_usuario),
+                "COMENTARIOS" => $this->comentarios,
+                "OBS_SISTEMA" => $this->observacao_sistema,
                 //"ANEXO"	            => $url,
-                "DATA"		        => $this->data,
-                "HORA"              => $this->hora,
-                "STATUS"		    => $this->status_chamado,
-                "REVISAO"		    => $this->revisao,
+                "DATA" => $this->data,
+                "HORA" => $this->hora,
+                "STATUS" => $this->status_chamado,
+                "REVISAO" => $this->revisao,
             ));
 
         retornoPadrao($stmt, "Histórico do chamado cadastrado com sucesso", "Não foi possível cadastrar o histórico do chamado");

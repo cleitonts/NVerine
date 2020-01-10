@@ -11,7 +11,7 @@ namespace src\entity;
 include_once("class/Notificacoes.php");
 include_once("class/Email.php");
 
-use ExtPDO as PDO;
+use src\services\Transact\ExtPDO as PDO;
 use Notificacoes\Chat;
 use Notificacoes\ChatFile;
 
@@ -44,17 +44,16 @@ class SuporteChamadoETT extends ObjectETT
      */
 
     // status
-    const STATUS_NAO_CONFIRMADO = 1;
+    const STATUS_TRIAGEM = 1;
     const STATUS_CONFIRMADO = 2;
     const STATUS_EM_ANDAMENTO = 3;
-    const STATUS_RETORNO = 4;
-    const STATUS_RESOLVIDO = 5;
-    const STATUS_VALIDADO = 6; // = homologado
-    const STATUS_INCOMPLETO = 7;
+    const STATUS_PAUSADO = 4;
+    const STATUS_CTRL_QUALIDADE = 5;
+    const STATUS_HOMOLOGADO = 6; // = homologado
+    const STATUS_LIBERADO = 7;
     const STATUS_INVALIDO = 8;
     const STATUS_DUPLICADO = 9;
     const STATUS_NAO_RESOLVERA = 10;
-    const STATUS_WORKAROUND = 11;
     /* a numeração dos status tem um sentido: do "mais tenso" (mais novo)
      * ... ao "menos tenso" (perto de resolver, resolvido ou descartado por motivo tal)
      * o código numérico do status pode ser usado como ordenação
@@ -147,7 +146,7 @@ class SuporteChamadoETT extends ObjectETT
 
         // trata defaults
         if (empty($this->tipo)) $this->tipo = self::TIPO_SUPORTE;
-        if (empty($this->status)) $this->status = self::STATUS_NAO_CONFIRMADO;
+        if (empty($this->status)) $this->status = self::STATUS_TRIAGEM;
         if (empty($this->prioridade)) $this->prioridade = self::PRIORIDADE_NORMAL;
         if (empty($this->cod_reporter)) $this->cod_reporter = $_SESSION["ID"];
         $this->handle = newHandle("K_CHAMADOS", $conexao);
@@ -177,40 +176,34 @@ class SuporteChamadoETT extends ObjectETT
 
         $stmt = $this->insertStatement("K_CHAMADOS",
             array(
-                "HANDLE"		    => $this->handle,
-                "TIPO"		        => $this->cod_tipo,
-                "STATUS"			=> $this->cod_status,
-                "PRIORIDADE"		=> $this->cod_prioridade,
-                "CLIENTE"	        => validaVazio($this->cod_cliente),
-                "PRODUTO"		    => validaVazio($this->cod_produto),
-                "COMPONENTE"		=> $this->componente,
-                "RESPONSAVEL"		=> validaVazio($this->cod_responsavel),
-                "REPORTER"          => validaVazio($this->cod_reporter),
-                "CONTATONOME"		=> $this->contato_nome,
-                "CONTATOEMAIL"		=> $this->contato_email,
-                "CONTATOTELEFONE"	=> $this->contato_telefone,
-                "COPIACARBONO"		=> $this->copia_carbono,
-                "ASSUNTO"		    => trim($this->assunto),
-                "PRAZO"		        => $this->prazo,
-                "DUPLICADO"		    => $this->duplicado,
-                "AFTER"             => $this->after,
-                "FILIAL"		    => __FILIAL__
+                "HANDLE" => $this->handle,
+                "TIPO" => $this->cod_tipo,
+                "STATUS" => $this->cod_status,
+                "PRIORIDADE" => $this->cod_prioridade,
+                "CLIENTE" => validaVazio($this->cod_cliente),
+                "PRODUTO" => validaVazio($this->cod_produto),
+                "COMPONENTE" => $this->componente,
+                "RESPONSAVEL" => validaVazio($this->cod_responsavel),
+                "REPORTER" => validaVazio($this->cod_reporter),
+                "CONTATONOME" => $this->contato_nome,
+                "CONTATOEMAIL" => $this->contato_email,
+                "CONTATOTELEFONE" => $this->contato_telefone,
+                "COPIACARBONO" => $this->copia_carbono,
+                "ASSUNTO" => trim($this->assunto),
+                "PRAZO" => $this->prazo,
+                "DUPLICADO" => $this->duplicado,
+                "AFTER" => $this->after,
+                "FILIAL" => __FILIAL__
             ));
 
         retornoPadrao($stmt, "Seu chamado foi aberto com o número de protocolo <b>#{$this->handle}</b>", "Não foi possível abrir seu chamado");
     }
 
-    public function atualiza()
+    public function atualiza($lazy = false)
     {
-//        // valida status da atualização
-//        if ($this->cod_status == self::STATUS_NAO_CONFIRMADO) {
-//            mensagem("O acompanhamento de um chamado requer que o status 'não confirmado' seja alterado.", MSG_ERRO);
-//            finaliza();
-//        }
-
-        if($this->cod_status > self::STATUS_NAO_CONFIRMADO){
+        if ($this->cod_status > self::STATUS_TRIAGEM) {
             // valida data de prazo
-            if ($this->cod_status > self::STATUS_NAO_CONFIRMADO && $this->status < self::STATUS_RESOLVIDO && empty($this->prazo)) {
+            if ($this->cod_status < self::STATUS_CTRL_QUALIDADE && empty($this->prazo)) {
                 mensagem("Por favor, informe uma data de previsão para resolução ou visita.", MSG_ERRO);
                 finaliza();
             }
@@ -222,52 +215,52 @@ class SuporteChamadoETT extends ObjectETT
             }
         }
 
-
         // valida cliente padrão
         if ($this->cod_cliente <= 2) {
             mensagem("Por favor, indique o cliente final (chamado está com Cliente Padrão ou Empresa Padrão)", MSG_ERRO);
             finaliza();
         }
 
-
         $stmt = $this->updateStatement("K_CHAMADOS",
             array(
-                "HANDLE"		    => $this->handle,
-                "TIPO"		        => $this->cod_tipo,
-                "STATUS"			=> $this->cod_status,
-                "PRIORIDADE"		=> $this->cod_prioridade,
-                "CLIENTE"	        => validaVazio($this->cod_cliente),
-                "PRODUTO"		    => validaVazio($this->cod_produto),
-                "COMPONENTE"		=> $this->componente,
-                "RESPONSAVEL"		=> validaVazio($this->cod_responsavel),
-                "CONTATONOME"		=> $this->contato_nome,
-                "CONTATOEMAIL"		=> $this->contato_email,
-                "CONTATOTELEFONE"	=> $this->contato_telefone,
-                "COPIACARBONO"		=> $this->copia_carbono,
-                "ASSUNTO"		    => trim($this->assunto),
-                "PRAZO"		        => $this->prazo,
-                "AFTER"             => $this->after,
-                "DUPLICADO"		    => $this->duplicado
+                "HANDLE" => $this->handle,
+                "TIPO" => $this->cod_tipo,
+                "STATUS" => $this->cod_status,
+                "PRIORIDADE" => $this->cod_prioridade,
+                "CLIENTE" => validaVazio($this->cod_cliente),
+                "PRODUTO" => validaVazio($this->cod_produto),
+                "COMPONENTE" => $this->componente,
+                "RESPONSAVEL" => validaVazio($this->cod_responsavel),
+                "CONTATONOME" => $this->contato_nome,
+                "CONTATOEMAIL" => $this->contato_email,
+                "CONTATOTELEFONE" => $this->contato_telefone,
+                "COPIACARBONO" => $this->copia_carbono,
+                "ASSUNTO" => trim($this->assunto),
+                "PRAZO" => $this->prazo,
+                "AFTER" => $this->after,
+                "DUPLICADO" => $this->duplicado
             ));
 
-        retornoPadrao($stmt, "Chamado atualizado com sucesso", "Não foi atualizar o chamado");
+        if (!$lazy) {
+            retornoPadrao($stmt, "Chamado atualizado com sucesso", "Não foi atualizar o chamado");
 
-        if(!empty($this->cod_responsavel)){
-            // notifica o responsável
-            $chat = new Chat();
-            $chat->texto = "Atualização no chamado #{$this->handle} - \"{$this->assunto}\", no qual você foi marcado como responsável.";
+            if (!empty($this->cod_responsavel)) {
+                // notifica o responsável
+                $chat = new Chat();
+                $chat->texto = "Atualização no chamado #{$this->handle} - \"{$this->assunto}\", no qual você foi marcado como responsável.";
 
-            $chatfile = new ChatFile($this->cod_responsavel);
-            $chatfile->escreve($chat);
-        }
+                $chatfile = new ChatFile($this->cod_responsavel);
+                $chatfile->escreve($chat);
+            }
 
-        // notifica o reporter
-        if ($this->cod_reporter != $this->cod_responsavel) {
-            $chat = new Chat();
-            $chat->texto = "Atualização no chamado #{$this->handle} - \"{$this->assunto}\", aberto por você.";
+            // notifica o reporter
+            if ($this->cod_reporter != $this->cod_responsavel) {
+                $chat = new Chat();
+                $chat->texto = "Atualização no chamado #{$this->handle} - \"{$this->assunto}\", aberto por você.";
 
-            $chatfile = new ChatFile($this->cod_reporter);
-            $chatfile->escreve($chat);
+                $chatfile = new ChatFile($this->cod_reporter);
+                $chatfile->escreve($chat);
+            }
         }
     }
 
@@ -275,8 +268,8 @@ class SuporteChamadoETT extends ObjectETT
     {
         $stmt = $this->updateStatement("K_CHAMADOS",
             array(
-                "HANDLE"		    => $this->handle,
-                "STATUS"			=> self::STATUS_VALIDADO
+                "HANDLE" => $this->handle,
+                "STATUS" => self::STATUS_HOMOLOGADO
             ));
 
         retornoPadrao($stmt, "Resolução aceita. O chamado será removido da sua lista de pendências.", "Não foi possível validar o chamado");
@@ -338,53 +331,25 @@ class SuporteChamadoETT extends ObjectETT
         }
     }
 
-    public static function getStatusKanban($status, $lista = false){
+    public static function getNomeStatus($status, $lista = false)
+    {
         $temp = array(
-            self::STATUS_NAO_CONFIRMADO => "Triagem",
-            self::STATUS_CONFIRMADO     => "Confirmado",
-            self::STATUS_EM_ANDAMENTO   => "Em andamento",
-            self::STATUS_RETORNO        => "Pausado",
-            self::STATUS_RESOLVIDO      => "Ctrl. qualidade",
-            self::STATUS_VALIDADO       => "Liberado",
-            self::STATUS_INCOMPLETO     => "Incompleto",
-            self::STATUS_INVALIDO       => "Inválido",
-            self::STATUS_NAO_RESOLVERA  => "Não resolverá"
+            self::STATUS_TRIAGEM => "Triagem",
+            self::STATUS_CONFIRMADO => "Confirmado",
+            self::STATUS_EM_ANDAMENTO => "Em andamento",
+            self::STATUS_PAUSADO => "Pausado",
+            self::STATUS_CTRL_QUALIDADE => "Ctrl. qualidade",
+            self::STATUS_HOMOLOGADO => "Homologado",
+            self::STATUS_LIBERADO => "Liberado",
+            self::STATUS_INVALIDO => "Inválido",
+            self::STATUS_DUPLICADO => "Duplicado",
+            self::STATUS_NAO_RESOLVERA => "Não resolverá"
         );
 
-        if($lista){
+        if ($lista) {
             return $temp;
         }
 
         return $temp[$status];
-    }
-
-    public function getNomeStatus($status)
-    {
-        switch ($status) {
-            case self::STATUS_NAO_CONFIRMADO:
-                return "Triagem";
-            case self::STATUS_CONFIRMADO:
-                return "Confirmado";
-            case self::STATUS_EM_ANDAMENTO:
-                return "Em andamento";
-            case self::STATUS_RETORNO:
-                return "Pausado";
-            case self::STATUS_RESOLVIDO:
-                return "Ctrl. qualidade";
-            case self::STATUS_VALIDADO:
-                return "Liberado";
-            case self::STATUS_INCOMPLETO:
-                return "Incompleto";
-            case self::STATUS_INVALIDO:
-                return "Inválido";
-            case self::STATUS_DUPLICADO:
-                return "Duplicado";
-            case self::STATUS_NAO_RESOLVERA:
-                return "Não resolverá";
-            case self::STATUS_WORKAROUND:
-                return "Existe workaround";
-            default:
-                return "Indefinido";
-        }
     }
 }

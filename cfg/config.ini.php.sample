@@ -1,7 +1,7 @@
 ;<?php
 ;/*
 
-; Este eh um template de arquivo de configuracao do Mais Completo e derivados.
+; Este eh um template de arquivo de configuracao.
 ; Para configurar uma nova instalaçao, voce deve editar este arquivo
 ; e salvar como config.ini.php.
 ; locais possiveis: raiz, /cfg ou /uploads
@@ -32,7 +32,7 @@ debug = false
 developer = false
 
 ; E-mail que recebe notificacoes globais do sistema
-log_email = "suporte@maiscompleto.com.br"
+log_email = "cleitonsorrilha@gmail.com.br"
 
 ; =====================================================================================
 [NFe]
@@ -47,8 +47,8 @@ modelo_nf = 55
 ; Credenciais de servidor de envio de e-mail vao aqui.
 smtp_host = "smtp.gmail.com"
 smtp_port = 587
-smtp_user = "no-reply@maiscompleto.com.br"
-smtp_pass = "ambientefiscal"
+smtp_user = "cleitonsorrilha@gmail.com"
+smtp_pass = "teste"
 smtp_secure = "tls"
 
 ; =====================================================================================

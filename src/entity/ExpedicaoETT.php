@@ -8,17 +8,11 @@
 
 namespace src\entity;
 
-include_once("class/Faturamento.php");
-
-use Faturamento\Nota;
-use Faturamento\ProdutoServico;
-use ExtPDO as PDO;
-
-class ExpedicaoETT extends Nota
+class ExpedicaoETT extends FaturamentoETT
 {
     public function __construct()
     {
         // cria um item vazio, para montar tabela do formulario
-        $this->produtos[] = new ProdutoServico(null);
+        $this->produtos[] = new FaturamentoProdutoServicoETT(null);
     }
 }

@@ -8,7 +8,7 @@
 
 namespace src\entity;
 
-use ExtPDO as PDO;
+use src\services\Transact\ExtPDO as PDO;
 
 class FaturamentoStatusETT extends ObjectETT
 {

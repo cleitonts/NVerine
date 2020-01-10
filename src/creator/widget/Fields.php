@@ -63,6 +63,12 @@ class Fields
     public $size;
 
     /**
+     * @var bool
+     * informa se o campo será obrigatório
+     */
+    public $required = false;
+
+    /**
      * @var string
      * icone que aparece dentro do input
      */

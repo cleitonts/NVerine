@@ -21,6 +21,7 @@ class Permissions {
     protected $erro;
 
     public $grupo;
+    public $cod_grupo;
 
     function __construct() {
         global $conexao;
@@ -28,7 +29,7 @@ class Permissions {
         // guarda todas as permissões do usuário atual
         $this->permissoes = array();
 
-        $sql = "SELECT A.NOME, P.BLOQUEIO, G.HANDLE GRUPO
+        $sql = "SELECT A.NOME, P.BLOQUEIO, G.HANDLE GRUPO, G.NOME AS NOMEGRUPO
 				FROM K_PD_USUARIOS U, K_FN_GRUPOUSUARIO G, K_FN_PERMISSOES P, K_PD_ALCADAS A
 				WHERE P.ALCADA = A.HANDLE
 				AND P.GRUPO = G.HANDLE
@@ -41,7 +42,8 @@ class Permissions {
         $this->permissoes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // grupo do usuário logado
-        $this->grupo = $this->permissoes[0]["GRUPO"];
+        $this->cod_grupo = $this->permissoes[0]["GRUPO"];
+        $this->grupo = $this->permissoes[0]["NOMEGRUPO"];
 
         // guarda os módulos compartilhados
         $this->compartilhados = array();
@@ -102,14 +104,9 @@ class Permissions {
         global $__PAGINA__;
 
         if(!$this->libera($__MODULO__) || $this->bloqueia($__PAGINA__)) {
-            ?>
-            <script>
-                $(document).ready(function(){
-                    destinoMenu("acesso_negado&msg=<?=$this->erro?>");
-                });
-            </script>
-            <?php
+            return false;
         }
+        return true;
     }
 
     // retorna se módulo é compartilhado
@@ -147,6 +144,7 @@ class Permissions {
         $stmt->bindValue(":grupo", $grupo->GRUPO);
         $stmt->execute();
         $lider = $stmt->fetch(PDO::FETCH_OBJ);
+
 
         if(safercrypt($senha) == $lider->SENHA) return "Ação liberada por supervisor do grupo ".formataCase($lider->NOMEGRUPO);
 

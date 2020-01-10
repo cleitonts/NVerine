@@ -33,7 +33,7 @@ $retorno = str_replace("?", "index.php?", getUrlRetorno());
 
     <title><?=__NOME_SISTEMA__?></title>
     <link rel="shortcut icon" href="<?php asset('img/favicon.png') ?>" type="image/x-icon">
-    <meta name="author" content="Ambiente Solido">
+    <meta name="author" content="Cleiton Terassi SOrrilha">
 
     <!-- mobile specific metas
     ================================================== -->
@@ -99,10 +99,10 @@ $retorno = str_replace("?", "index.php?", getUrlRetorno());
                             <input type="hidden" name="url_retorno" value="<?=$retorno;?>">
                             <div class="card card-login">
                                 <div class="card-header card-header-success text-center">
-                                    <div class="img-wrapper" style="overflow: hidden;">
+                                    <!--div class="img-wrapper" style="overflow: hidden;">
                                         <img src="<?php asset('img/logo.png') ?>" alt="" style="width: 100%;margin-bottom: -23px;">
-                                    </div>
-                                    <h4 class="card-title"> O MaisCompleto Sistema de Gestão Educacional</h4>
+                                    </div-->
+                                    <h2 class="card-title">NVerine</h2>
                                 </div>
                                 <div class="card-body ">
                                     <span class="bmd-form-group">
@@ -137,7 +137,7 @@ $retorno = str_replace("?", "index.php?", getUrlRetorno());
             <footer class="footer">
                 <div class="container">
                     <div class="copyright">
-                        © 2019 por Ambiente Solido.
+                        © 2019 NVerine.
                     </div>
                 </div>
                 <script>

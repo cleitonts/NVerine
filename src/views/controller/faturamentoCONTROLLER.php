@@ -8,12 +8,6 @@
 
 namespace src\views\controller;
 
-global $__MODULO__;
-global $__PAGINA__;
-
-$__PAGINA__ = "Notas de venda";
-$__MODULO__ = "Faturamento";
-
 use src\creator\widget\Tools;
 use src\entity\FaturamentoETT;
 use src\views\ControladoraCONTROLLER;

@@ -25,9 +25,7 @@ class Tabelas{
         let table_scroll = document.createElement("div");
         table_scroll.className = "table-responsive";
         table_scroll.style = "width:100%;";
-
-
-
+        
         $(table_scroll).append(this.tabela);
         $(wrapper_table).append(table_scroll);
         $(obj).append(wrapper_table);
@@ -240,13 +238,25 @@ class Tabelas{
         // antes de mais nada printa o spinner
         spinner(true);
 
-        var obj = [];
-        if(referencia){
-            obj = $(referencia).find("#form_pesquisa").serializeArray();
+        let myform = "";
+
+        if(referencia) {
+            myform = $(referencia).find("#form_pesquisa");
         }
         else{
-            obj = $("#form_pesquisa").serializeArray();
+            myform = $("#form_pesquisa");
         }
+
+        // Find disabled inputs, and remove the "disabled" attribute
+        let disabled = myform.find(':disabled').removeAttr('disabled');
+
+        // envia todos os forms como o mesmo nome
+        let submit = myform.serializeArray();
+
+        // re-disabled the set of inputs that you previously enabled
+        disabled.attr('disabled','disabled');
+
+        submit.push({name: "form_name", value: "form_pesquisa"});
 
         // ajax nao funciona muito bem com o this
         let elemento = this;
@@ -255,9 +265,9 @@ class Tabelas{
         let pesquisa = elemento.montapesquisa();
 
         // completa com o formulario de pesquisa
-        if(typeof obj != "undefined"){
-            for(var r in obj){
-                pesquisa.push(obj[r]);
+        if(typeof submit !== "undefined"){
+            for(var r in submit){
+                pesquisa.push(submit[r]);
             }
         }
 
@@ -371,7 +381,7 @@ class Tabelas{
         for (let i = 0; i <= dados.colunas.length -1; i++) {
             let td = document.createElement("td");
             td.className = "tabc "+dados.classes[i];
-            td.appendChild(document.createTextNode(dados.colunas[i]));
+            td.innerHTML = dados.colunas[i];
 
             // joga no objeto da linha
             $(obj).append(td);

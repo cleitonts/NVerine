@@ -138,7 +138,7 @@ function destinoMenu2(pagina) {
     }
 
     spinner();
-    window.location = "index.php?pagina="+pagina;
+    window.location = "index2.php?pagina="+pagina;
 }
 
 // exibe ou esconde o overlay de carregamento de paginas via ajax

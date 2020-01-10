@@ -11,11 +11,29 @@ class Field{
      */
     static common(obj, val){
         let wrapper = document.createElement("div");
-        wrapper.className = "col-md-" + val.size;
+        wrapper.className = "mt-3 col-md-" + val.size;
         wrapper.id = "wrapper_"+val.name;
 
+        let control = document.createElement("div");
+        control.className = "control";    // não pode ter por padrão
+        
+        if(val.icon.length > 0){
+            //control.className = "input-group form-control-lg";
+            
+            let icon = `<div class="input-group-prepend">
+                            <span class="input-group-text px-1 pb-2">
+                                <i class="${val.icon}"></i>
+                            </span>
+                        </div>`;
+            //$(control).append(icon);
+        }
+        
         let group = document.createElement("div");
         group.className = "form-group bmd-form-group";
+
+        if(val.required == 1){
+            group.className += " required";
+        }
 
         let title = document.createElement("label");
         title.className = "bmd-label-floating";
@@ -32,7 +50,8 @@ class Field{
 
         // adiciona o node ao wrapper
         $(group).append(title);
-        $(wrapper).append(group);
+        $(control).append(group);
+        $(wrapper).append(control);
         return wrapper;
     }
 
@@ -48,13 +67,18 @@ class Field{
 
         // monta o input propriamente dito
         let input = document.createElement("input");
-        if(type == "label"){
+        if(type === "label"){
             input.readOnly = true;
         }
         input.type = val.type;
         input.className = "form-control "+val.class;
         input.name = val.name;
-        if(prefix == "pesq_"){
+
+        if(val.required == 1){
+            input.required = true;
+        }
+
+        if(prefix === "pesq_"){
             input.name = prefix + val.name;
         }
         else if(prefix.length > 0){
@@ -63,15 +87,23 @@ class Field{
         input.id = "campo_"+val.name;
         input.value = val.value;
 
-        if(type != "hidden") {
+        if(type !== "hidden") {
             wrapper = Field.common(obj, val);
         }
         else{
             wrapper = Field.common(obj, val);
             $(wrapper).hide();
         }
-
+            
         $(wrapper).find(".form-group").append(input);               // junta tudo em um unico campo
+
+        if (val.class.includes("calcular_perc")){
+            $(wrapper).find(".control").addClass("input-group form-control-lg");
+            
+            let perc = `<button type="BUTTON" id="perc_${val.name}" class="btn btn-sm btn-info">%</button>`;
+            $(wrapper).find(".form-group").addClass("btn-group").append(perc);
+        }
+        
         $(obj).append(wrapper);                     // joga na posição correta do form
     }
 
@@ -101,7 +133,7 @@ class Field{
                 input.name = val.name + "[" + val.options[i].value + "]";
                 input.id = "campo_"+val.name+"_"+i;
 
-                if(prefix == "pesq_"){
+                if(prefix === "pesq_"){
                     input.name = prefix + val.name + "[" + val.options[i].value + "]";
                 }
                 if(val.options[i].checked == 'S'){
@@ -289,6 +321,9 @@ class Field{
         else if(prefix.length > 0){
             input.name = prefix + "["+val.name+"]";
         }
+        if(val.required == 1){
+            input.required = true;
+        }
         input.id = "campo_"+val.name;
         input.value = val.value;
         input.onkeyup = function() {
@@ -318,13 +353,17 @@ class Field{
      * @param prefix do campo, ex: pesq_
      */
     static select(obj, val, prefix = ""){
-        console.log(val);
         // gera a parte comum
         var wrapper = Field.common(obj, val);
 
         var input = document.createElement("select");
         input.className = "selectpicker "+val.class;
         input.name = val.name;
+        input.setAttribute("data-live-search", true);
+
+        if(val.required == 1){
+            input.required = true;
+        }
         if(prefix == "pesq_"){
             input.name = prefix + val.name;
         }
@@ -344,6 +383,7 @@ class Field{
         for(var i = 0; i < val.options.length; i++){
             let option = document.createElement("option");
             option.label = val.options[i].description;
+            option.setAttribute("data-tokens", val.options[i].description)
 
             var text = val.options[i].description;
             if(text.length == 0){
@@ -378,9 +418,9 @@ class Field{
         // cria botão
         let button = document.createElement("button");
         button.type = type;
-        button.className = "btn " + val.class;
+        button.className = `btn btn-block ${val.class}`;
         button.name = val.name;
-        if(prefix == "pesq_"){
+        if(prefix === "pesq_"){
             button.name = prefix + val.name;
         }
         else if(prefix.length > 0){
@@ -395,7 +435,7 @@ class Field{
         // adiciona o node de texto ao button
         $(button).append(document.createTextNode(val.description));
         $(html).append(button);             // coloca o button dentro do seu wrapper
-        $(obj).append(button);
+        $(obj).append(html);
     }
 
     /**
@@ -410,8 +450,12 @@ class Field{
         // monta o input propriamente dito
         let input = document.createElement("input");
         input.type = type;
+        
         input.className = "form-control "+val.class;
         input.name = val.name;
+        if(val.required == 1){
+            input.required = true;
+        }
         if(prefix == "pesq_"){
             input.name = prefix + val.name;
         }
@@ -459,6 +503,9 @@ class Field{
         input.className = "selectpicker "+val.class;
         //input.setAttribute('data-container', 'body');
         input.name = val.name;
+        if(val.required == 1){
+            input.required = true;
+        }
         if(prefix == "pesq_"){
             input.name = prefix + val.name;
         }

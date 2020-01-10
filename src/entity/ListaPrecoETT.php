@@ -8,6 +8,7 @@
 
 namespace src\entity;
 
+
 class ListaPrecoETT extends ObjectETT
 {
     //variáveis recebidas da controller da lista de preço
@@ -48,7 +49,6 @@ class ListaPrecoETT extends ObjectETT
      * limpa o cadastro caso ja tenha itens, senão retorna o numero
      */
     public static function limpa($indice){
-        global $transact;
         global $conexao;
 
         //limpa as linhas do banco de dados, para deletar as que forem removidas
@@ -58,7 +58,7 @@ class ListaPrecoETT extends ObjectETT
             $stmt->bindValue(":indice", $indice);
             $stmt->execute();
 
-            $transact->retornoPadrao($stmt, "Dados antigos limpos da lista de preço", "Não foi possível limpar dados antigos da lista de preço");
+            retornoPadrao($stmt, "Dados antigos limpos da lista de preço", "Não foi possível limpar dados antigos da lista de preço");
 
             // salva o indice atual para salvar os proximos itens
             $retorno = $indice;
@@ -80,15 +80,14 @@ class ListaPrecoETT extends ObjectETT
     }
 
     public function cadastra(){
-        global $transact;
         global $conexao;
 
         // campos obrigatorios
-        $transact->validaCampo($this->data_inicio, "Data início");
-        $transact->validaCampo($this->nome, "nome");
-        $transact->validaCampo($this->data_fim, "Data fim");
-        $transact->validaCampo($this->indice, "Indice");
-        $transact->validaCampo($this->produto, "Produto");
+        validaCampo($this->data_inicio, "Data início");
+        validaCampo($this->nome, "nome");
+        validaCampo($this->data_fim, "Data fim");
+        validaCampo($this->indice, "Indice");
+        validaCampo($this->produto, "Produto");
 
 
         // gera novas listas de preço
@@ -111,7 +110,7 @@ class ListaPrecoETT extends ObjectETT
         $stmt->bindValue(":ativo", $this->ativo);
         $stmt->execute();
 
-        $transact->retornoPadrao($stmt, "Cadastrada a lista de preço #{$this->handle}", "Não foi possível cadastrar a lista de preço {$this->handle}");
+        retornoPadrao($stmt, "Cadastrada a lista de preço #{$this->handle}", "Não foi possível cadastrar a lista de preço {$this->handle}");
 
     }
 }

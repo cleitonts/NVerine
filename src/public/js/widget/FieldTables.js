@@ -110,6 +110,9 @@ class FieldTables {
 
                 $(row).append(separator);
                 $(obj).append(row);
+
+                // esse é mais seguro
+                $(document).trigger("trigger_dynamic_"+val.reference, [row, i]);
             }
             // adiciona ultima linha caso seja dinamico
             if (val.view == 4) {
@@ -130,6 +133,7 @@ class FieldTables {
                 $(obj).append(btn);
                 $(btn).before(cont);
             }
+            
             // esse nome deve vir padão dos arquivos externos
             if(typeof triggerUpdate === "function"){
                 triggerUpdate();
@@ -251,6 +255,9 @@ class FieldTables {
 
             FieldTables.normalizeRow(tr);
             $(tbody).append(tr);
+
+            // esse é mais seguro
+            $(document).trigger("trigger_dynamic_"+val.reference, [tr, i]);
         }
 
         // adiciona ultima linha caso seja dinamico
@@ -359,6 +366,9 @@ class FieldTables {
             $(obj).toggleClass("btn-success btn-danger").toggleClass("fa-times fa-plus");
         }
 
+        // esse é mais seguro
+        //$(document).trigger("trigger_dynamic_"+val.reference, [row, - 1]);
+        
         // esse nome deve vir padão dos arquivos externos
         if(typeof triggerUpdate === "function"){
             triggerUpdate();
@@ -373,6 +383,10 @@ class FieldTables {
     static removeLinha(linha){
         $(linha).find('[title]').tooltip('hide');
         linha.outerHTML = "";
+        
+        if(typeof triggerUpdate === "function"){
+            triggerUpdate();
+        }
     }
 
     /**
@@ -415,7 +429,7 @@ class FieldTables {
         });
         $(linha).find("[id*='perc']").each(function(){
             const list = this.classList;
-            var str = "00,00%";
+            var str = "000,00%";
 
             for (var i = 0; i < list.length; i++ ){
                 if(list[i].includes("precision") === true){

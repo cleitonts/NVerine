@@ -11,7 +11,7 @@ namespace src\entity;
 include_once("class/Contabil.php");
 
 use Contabil\Conta;
-use ExtPDO as PDO;
+use src\services\Transact\ExtPDO as PDO;
 
 class FaturamentoGUI extends ObjectGUI implements InterfaceGUI
 {

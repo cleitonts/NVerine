@@ -89,8 +89,26 @@ class Creator {
     }
 
     static reload() {
-        $('.money').mask('#.##0.00', {reverse: true}); // mascara causando erro dentro do cadastro de produto.
-        //$('.percent').mask('##0.00%', {reverse: true});
+        $('.money').mask("#.##0,00", {reverse: true});
+        
+        $('.percent').each(function(){
+            const list = this.classList;
+            var str = "000,00%";
+
+            for (var i = 0; i < list.length; i++ ){
+                if(list[i].includes("precision") === true){
+                    let cont = list[i].split("-");
+                    str = "";
+                    while (cont[1] > 0){
+                        str = str + "0";
+                        cont[1]--;
+                    }
+                    str = "00,"+str+"%";
+                }
+            }
+            $(this).mask(str, {reverse: true});
+        });
+        
         $('input[type="text"]').focus(function () {
             this.select()
         });
@@ -188,5 +206,41 @@ class Creator {
         if (typeof pageUpdate === "function") {
             pageUpdate();
         }
+        Creator.atualizaTermos();
+    }
+
+    static atualizaTermos(){
+        spinner(true);
+        // algumas paginas não usamos o dicionario
+
+        if(Tools.getUrlParameter("tn") === "Termos" ){
+            spinner(false);
+            return;
+        }
+
+        $.ajax({
+            url: "json.php?pagina=termos",
+            dataType: "json",
+            type: 'POST'
+        }).done(function (valores) {
+            if(valores.length > 0){
+                $('body :not(script, td)').contents().filter(function() {
+                    return this.nodeType === 3;
+                }).replaceWith(function() {
+                    let retorno = this.nodeValue;
+                    for (var i = 0; i < valores.length; i++) {
+                        retorno = retorno.replace(valores[i].original, valores[i].novo);
+                    }
+                    return retorno;
+                });
+            }
+            spinner(false);
+        }).fail(function () {
+            var popup = new Alert();
+            popup.typo = "danger";
+            popup.texto = "Não foi possível atualizar os termos";
+            popup.montaMensagem();
+            spinner(false);
+        });
     }
 }

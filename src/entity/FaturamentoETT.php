@@ -8,7 +8,7 @@
 
 namespace src\entity;
 
-use ExtPDO as PDO;
+use src\services\Transact\ExtPDO as PDO;
 
 class FaturamentoETT extends ObjectETT
 {
@@ -141,11 +141,11 @@ class FaturamentoETT extends ObjectETT
     public function validaForm(){
         global $transact;
         // campos obrigatorios
-        $transact->validaCampo($this->handle, "Handle");
-        $transact->validaCampo($this->finalidade, "Finalidade");
-        $transact->validaCampo($this->data_emissao, "Data emissão");
-        $transact->validaCampo($this->status->handle, "Status");
-        $transact->validaCampo($this->cod_pessoa, "Pessoa");
+        validaCampo($this->handle, "Handle");
+        validaCampo($this->finalidade, "Finalidade");
+        validaCampo($this->data_emissao, "Data emissão");
+        validaCampo($this->status->handle, "Status");
+        validaCampo($this->cod_pessoa, "Pessoa");
     }
 
     public function cadastra()
@@ -464,14 +464,14 @@ class FaturamentoETT extends ObjectETT
         $notasGUI->fetch();
         $nota = $notasGUI->itens[0];
 
-        $xml_nfe = "uploads/xml/nfe{$nota->nota_fiscal->chave}.xml";
+        $xml_nfe = _base_path."xml/nfe{$nota->nota_fiscal->chave}.xml";
         if(file_exists($xml_nfe)) {
             $xml = file_get_contents($xml_nfe);
             $xml = utf8_decode($xml);
             $erros = array();
 
             // confere se existe protocolo de aprovação
-            $xml_prot = "uploads/xml/prot{$nota->nota_fiscal->chave}.xml";
+            $xml_prot = _base_path."xml/prot{$nota->nota_fiscal->chave}.xml";
 
             if(file_exists($xml_prot)) {
                 $protocolo = file_get_contents($xml_prot);

@@ -25,10 +25,10 @@ class PessoaContatoETT extends ObjectETT
         global $transact;
 
         // campos obrigatorios
-        $transact->validaCampo($this->cod_pessoa, "Pessoa");
-        $transact->validaCampo($this->nome, "Nome");
-        $transact->validaCampo($this->email, "E-mail");
-        $transact->validaCampo($this->telefone, "Telefone");
+        validaCampo($this->cod_pessoa, "Pessoa");
+        validaCampo($this->nome, "Nome");
+        validaCampo($this->email, "E-mail");
+        validaCampo($this->telefone, "Telefone");
     }
 
     // métodos públicos

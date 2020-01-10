@@ -7,12 +7,8 @@
  */
 
 namespace src\entity;
-include_once("class/Faturamento.php");
 
-use Faturamento\NotaGUI;
-use ExtPDO as PDO;
-
-class ExpedicaoGUI extends NotaGUI implements InterfaceGUI
+class ExpedicaoGUI extends FaturamentoGUI implements InterfaceGUI
 {
     // ----------------------------------------------------------------------------
     public function __construct($nota = null) {

@@ -54,7 +54,7 @@ class agendaCONTROLLER implements ControladoraCONTROLLER
 
                 // executa durante todo o intervalo de tempo
                 while ($data_inicio <= $data_fim) {
-                    if ($data_inicio->format('w') == $k) {      // se $k == 0 então é domingo e sucessivamente...
+                    if ($data_inicio->format('w') == $k -1) {      // se $k == 1 então é domingo e sucessivamente...
                         $obj->data_inicial = $data_inicio->format('Y-m-d');
                         $obj->data_final = $obj->data_inicial;
 

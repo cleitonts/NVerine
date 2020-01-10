@@ -20,7 +20,6 @@ class GaleriaETT extends ObjectETT
     const TARGET_SUPORTE = 3;
 
     const _BIBLIOTECA_ = "http://www.maiscompleto.com.br";
-    const _CAMINHO_ = "/home/sistemas/web/maiscompleto";
     //const _BIBLIOTECA_ = "http://192.168.0.26";
     //const _CAMINHO_ = "/home/cleiton/html";
 
@@ -52,13 +51,11 @@ class GaleriaETT extends ObjectETT
     }
 
     public function validaForm(){
-        global $transact;
-
         // campos obrigatorios
-        $transact->validaCampo($this->target, "Target");
-        $transact->validaCampo($this->nome, "Nome");
-        $transact->validaCampo($this->referencia, "Referencia");
-        $transact->validaCampo($this->legenda, "Legenda");
+        validaCampo($this->target, "Target");
+        validaCampo($this->nome, "Nome");
+        validaCampo($this->referencia, "Referencia");
+        validaCampo($this->legenda, "Legenda");
     }
     /**
      * @param $file
@@ -203,8 +200,11 @@ class GaleriaETT extends ObjectETT
 
     // caminho parcial, tanto para url quanto para pasta
     public static function getPath($target){
-        return "/biblioteca/images/".Tools::sanitize(strtolower(__DB_NAME__))."/"
-            .strtolower(Tools::sanitize(str_replace(" ", "", __SISTEMA__)))."/".self::getTarget($target);
+        if(_base_path == "uploads/") {
+            return "/biblioteca/images/" . sanitize(strtolower(__DB_NAME__)) . "/"
+                . strtolower(sanitize(str_replace(" ", "", __SISTEMA__))) . "/" . self::getTarget($target);
+        }
+        return "/biblioteca/images/" . strtolower(sanitize(str_replace(" ", "", __SISTEMA__))) . "/" . self::getTarget($target);
     }
 
     // retorna somente pasta interna
@@ -226,6 +226,10 @@ class GaleriaETT extends ObjectETT
     // retorna caminho completo para a pasta
     public static function getDir($target)
     {
-        return self::_CAMINHO_.self::getPath($target);
+        if(_base_path == "uploads/"){
+            return "/home/sistemas/web/maiscompleto".self::getPath($target);
+        }
+        dumper(_base_path.self::getPath($target));
+        return _base_path.self::getPath($target);
     }
 }

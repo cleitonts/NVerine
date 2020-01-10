@@ -135,7 +135,7 @@ class PessoaGUI extends ObjectGUI implements InterfaceGUI
             $where .= "AND (";
             foreach ($_REQUEST["pesq_funcoes"] as $k => $r) {
                 if(isset($or)){
-                    $where .= " OR ";
+                    $where .= " AND ";
                 }
                 $or = true;
                 $where .= $funcoes[$k-1];
@@ -292,7 +292,6 @@ class PessoaGUI extends ObjectGUI implements InterfaceGUI
                 $item->telefone = $item->contatos[0]->telefone;
                 $item->contato = $item->contatos[0]->nome;
                 $item->area_contato = $item->contatos[0]->area;
-                $item->foto_relatorio = "<img style='height: 150px; width: auto' src='{$item->imagem}'>";
 
             } else {
                 $string = "?";

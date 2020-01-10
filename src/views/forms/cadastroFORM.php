@@ -24,11 +24,17 @@ class cadastroFORM implements ControladoraFORM
 {
     public function createSearch()
     {
+        global $__MODULO__;
         $dados = CadastroETT::cadastroLoader();
 
         $widget = new Widget();
         $widget->header->title = $dados["nome"];
         $widget->header->icon = "fa fa-persons";
+
+        if($__MODULO__ == "Educacional"){
+            $widget->header->icon = "fa fa-book";
+        }
+
         //$widget->includes[] = "src/public/js/cadastro/agenda.js";
 
         // cria body e tabs
@@ -53,6 +59,8 @@ class cadastroFORM implements ControladoraFORM
 
     public function createForm($handle = null)
     {
+        global $__MODULO__;
+
         $dados_tabela = CadastroETT::cadastroLoader();
         $cadastro = $dados_tabela["cadastro"];
 
@@ -66,6 +74,9 @@ class cadastroFORM implements ControladoraFORM
         $widget = new Widget();
         $widget->header->title = $dados_tabela["nome"];
         $widget->header->icon = "fa fa-persons";
+        if($__MODULO__ == "Educacional"){
+            $widget->header->icon = "fa fa-book";
+        }
         $widget->entity = $gui;
 
         //$widget->includes[] = "src/public/js/cadastro/agenda.js";

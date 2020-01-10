@@ -168,7 +168,7 @@ class Gallery {
 
             let clone = $(obj).find("img").clone();
 
-            if($(clone).attr("file") != "undefined"){
+            if(typeof $(clone).attr("file") !== "undefined"){
                 var link = document.createElement("a");
                 link.href = $(clone).attr("file");
                 link.className = "btn btn-success";

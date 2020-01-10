@@ -91,7 +91,7 @@ class Calendario {
 
         var dados = [];
         dados.push(
-            {name: "pesq_top", value: 999999},
+            {name: "pesq_top", value: 0},
             {name: "pesq_pagina", value: 1},
             {name: "pesq_data_inicial", value: "01-01-"+ano},
             {name: "pesq_data_final", value: "31-12-"+ano},
@@ -209,7 +209,7 @@ class Calendario {
         var nome_mes = mesDate.toLocaleString("pt-br", {month: "long"});
 
         var header = document.createElement("div");
-        header.className = "card-header card-header-warning text-center";
+        header.className = "card-header card-header-warning text-center text-capitalize";
         header.appendChild(document.createTextNode(nome_mes));
         $(html).append(header);
 

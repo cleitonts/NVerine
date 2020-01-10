@@ -7,19 +7,9 @@ class Tools{
         return captalize.charAt(0).toUpperCase() + captalize.slice(1);
     }
 
-    static getUrlParameter(sParam) {
-        var sPageURL = window.location.search.substring(1),
-            sURLVariables = sPageURL.split('&'),
-            sParameterName,
-            i;
-
-        for (i = 0; i < sURLVariables.length; i++) {
-            sParameterName = sURLVariables[i].split('=');
-
-            if (sParameterName[0] === sParam) {
-                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
-            }
-        }
+    static getUrlParameter(param) {
+        const url = new URL(window.location.href);
+        return (url.searchParams.get(param));
     }
 
     static showLog(){
@@ -45,7 +35,7 @@ class Tools{
         var pagina = Tools.getUrlParameter("retorno");
 
         // retorno que vem do php
-        if(typeof pagina == "undefined"){
+        if(pagina == null){
             if(padrao.length ==0){
                 window.location = "index.php";
             }
@@ -101,5 +91,9 @@ class Tools{
             popup.montaMensagem();
             spinner(false);
         });
+    }
+
+    static redirect_relatorio(url, back = false, limpa_log){
+        window.location.replace("index.php" + url);
     }
 }

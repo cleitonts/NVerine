@@ -51,18 +51,16 @@ class ProdutoGUI extends ObjectGUI implements InterfaceGUI{
             campo($item->tamanho),
             campo($item->modelo),
             campo($item->fabricante),
-
-
         ));
     }
 
     public function fetch()
     {
         global $conexao;
-        dumper($this->pesquisa);
 
 		// monta query de pesquisa
 		$where = "WHERE ".filtraFilial("P.K_KFILIAL", "Produto");
+        if(!empty($this->handle))			                $where .= "AND P.HANDLE = {$this->handle}\n";
 		if(!empty($this->pesquisa["pesq_filial"]))			$where .= "AND P.K_KFILIAL = :pesq_filial\n";
 		if(!empty($this->pesquisa["pesq_codigo"]))			$where .= "AND P.CODIGO = :codigo\n";
 		if(!empty($this->pesquisa["pesq_cod_alternativo"])) $where .= "AND P.CODIGOALTERNATIVO = :codalternativo \n";
@@ -107,16 +105,17 @@ class ProdutoGUI extends ObjectGUI implements InterfaceGUI{
 		$this->itens = array();
 
         $distinct = "";
+        
 		// puxa dados
 		$sql = "SELECT {$distinct} {$top}
 					-- já que a tabela é enorme, precisamos listar cada campo utilizado para otimizar
-					P.HANDLE, P.K_KFILIAL AS FILIAL, P.PRODUTOPAI PAI, P.CODIGO, P.CUSTOMAOOBRA AS PERCCOMISSAO,
+					P.HANDLE, P.K_KFILIAL AS FILIAL, P.CODIGO, P.CUSTOMAOOBRA AS COMISSAO,
 					P.CODIGOALTERNATIVO, P.CODIGOREFERENCIA, P.CODIGOBARRAS, P.NUMEROSERIE,
 					P.NOME, P.DESCRICAO, P.K_OTIMIZA,
 					P.K_ENDERECO, E.NOME AS NOMEENDERECO, A.NOME AS ALMOXARIFADO,
-					P.FAMILIA, P.MATERIAL,
+					P.FAMILIA, P.MATERIAL, P.CUSTOS_FIXOS, P.VALOR_COMISSAO, P.ESTOQUE_MAXIMO,
 					P.K_CONTROLAESTOQUE, P.K_RESERVAESTOQUE, P.K_TERCEIRO,
-					P.ATIVO, P.LOTE, P.K_NCM, P.K_FORNECEDORES, P.HORIZONTEFIRME AS GARANTIA,
+					P.ATIVO, P.LOTE, P.K_NCM, P.HORIZONTEFIRME AS GARANTIA,
 					P.MEDIDA_X, P.MEDIDA_Z, P.MEDIDA_Y, P.PESOVALOR,
 					P.COR, P.TAMANHO, P.K_ESTRUTURADO, P.K_TIPOMOVENTRADA, P.K_TIPOMOVSAIDA,
 					P.CUSTOCOMPRAS, P.PRECOVENDA, 
@@ -181,7 +180,6 @@ class ProdutoGUI extends ObjectGUI implements InterfaceGUI{
 			$item->cont = $i;
 			$item->handle = $r->HANDLE;
 			$item->filial = $r->NOMEFILIAL;
-			$item->pai = $r->PAI;
 			$item->codigo = $r->CODIGO;
 			$item->codigo_alternativo = $r->CODIGOALTERNATIVO;
 			$item->codigo_barras = $r->CODIGOBARRAS;
@@ -190,6 +188,9 @@ class ProdutoGUI extends ObjectGUI implements InterfaceGUI{
 			$item->numero_serie = $r->NUMEROSERIE;
 			$item->nome = formataCase($r->NOME, true);
 			$item->descricao = $r->DESCRICAO;
+            $item->valor_custos_fixos = $r->CUSTOS_FIXOS;
+            $item->valor_comissao = $r->VALOR_COMISSAO;
+            $item->estoque_maximo = $r->ESTOQUE_MAXIMO;
 			$item->marca = $r->MARCA;
 			$item->endereco = $r->NOMEENDERECO;
 			$item->almoxarifado = $r->ALMOXARIFADO;
@@ -209,7 +210,7 @@ class ProdutoGUI extends ObjectGUI implements InterfaceGUI{
 			$item->lote = strtoupper($r->LOTE);
 			$item->ncm = $r->K_NCM;
 			$item->reservado = $r->K_RESERVADO;
-			$item->fornecedores = trim($r->K_FORNECEDORES, " ,");
+			//$item->fornecedores = trim($r->K_FORNECEDORES, " ,");
 			$item->medida_x = noZeroes($r->MEDIDA_X);
 			$item->medida_z = noZeroes($r->MEDIDA_Z);
 			$item->medida_y = noZeroes($r->MEDIDA_Y);
@@ -239,22 +240,7 @@ class ProdutoGUI extends ObjectGUI implements InterfaceGUI{
 			$item->lote = intval($this->pesquisa["pesq_lote"]);
 			$item->analise();
 
-			// instancia movimento apenas se for pesquisa unica?
-			/*if(!empty($this->pesquisa["pesq_codigo"])){
-				$item->movimento->pai = $item->handle;
-				$item->movimento->fetch();
-
-				if(!empty($item->movimento)){
-					// sobrescreve os valores
-					$item->cred_icms = $item->movimento->icms_compra;
-					$item->cred_ipi = formataValor($item->movimento->ipi_compra);
-					$item->valor_custo = formataValor($item->movimento->ultimo_valor_compra);
-					$item->valor_frete = formataValor($item->movimento->venda_frete);
-					$item->valor_venda = formataValor($item->cred_ipi + $item->cred_icms + $item->valor_custo + $item->valor_frete + $item->markup);
-				}
-			}*/
-
-			$item->ncm_aliquota_ipi = $r->ALIQUOTAIPI;
+			$item->ncm_aliquota_ipi = formataValor($r->ALIQUOTAIPI);
 			$item->ncm_codigo = $r->COD_NCM;
 			$item->ncm_codigo_ex = $r->CODIGOEX;
 			$item->ncm_cst = $r->SITUACAOTRIB;
@@ -267,7 +253,7 @@ class ProdutoGUI extends ObjectGUI implements InterfaceGUI{
 			$item->producao = $r->K_OTIMIZA; // usado apenas em produção (desativado)
 			// $item->patrimonio = $r->K_PATRIMONIO; // o módulo patrimonial nunca foi concluído. nem sei se isso estava certo
 
-			$item->perc_comissao = $r->PERCCOMISSAO;
+			$item->valor_comissao = $r->VALOR_COMISSAO;
 			// configura análise de movimento
 			$item->movimento->pai = $item->codigo;
 
@@ -286,59 +272,34 @@ class ProdutoGUI extends ObjectGUI implements InterfaceGUI{
 				// $item->grupo = "--";
 			}
 
-			if($this->handle > 0){
-			    $produtoEstruturado = new ProdutoEstruturadoGUI();
-			    $produtoEstruturado->pesquisa['pesq_pai'] = $this->handle;
-			    $produtoEstruturado->fetch();
-			    $item->estrutura = $produtoEstruturado->itens;
-
-            }
-
 			// listas de preço/promoções
 			$item->perc_desconto = empty($r->PERCDESCONTO) ? 0 : $r->PERCDESCONTO;
 			$item->valor_desconto = $item->valor_venda * ($item->perc_desconto / 100);
 			$item->valor_promocional = $item->valor_venda - $item->valor_desconto;
 
-			/* busca dados específicos do produto único
-			 * (loja virtual)
-			 */
-			if(!empty($this->handle)) {
-			    $tabela = new TabelaPrecosGUI();
-			    $tabela->pesquisa["pesq_prouto"] = $this->handle;
-			    $tabela->fetch();
-			    $item->tabela = $tabela->itens;
+            /* busca dados específicos da tabela de preço e estruturada */
+            if(!empty($this->handle)) {
+                $tabela = new ProdutoTabelaPrecoGUI();
+                $tabela->pesquisa["pesq_produto"] = $this->handle;
+                $tabela->fetch();
+                $item->tabela = $tabela->itens;
 
-                $tabela_produto_estruturado = new ProdutoEstruturadoGUI();
-                $tabela_produto_estruturado->pesquisa["pesq_prouto"] = $this->handle;
-                $tabela_produto_estruturado->fetch();
-                $item->tabela_produto_estruturado = $tabela_produto_estruturado->itens;
-
-				// monta galeria
-				$item->galeria = array();
-				$sql = "SELECT * FROM K_GALERIA WHERE PRODUTO = '{$item->codigo}' AND ATIVO = 'S'";
-				$stmt = $conexao->prepare($sql);
-				$stmt->execute();
-				$galeria = $stmt->fetchAll(PDO::FETCH_OBJ);
-
-				if(!empty($galeria)) {
-					foreach($galeria as $foto) {
-						$obj = new GaleriaGUI();
-						$obj->handle = $foto->HANDLE;
-						$obj->legenda = strip_tags($foto->LEGENDA);
-						$obj->url = $foto->URL;
-						$item->galeria[] = $obj;
-					}
-				}
-			}
-
+                $fornecedores = new ProdutoFornecedorGUI();
+                $fornecedores->pesquisa["pesq_produto"] = $this->handle;
+                $fornecedores->fetch();
+                $item->fornecedores = $fornecedores->itens;
+                    
+                $produtoEstruturado = new ProdutoEstruturadoGUI();
+                $produtoEstruturado->pesquisa['pesq_pai'] = $this->handle;
+                $produtoEstruturado->fetch();
+                $item->tabela_estruturada = $produtoEstruturado->itens;
+            }
+            
 			if(!($this->pesquisa["pesq_filtra_saldo"] == 'S' && $item->movimento->saldo_estoque == "Indisponível")){
 				array_push($this->itens, $item);
 				$i++;
-
 			}
-
         }
-
     }
 }
 

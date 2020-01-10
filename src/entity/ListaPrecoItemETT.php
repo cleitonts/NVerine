@@ -8,6 +8,7 @@
 
 namespace src\entity;
 
+
 class ListaPrecoItemETT extends ListaPrecoETT
 {
     public $produto;

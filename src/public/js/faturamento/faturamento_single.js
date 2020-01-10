@@ -1,6 +1,5 @@
 // var locais
 var produtos = [];
-var comissao = [];
 var nota;
 var duplicatas;
 
@@ -390,8 +389,6 @@ class Produto {
         this.pesquisa();						// instancia pesquisa para produtos
 
         this.atualizaValores(false);
-        this.sobrePreco();
-        //this.getMedidas();
 
         // instancia a classe de desconto
         //_desconto[this.num] = new DescontoItens(this.num);
@@ -463,8 +460,8 @@ class Produto {
             });
     }
     /* 	Pesquisa e autocompleta produto
- *	Pequena lista para otimizar a transferencia de dados
- */
+     *	Pequena lista para otimizar a transferencia de dados
+     */
     pesquisa (){
         var elemento = this;
         $("[id^='campo_produto']").autocomplete({
@@ -512,49 +509,13 @@ class Produto {
         }
     }
 
-
-    // calcula a medida padrão e arredonda
-    getMedidas (){
-        spinner(true);
-
-        var elemento = this;
-        elemento.medidas_padrao = [];
-
-        $.ajax({
-            url: __PASTA__+"json.php?pagina=medidas_padrao",
-            dataType: "json",
-            data: {handle_produto: elemento.id}
-        })
-            .done(function(valores){
-                if (valores != null) {
-                    if(typeof (valores.medida_base ) != "undefined") {
-                        elemento.medida_base = parseFloat(valores.medida_base);
-                        // converte para um array que possua somente as medidas
-                        for (var i = valores.itens.length - 1; i >= 0; i--) {
-                            elemento.medidas_padrao.push(valores.itens[i].medidas);
-                        }
-                    }
-                }
-                spinner(false);
-            })
-            .fail(function(){
-                var popup = new Alert();
-                popup.typo = "danger";
-                popup.texto = "Medidas não encontradas";
-                popup.montaMensagem();
-                spinner(false);
-            });
-    }
-
     // Traz a lista completa com todos os detalhes do produto
     atualiza (){
         spinner(true);
 
         // o ajax nao trabalha bem com THIS
         var elemento = this;
-
-        // carrega as medidas padrões
-        elemento.getMedidas();
+        
         $.ajax({
             url: __PASTA__+"json.php?pagina=produto_valores",
             dataType: "json",
@@ -644,68 +605,12 @@ class Produto {
 
     // Calcula a metragem total do produto
     calculaMetragem (){
-        // medida arredondada é o comprimento
-        var index;
-        var medida_arredondar_x;
-        var medida_arredondar_z;
-
-        if(this.emenda == "N"){
-            // itera tabela de medidas padrão
-            if(this.unidade == "M" || this.unidade == "M2"){
-
-                // verifica a medida z
-                for (var i = this.medidas_padrao.length - 1; i >= 0; i--) {
-                    if(parseInt(this.medidas_padrao[i]) >= this.medida_z){
-                        index = i;
-                        break;
-                    }
-                }
-
-                // salva valor
-                if(!isNaN(index)) {
-                    medida_arredondar_z = parseFloat(this.medidas_padrao[index]);
-                    index = null;
-                }
-
-                // verifica a medida x
-                for (var i = this.medidas_padrao.length - 1; i >= 0; i--) {
-                    if(parseInt(this.medidas_padrao[i]) >= this.medida_x){
-                        index = i;
-                        break;
-                    }
-                }
-
-                if(!isNaN(index)){
-                    medida_arredondar_x = parseFloat(this.medidas_padrao[index]);
-                    index = null;
-                }
-            }
-        }
-
-        // verifica se arredonda medida x
-        if((medida_arredondar_x > 0) && ((medida_arredondar_x - this.medida_x) <= (medida_arredondar_z - this.medida_z) || isNaN(medida_arredondar_z))){     // isto assusta
-            this.arredonda_x = medida_arredondar_x;
-            this.arredonda_z = this.medida_z;
-        }
-
-        // verifica se arredonda medida z
-        else if((medida_arredondar_z > 0) && ((medida_arredondar_z - this.medida_z) <= (medida_arredondar_x - this.medida_x) || isNaN(medida_arredondar_x))){
-            this.arredonda_x = this.medida_x;
-            this.arredonda_z = medida_arredondar_z;
-        }
-
-        // se chegou aqui é pq as medidas estão zeradas
-        else{
-            this.arredonda_x = this.medida_x;
-            this.arredonda_z = this.medida_z;
-        }
-
         // calcula arredondamenoto de acordo com unidade de medida
         if(this.unidade == "M2") {
-            this.medida_t = (this.arredonda_x * this.arredonda_z * this.quantidade) / 1000000;
+            this.medida_t = (this.medida_x * this.medida_z * this.quantidade) / 1000000;
         }
         else if(this.unidade == "M") {
-            this.medida_t = (this.arredonda_z * this.quantidade) / 1000;
+            this.medida_t = (this.medida_z * this.quantidade) / 1000;
         }
         else {
             this.valor_bruto = (this.quantidade * this.valor_unitario);
@@ -788,7 +693,6 @@ class Produto {
             nota.totalProdutos();
         }
     }
-
 
     // separado pois pode ter casos em que nao quero salvar os valores
     salvaValores (){
@@ -928,27 +832,6 @@ class Nota{
         $("#campo_vendedor, #campo_supervisor").change(function(){
             elemento.totalProdutos();
         });
-
-        // precisa estar carregado com o valor
-        this.comissao = this.somaValor("campo_prod_comissao");
-        this.sobrepreco = this.somaValor("campo_prod_sobrepreco");
-
-        // 1 => comissao padrao
-        // 2 => supervisor
-        // 3 => sobrepreço
-        // atualiza a tabela de comissão
-        $("#campo_supervisor").change(function(){
-            comissao[2].atualizaPessoa(this.value);	// supervisor
-        });
-        $("#campo_vendedor").change(function(){
-            comissao[1].atualizaPessoa(this.value);	// comissao normal
-            comissao[3].atualizaPessoa(this.value);	// sobrepreço
-        });
-
-        // seta o tipo
-        comissao.push(new ComissaoItens(1));
-        comissao.push(new ComissaoItens(2));
-        comissao.push(new ComissaoItens(3));
     }
 
     totalProdutos (){
@@ -1011,109 +894,6 @@ class Nota{
     static setTotal(campo, valor){
         let table = $("#dynamic_totais");
         $(table).find("[id^='campo_"+campo+"']").val(valor.toFixed(__CASAS_DECIMAIS__));
-    }
-
-    static rateio_comissao (){
-        // atualiza comissao base do vendedor
-        for(var i = comissao.length -1; i > 0; i--){
-            comissao[i].atualiza();
-        }
-    }
-}
-
-// linhas de comissão
-class ComissaoItens{
-    constructor (tipo){
-        // seta o tipo
-        this.tipo = tipo;
-        this.obj = $("table#comissao tbody tr:nth-child("+this.tipo+")");
-        this.obj.find("[id^='campo_comissao_nome']").val(this.getNomeTipo());
-        this.cod_pessoa = this.obj.find("[id^='campo_comissao_cod_pessoa']").val();
-
-        // se estiver vazio, precisa pesquisar novamente
-        if(isNaN(parseInt(this.cod_pessoa))){
-            if(tipo == 2){
-                this.atualizaPessoa($("#campo_supervisor").val());
-            }
-            else{
-                this.atualizaPessoa($("#campo_vendedor").val());
-            }
-        }
-        else{
-            this.perc_comissao = this.obj.find("[id^='campo_perc_comissao']").val();
-            this.nome_pessoa = this.obj.find("[id^='campo_comissao_pessoa']").val();
-        }
-    }
-    atualiza (){
-        if(isNaN(this.perc_comissao) && this.tipo == 2){
-            this.perc_comissao = 0;
-        }
-
-        else if(isNaN(this.perc_comissao) && this.tipo == 1){
-            this.perc_comissao = 100;
-        }
-
-        if(this.tipo == 3){
-            this.base = nota.sobrepreco;
-            this.valor = nota.sobrepreco * 0.3;
-            this.perc_comissao = 30;
-        }
-        else{
-            // diferenciação para sobrepreço
-            this.base = parseFloat(nota.comissao).toFixed(2);
-            this.valor = this.base * (this.perc_comissao / 100);
-
-        }
-
-        this.obj.find("[id^='campo_comissao_origem']").val(this.tipo);
-        this.obj.find("[id^='campo_comissao_pessoa']").val(this.nome_pessoa);
-        this.obj.find("[id^='campo_comissao_cod_pessoa']").val(this.cod_pessoa);
-        this.obj.find("[id^='campo_comissao_valor_base']").val(parseFloat(this.base).toFixed(2));
-        this.obj.find("[id^='campo_comissao_nome']").val(this.getNomeTipo());
-        this.obj.find("[id^='campo_perc_comissao']").val(parseFloat(this.perc_comissao).toFixed(2));
-        this.obj.find("[id^='campo_comissao_valor_total']").val(parseFloat(this.valor).toFixed(2));
-    }
-
-    // atualiza de usuarios para pessoas
-    atualizaPessoa (id){
-        spinner(true);
-
-        var itens = this;
-        $.ajax({
-            url: "json.php?pagina=comissao",
-            dataType: "json",
-            data: {	term: id }
-        })
-            .done(function(valores){
-                itens.nome_pessoa = valores.pessoa;
-                itens.cod_pessoa = valores.codPessoa;
-                itens.perc_comissao = parseFloat(valores.comissao) * 100; // corrige decimais
-
-                // esta atualização deve estar aqui dentro
-                comissao[1].perc_comissao = 100 - comissao[2].perc_comissao;
-                Nota.rateio_comissao();
-                spinner(false);
-            })
-            .fail(function(){
-                spinner(false);
-                var popup = new Alert();
-                popup.typo = "danger";
-                popup.texto = "Preencha os campos Supervisor/Vendedor com informações válidas";
-                popup.montaMensagem();
-            });
-    }
-
-    getNomeTipo (){
-        switch(this.tipo) {
-            case 1:
-                return "Vendedor";
-            case 2:
-                return "Sup/indic";
-            case 3:
-                return "Sobrepreço";
-            default:
-                return "Está errado"
-        }
     }
 }
 

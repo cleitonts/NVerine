@@ -6,10 +6,11 @@
  * Time: 08:51
  */
 
-
 namespace src\views\forms;
 
+include_once("class/Contabil.php");
 
+use Contabil\ContaGUI;
 use src\creator\widget\Body;
 use src\creator\widget\Component;
 use src\creator\widget\Fields;
@@ -32,7 +33,6 @@ use src\entity\FaturamentoStatusTransicaoETT;
 use src\entity\PessoaEnderecoETT;
 use src\entity\ProdutoETT;
 use src\entity\UsuarioGUI;
-use src\services\Transact;
 use src\views\ControladoraFORM;
 
 class faturamentoFORM implements ControladoraFORM
@@ -40,9 +40,7 @@ class faturamentoFORM implements ControladoraFORM
 
     public function createSearch()
     {
-        if(empty($_REQUEST["pesq_tipo"])){
-            return Tools::returnError("Tipo de nota não informado.");
-        }
+        $this->setTipo($_REQUEST["pesq_tipo"]);
 
         $widget = new Widget();
         $widget->includes[] = "src/public/js/faturamento/faturamento.js";
@@ -269,7 +267,7 @@ class faturamentoFORM implements ControladoraFORM
 
         $tabs->form->children[] = $div;
 
-        Tools::footerSearch($tabs->form, 6);
+        Tools::footerSearch($tabs->form, 8);
 
         // cria tabelas
         $tabs->table = new Table();
@@ -280,7 +278,7 @@ class faturamentoFORM implements ControladoraFORM
         $widget->body->tabs["pesquisar"] = $tabs; // colocar o nome da tab
 
         $tab = new Tabs();
-        $tab->function = "destinoMenu('faturamento_notas_relatorios&pesq_tipo={$_REQUEST["pesq_tipo"]}&retorno=".urlencode(Transact::getUrlRetorno("index.php"))."')";
+        $tab->function = "destinoMenu('faturamento_notas_relatorios&pesq_tipo={$_REQUEST["pesq_tipo"]}&retorno=" . urlencode(getUrlRetorno("index2.php")) . "')";
         $tab->icon = "fa fa-bar-chart";
 
         $widget->body->tabs["Relatórios"] = $tab;
@@ -297,9 +295,6 @@ class faturamentoFORM implements ControladoraFORM
 
     public function createForm($handle = null)
     {
-        global $__MODULO__;
-        global $__PAGINA__;
-
         // se chegar null é pq eu quero a instancia da entidade somente 1x
         if ($handle == 0) {
             // instancia a entidade
@@ -307,45 +302,31 @@ class faturamentoFORM implements ControladoraFORM
             $gui->status->handle = 1;
             $gui->cod_tipo = $_REQUEST["pesq_tipo"];
 
-            if(empty($gui->cod_tipo)){
+            if (empty($gui->cod_tipo)) {
                 $gui->cod_tipo = $_REQUEST["tipo"];
             }
-
-            if(empty($_REQUEST["pesq_tipo"]) && empty($_REQUEST["tipo"])) {
-                return Tools::returnError("Tipo de nota não informado.", "faturamento");
-            }
-        }
-        else {
+        } else {
             // instancia a entidade
             $gui = new FaturamentoGUI($handle);
             $gui->setPesquisa();
             $gui->fetch();
             $gui = $gui->itens[0];
+        }
 
-            // atribui valor paranão ficar com erro
-            $_REQUEST["pesq_tipo"] = $gui->cod_tipo;
+        $this->setTipo($gui->cod_tipo, $gui->finalidade);
 
-            if(empty($gui)) {
-                return Tools::returnError("Nota/orçamento não encontrado.", "faturamento");
-            }
+        if (empty($gui)) {
+            return Tools::returnError("Nota/orçamento não encontrado.", "faturamento&pesq_tipo=" . $gui->cod_tipo);
         }
 
         // opções de plano de contas
         $contas = new ContaGUI();
 
         // seta módulo e nome da página
-        if($gui->cod_tipo == "S") {
-            $__MODULO__ = $gui->finalidade == FaturamentoETT::FINALIDADE_DEVOLUCAO ? "Compras" : "Faturamento";
-            $__PAGINA__ = $gui->finalidade == FaturamentoETT::FINALIDADE_DEVOLUCAO ? "Nota de compra" : "Nota de venda";
+        if ($gui->cod_tipo == "S") {
             $contas->pesquisa["pesq_contas_a_receber"] = 1;
-        }
-        elseif($gui->cod_tipo == "E") {
-            $__MODULO__ = $gui->finalidade == FaturamentoETT::FINALIDADE_DEVOLUCAO ? "Faturamento" : "Compras";
-            $__PAGINA__ = $gui->finalidade == FaturamentoETT::FINALIDADE_DEVOLUCAO ? "Nota de venda" : "Nota de compra";
+        } else {
             $contas->pesquisa["pesq_contas_a_pagar"] = 1;
-        }
-        else {
-            return Tools::returnError("Tipo de nota não informado.", "faturamento");
         }
 
         // define nomes dinâmicos
@@ -516,7 +497,7 @@ class faturamentoFORM implements ControladoraFORM
             $tabs->form->name = "faturamento";
             $tabs->form->action = _pasta . "actions.php?pagina=faturamento";
 
-            if($handle > 0){
+            if ($handle > 0) {
                 // cria novo campo
                 $field = new Fields();
                 $field->type = $field::HIDDEN;
@@ -596,7 +577,7 @@ class faturamentoFORM implements ControladoraFORM
             // cria novo campo
             $field = new Fields();
             $field->type = $field::LABEL;
-            $field->description = "Cód. ".$nomes[$gui->cod_tipo]["pessoa"];
+            $field->description = "Cód. " . $nomes[$gui->cod_tipo]["pessoa"];
             $field->name = "cod_pessoa";
             $field->property = "cod_pessoa";
             $field->size = 2;
@@ -626,7 +607,7 @@ class faturamentoFORM implements ControladoraFORM
             $field->description = "Histórico da venda";
             $field->name = "descricao";
             $field->property = "descricao";
-            $field->size = ($gui->cod_tipo == "S")? 12 : 8;
+            $field->size = ($gui->cod_tipo == "S") ? 12 : 8;
             $tabs->form->field[] = $field;
 
             $vendedores = UsuarioGUI::getVendedor();
@@ -639,11 +620,11 @@ class faturamentoFORM implements ControladoraFORM
             $field->description = $nomes[$gui->cod_tipo]["salesman"];
             $field->type = $field::SELECT;
             $field->options = Options::byArray($vendedores["handle"], $vendedores["nome"]);
-            $field->size = ($gui->cod_tipo == "S")? 4 : 2;
+            $field->size = ($gui->cod_tipo == "S") ? 4 : 2;
             $field->property = "cod_vendedor";
             $tabs->form->field[] = $field;
 
-            if($gui->cod_tipo == "S"){
+            if ($gui->cod_tipo == "S") {
                 $contas->fetch();
 
                 $supervisores = UsuarioGUI::getSupervisor();
@@ -667,8 +648,7 @@ class faturamentoFORM implements ControladoraFORM
                 $field->size = 4;
                 $field->property = "cod_plano_contas";
                 $tabs->form->field[] = $field;
-            }
-            else{
+            } else {
                 // cria novo campo
                 $field = new Fields();
                 $field->type = $field::TEXT;
@@ -1264,7 +1244,7 @@ class faturamentoFORM implements ControladoraFORM
             $field->name = "Calcular parcelas";
             $field->function = "duplicatas.processa()";
             $field->class = "float-right btn-warning mt-3";
-            if(count($gui->duplicatas) > 0 ){
+            if (count($gui->duplicatas) > 0) {
                 $field->function = "";
                 $field->class = "float-right btn-default mt-3";
             }
@@ -1534,10 +1514,9 @@ class faturamentoFORM implements ControladoraFORM
             $field->type = $field::SELECT;
             $field->property = "cod_cidade";
 
-            if(empty($gui->entrega->cidade)){
+            if (empty($gui->entrega->cidade)) {
                 $field->options[] = new Options("", "Por gentileza, escolha um estado");
-            }
-            else{
+            } else {
                 $field->options[] = new Options($gui->entrega->cidade, $gui->entrega->cidade);
             }
             $field->size = 3;
@@ -1628,19 +1607,9 @@ class faturamentoFORM implements ControladoraFORM
             $field->size = 2;
             $row->field[] = $field;
 
-            $unidade = ProdutoETT::getUnidade();
-            array_unshift($unidade["nome"], "");
-            array_unshift($unidade["abreviatura"], "");
-
-            // cria novo campo
-            $field = new Fields();
-            $field->name = "volume_especie";
+            $field = Fields::fromTable(Fields::SELECT, 2, "volume_especie", "CM_UNIDADESMEDIDA", "ABREVIATURA+') '+NOME", "HANDLE", "", "volume_especie");
             $field->description = "Espécie";
-            $field->type = $field::SELECT;
-            $field->options = Options::byArray($unidade["abreviatura"], $unidade["nome"]);
-            $field->property = "volume_especie";
-            $field->size = 2;
-            $row->field[] = $field;
+            $tabs->form->field[] = $field;
 
             // cria novo campo
             $field = new Fields();
@@ -1692,7 +1661,7 @@ class faturamentoFORM implements ControladoraFORM
         }
 
         //Painel NFE
-        if($handle > 0){
+        if ($handle > 0) {
             // carrega calendario
             $div = new Component();
             $div->tag = "div";
@@ -1798,5 +1767,21 @@ class faturamentoFORM implements ControladoraFORM
 
         $widget->setDefaults();
         return $widget;
+    }
+
+    public function setTipo($tipo, $finalidade = null)
+    {
+        global $__MODULO__;
+        global $__PAGINA__;
+
+        if ($tipo == "S") {
+            $__MODULO__ = $finalidade == FaturamentoETT::FINALIDADE_DEVOLUCAO ? "Compras" : "Faturamento";
+            $__PAGINA__ = $finalidade == FaturamentoETT::FINALIDADE_DEVOLUCAO ? "Nota de compra" : "Nota de venda";
+        } elseif ($tipo == "E") {
+            $__MODULO__ = $finalidade == FaturamentoETT::FINALIDADE_DEVOLUCAO ? "Faturamento" : "Compras";
+            $__PAGINA__ = $finalidade == FaturamentoETT::FINALIDADE_DEVOLUCAO ? "Nota de venda" : "Nota de compra";
+        } else {
+            return Tools::returnError("Tipo de nota não informado.");
+        }
     }
 }

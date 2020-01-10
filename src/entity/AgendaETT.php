@@ -52,26 +52,30 @@ class AgendaETT extends ObjectETT
     public function validaForm(){
         global $transact;
         // campos obrigatorios
-        $transact->validaCampo($this->data_inicial, "Data inicial");
-        $transact->validaCampo($this->data_final, "Data final");
-        $transact->validaCampo($this->titulo, "Titulo do evento");
-        $transact->validaCampo($this->evento_ativo, "Evento ativo");
-        //$transact->validaCampo($this->tipo_evento, "Tipo evento");
+        validaCampo($this->data_inicial, "Data inicial");
+        validaCampo($this->data_final, "Data final");
+        validaCampo($this->titulo, "Titulo do evento");
+        validaCampo($this->evento_ativo, "Evento ativo");
+        validaCampo($this->tipo_evento, "Tipo evento");
     }
 
     public function cadastra()
     {
-        global $transact;
         global $conexao;
 
         $this->validaForm();
+        $filial = __FILIAL__;
+
+        if(__EDUCACIONAL__){
+            $filial = $this->cod_escola;
+        }
 
         $this->handle = newHandle('K_AGENDA', $conexao);
 
         $stmt = $this->insertStatement("K_AGENDA",
             array(
                 "HANDLE" =>  $this->handle,
-                "FILIAL" => __FILIAL__,
+                "FILIAL" => validaVazio($filial),
                 "DATA" => $this->data_inicial,
                 "DATAFINAL" => $this->data_final,
                 "HORA" => $this->hora_inicial,
@@ -79,23 +83,26 @@ class AgendaETT extends ObjectETT
                 "ATIVO" => $this->evento_ativo,
                 "REGIAO" => validaVazio($this->cod_regiao),
                 "CONTEUDO" => $this->conteudo,
-                "FILIAL" => validaVazio($this->cod_escola),
                 "TURMA" => validaVazio($this->cod_turma),
                 "PESSOA" => validaVazio($this->cod_pessoa),
                 "USUARIO" => validaVazio($this->responsavel),
                 "HORAFINAL" => $this->hora_final,
+                "TIPO" => $this->tipo_evento,
             ));
 
         $nome_evento = AgendaETT::getNomeEvento($this->tipo_evento);
-        $transact->retornoPadrao($stmt, "Novo evento #{$nome_evento} cadastrado", "Não foi possível cadastrar novo evento #{$nome_evento}");
+        retornoPadrao($stmt, "Novo evento #{$nome_evento} cadastrado", "Não foi possível cadastrar novo evento #{$nome_evento}");
     }
 
     public function atualiza()
     {
-        global $transact;
-        global $conexao;
-
         $this->validaForm();
+
+        $filial = __FILIAL__;
+
+        if(__EDUCACIONAL__){
+            $filial = $this->cod_escola;
+        }
 
         $stmt = $this->updateStatement("K_AGENDA",
             array(
@@ -107,33 +114,15 @@ class AgendaETT extends ObjectETT
                 "ATIVO" => $this->evento_ativo,
                 "REGIAO" => validaVazio($this->cod_regiao),
                 "CONTEUDO" => $this->conteudo,
-                "FILIAL" => validaVazio($this->cod_escola),
+                "FILIAL" => validaVazio($filial),
                 "TURMA" => validaVazio($this->cod_turma),
                 "PESSOA" => validaVazio($this->cod_pessoa),
                 "USUARIO" => validaVazio($this->responsavel),
                 "HORAFINAL" => $this->hora_final,
+                "TIPO" => $this->tipo_evento,
             ));
 
-        $transact->retornoPadrao($stmt, "O evento foi atualizado #{$this->handle}", "Não foi possível atualizar o evento #{$this->handle}");
-    }
-
-    static function getResponsavel(){
-        global $conexao;
-
-        $sql = "select * from K_PD_USUARIOS";
-        $stmt = $conexao->prepare($sql);
-
-        $stmt->execute();
-        $f = $stmt->fetchAll(PDO::FETCH_OBJ);
-
-        $arr = array();
-        $arr["handle"][] = "";
-        $arr["nome"][] = "";
-        foreach ($f as $r) {
-            $arr["handle"][] = $r->HANDLE;
-            $arr["nome"][] = $r->NOME;
-        }
-        return $arr;
+        retornoPadrao($stmt, "O evento foi atualizado #{$this->handle}", "Não foi possível atualizar o evento #{$this->handle}");
     }
 
     // retorna nomes dos eventos
@@ -149,64 +138,6 @@ class AgendaETT extends ObjectETT
 
     public static function getTipoAssunto(){
         $arr = array("", "Ligar", "Email", "Almoço", "Reunião", "Tarefa", "Visita");
-        return $arr;
-    }
-
-    static function getCRMStatus(){
-
-        global $conexao;
-
-        $sql = "select * from K_CRM_ETAPAS";
-        $stmt = $conexao->prepare($sql);
-
-        $stmt->execute();
-        $f = $stmt->fetchAll(PDO::FETCH_OBJ);
-
-        $arr = array();
-        foreach ($f as $r) {
-            $arr["handle"][] = $r->HANDLE;
-            $arr["nome"][] = $r->NOME;
-        }
-        return $arr;
-    }
-
-    static function getRegiao(){
-
-        global $conexao;
-
-        $sql = "select * from K_REGIAO";
-        $stmt = $conexao->prepare($sql);
-
-        $stmt->execute();
-        $f = $stmt->fetchAll(PDO::FETCH_OBJ);
-
-        $arr = array();
-        $arr["handle"][] = "";
-        $arr["nome"][] = "";
-        foreach ($f as $r) {
-            $arr["handle"][] = $r->HANDLE;
-            $arr["nome"][] = $r->NOME;
-        }
-        return $arr;
-    }
-
-    static function getFilial(){
-
-        global $conexao;
-
-        $sql = "SELECT * FROM K_FN_FILIAL";
-        $stmt = $conexao->prepare($sql);
-
-        $stmt->execute();
-        $f = $stmt->fetchAll(PDO::FETCH_OBJ);
-
-        $arr = array();
-        $arr["handle"][] = "";
-        $arr["nome"][] = "";
-        foreach ($f as $r) {
-            $arr["handle"][] = $r->HANDLE;
-            $arr["nome"][] = $r->NOME;
-        }
         return $arr;
     }
 

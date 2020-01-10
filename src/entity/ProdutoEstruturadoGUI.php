@@ -7,6 +7,8 @@ use src\services\Transact\ExtPDO as PDO;
 
 class ProdutoEstruturadoGUI extends ObjectGUI implements InterfaceGUI
 {
+
+
     /**
      * @param $linha
      * @param $coluna
@@ -31,14 +33,16 @@ class ProdutoEstruturadoGUI extends ObjectGUI implements InterfaceGUI
 
         // puxa dados
         $sql = "SELECT E.*, P.NOME AS NOMEPAI, F.NOME AS NOMEFILHO,
-				(P.MARGEMLUCRO / (P.PRECOVENDA - P.MARGEMLUCRO)) AS MARKUP,
-				F.CUSTOCOMPRAS
+				(P.MARGEMLUCRO / (P.PRECOVENDA - P.MARGEMLUCRO)) AS MARKUP, 
+				F.CUSTOCOMPRAS, F.UNIDADEMEDIDAVENDAS AS UNIDADE, F.PRECOVENDA,
+				UM.ABREVIATURA AS NOMEUNIDADE
 				FROM K_FN_PRODUTOESTRUTURADO E
 				LEFT JOIN PD_PRODUTOS P ON E.PAI = P.CODIGO
 				LEFT JOIN PD_PRODUTOS F ON E.FILHO = F.CODIGO
+				LEFT JOIN CM_UNIDADESMEDIDA UM ON F.UNIDADEMEDIDAVENDAS = UM.HANDLE
 				WHERE E.PAI = :pai";
         $stmt = $conexao->prepare($sql);
-        $stmt->bindValue(":pai", $this->pesquisa['pesq_prouto']);
+        $stmt->bindValue(":pai", $this->pesquisa['pesq_pai']);
         $stmt->execute();
 
         $f = $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -53,9 +57,9 @@ class ProdutoEstruturadoGUI extends ObjectGUI implements InterfaceGUI
             $item->filho = formataCase($r->NOMEFILHO);
             $item->cod_pai = $r->PAI;
             $item->cod_filho = $r->FILHO;
-            $item->unidade = $r->UNIDADE;
+            $item->unidade = strtoupper($r->NOMEUNIDADE);
             $item->quantidade = $r->QUANTIDADEFLOAT;
-            $item->valor_unitario = $r->UNITARIO;
+            $item->valor_unitario = $r->PRECOVENDA;
             $item->valor_total = $item->valor_unitario * $item->quantidade;
             $item->markup = $r->MARKUP;
             // $item->custo_compra = $r->CUSTOCOMPRAS;

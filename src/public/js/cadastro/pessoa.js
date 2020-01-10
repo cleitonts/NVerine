@@ -1,35 +1,38 @@
 function pageUpdate() {
-    // corrige posicionamento
-    let h2 = document.createElement("h2");
-    h2.className = "col-6";
+    // correções da ficha
+    if (1 == 1) {
+        // corrige posicionamento
+        let h2 = document.createElement("h2");
+        h2.className = "col-6";
 
-    $(h2).append(document.createTextNode($("#campo_nome").val()));
+        $(h2).append(document.createTextNode($("#campo_nome").val()));
 
-    let handle = $("#campo_handle").val();
+        let handle = $("#campo_handle").val();
 
-    let ficha = document.createElement("a");
-    ficha.className = "btn btn-info float-right";
-    ficha.target = "_blank";
-    ficha.href = "relatorio.php?pagina=educacional_aluno&pesq_codigo="+handle;
-    $(ficha).append(document.createTextNode("Ficha"));
+        let ficha = document.createElement("a");
+        ficha.className = "btn btn-info float-right";
+        ficha.target = "_blank";
+        ficha.href = "relatorio.php?pagina=educacional_aluno&pesq_codigo=" + handle;
+        $(ficha).append(document.createTextNode("Ficha"));
 
-    let financeiro = document.createElement("a");
-    financeiro.className = "btn btn-success float-right";
-    financeiro.target = "_blank";
-    financeiro.href = "index.php?pagina=contabil_titulos&pesq_natureza=2&pesq_cod_pessoa="+handle;
-    $(financeiro).append(document.createTextNode("Financeiro"));
+        let financeiro = document.createElement("a");
+        financeiro.className = "btn btn-success float-right";
+        financeiro.target = "_blank";
+        financeiro.href = "index.php?pagina=contabil_titulos&pesq_natureza=2&pesq_cod_pessoa=" + handle;
+        $(financeiro).append(document.createTextNode("Financeiro"));
 
-    let div = document.createElement("div");
-    div.className = "col-6";
+        let div = document.createElement("div");
+        div.className = "col-6";
 
-    let row = document.createElement("div");
-    row.className = "row";
-    $(div).append(financeiro);
-    $(div).append(ficha);
-    $(row).prepend(div);
-    $(row).prepend(h2);
-    $("#card_ficha > .card-body").prepend(row);
-    $("#main-content > .row").prepend($("#card_ficha")[0]);
+        let row = document.createElement("div");
+        row.className = "row";
+        $(div).append(financeiro);
+        $(div).append(ficha);
+        $(row).prepend(div);
+        $(row).prepend(h2);
+        $("#card_ficha > .card-body").prepend(row);
+        $("#main-content > .row").prepend($("#card_ficha")[0]);
+    }
 
     // máscaras
     $("[id^='campo_telefone']").mask("99-999999999");

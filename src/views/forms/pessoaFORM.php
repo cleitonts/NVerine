@@ -98,7 +98,7 @@ class pessoaFORM implements ControladoraFORM
         $widget->body->tabs["pesquisar"] = $tabs; // colocar o nome da tab
 
         $tab = new Tabs();
-        $tab->function = "destinoMenu('cadastro_pessoa_relatorios&retorno=".urlencode(getUrlRetorno("index.php"))."')";
+        $tab->function = "destinoMenu('cadastro_pessoa_relatorios&retorno=".urlencode(getUrlRetorno())."')";
         $tab->icon = "fa fa-bar-chart";
         $widget->body->tabs["Relatórios"] = $tab;
 
@@ -127,7 +127,6 @@ class pessoaFORM implements ControladoraFORM
 
         $widget = new Widget();
         $widget->includes[] = "src/public/js/cadastro/pessoa.js";
-//        $widget->includes[] = "src/public/js/formularios/agenda.js";
 
         $widget->header = new Header();
         $widget->entity = $gui;
@@ -262,25 +261,11 @@ class pessoaFORM implements ControladoraFORM
             $field->property = "nome_fantasia";
             $div->field[] = $field;
 
-            $areas = PessoaETT::getArea();
-            // cria novo campo
-            $field = new Fields();
-            $field->type = $field::SELECT;
+            $field = Fields::fromTable(Fields::SELECT, 4, "area", "K_FN_AREA", "NOME", "HANDLE", "", "cod_area");
             $field->description = "Área";
-            $field->name = "area";
-            $field->property = "cod_area";
-            $field->options = Options::byArray($areas["handle"], $areas["nome"]);
-            $field->size = 4;
             $div->field[] = $field;
 
-            $segmentos = PessoaETT::getSegmento();
-            // cria novo campo
-            $field = new Fields();
-            $field->type = $field::SELECT;
-            $field->name = "Segmento de negócio";
-            $field->property = "cod_segmento";
-            $field->options = Options::byArray($segmentos["handle"], $segmentos["nome"]);
-            $field->size = 5;
+            $field = Fields::fromTable(Fields::SELECT, 5, "Segmento de negócio", "K_CRM_SEGMENTOS", "NOME", "HANDLE", "", "cod_segmento");
             $div->field[] = $field;
 
             // cria novo campo
@@ -333,11 +318,7 @@ class pessoaFORM implements ControladoraFORM
             $field->size = 12;
             $div->field[] = $field;
 
-            $field = new Fields();
-            $field->type = $field::SUBMIT;
-            $field->name = "enviar";
-            $field->class = "float-right ml-3 mr-3";
-            $div->field[] = $field;
+            $div->field[] = $this->getSubmit();
 
             $tabs->form->children[] = $div;
 
@@ -455,12 +436,7 @@ class pessoaFORM implements ControladoraFORM
             }
             $tabs->form->table[] = $table;
 
-            // botão de submit
-            $field = new Fields();
-            $field->type = $field::SUBMIT;
-            $field->name = "enviar";
-            $field->class = "float-right ml-3 mr-3";
-            $tabs->form->field[] = $field;
+            $tabs->form->field[] = $this->getSubmit();
 
             $widget->body->tabs["Endereços"] = $tabs;
         }
@@ -551,12 +527,7 @@ class pessoaFORM implements ControladoraFORM
             }
             $tabs->form->table[] = $table;
 
-            // botão de submit
-            $field = new Fields();
-            $field->type = $field::SUBMIT;
-            $field->name = "enviar";
-            $field->class = "float-right ml-3 mr-3";
-            $tabs->form->field[] = $field;
+            $tabs->form->field[] = $this->getSubmit();
 
             $widget->body->tabs["Contatos"] = $tabs;
         }
@@ -569,5 +540,14 @@ class pessoaFORM implements ControladoraFORM
         $widget->setDefaults();                 // pega todos os valores das entidades e popula
 
         return $widget;
+    }
+
+    private function getSubmit(){
+        $field = new Fields();
+        $field->type = $field::SUBMIT;
+        $field->name = "enviar";
+        $field->size = "4 float-right";
+
+        return $field;
     }
 }

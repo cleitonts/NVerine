@@ -61,7 +61,7 @@ class expedicaoFORM implements ControladoraFORM
 
         // cria novo campo
         $field = new Fields();
-        $field->now($field::TEXT, 2, "data final");
+        //$field->now($field::TEXT, 2, "data final");
         $tabs->form->field[] = $field;
 
         // cria novo campo
@@ -75,12 +75,12 @@ class expedicaoFORM implements ControladoraFORM
 
         // cria novo campo
         $field = new Fields();
-        $field->now($field::TEXT, 3, "Nº orçamento");
+        //$field->now($field::TEXT, 3, "Nº orçamento");
         $tabs->form->field[] = $field;
 
         // cria novo campo
         $field = new Fields();
-        $field->now($field::TEXT, 3, "Nº nota fiscal");
+        //$field->now($field::TEXT, 3, "Nº nota fiscal");
         $tabs->form->field[] = $field;
 
         Tools::footerSearch($tabs->form, 6);
@@ -132,7 +132,7 @@ class expedicaoFORM implements ControladoraFORM
 
         // cria novo campo
         $field = new Fields();
-        $field->now($field::HIDDEN, 0, "url_retorno", "?pagina=expedicao");
+        //$field->now($field::HIDDEN, 0, "url_retorno", "?pagina=expedicao");
         $tabs->form->field[] = $field;
 
         $field = new Fields();

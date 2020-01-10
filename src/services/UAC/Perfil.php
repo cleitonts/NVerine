@@ -85,6 +85,35 @@ class Perfil extends ObjectETT {
         retornoPadrao($stmt, "Novo usuário cadastrado.", "Não foi possível cadastrar o novo usuário.");
     }
 
+    public function registrar() {
+        global $conexao;
+
+        $sql = "SELECT * FROM K_FN_PESSOA where CPFCNPJ = :cpfcnjp AND NASCIMENTO = :data_nascimento";
+        $stmt = $conexao->prepare($sql);
+        $stmt->bindValue(":cpfcnjp", $this->cpf);
+        $stmt->bindValue(":data_nascimento", converteDataSqlOrdenada($this->data_nascimento));
+
+        $stmt->execute();
+
+        $r = $stmt->fetch(PDO::FETCH_OBJ);
+
+        retornoPadrao($stmt, "Buscando responsavel", "Não foi possível encontrar o usuário.");
+
+        if(!empty($r)) {
+            $this->nome = $r->NOME;
+            $this->login = $r->NOME;
+            $this->senha = $this->senha;
+            $this->cpf = $r->CPFCNPJ;
+            $this->cliente = $r->HANDLE;
+            $this->nivel = 1;
+            $this->email = $this->email;
+            $this->terminal = "";
+            $this->grupo = 1;
+
+            $this->cadastra();
+        }
+    }
+
     public function atualiza() {
         global $conexao;
 

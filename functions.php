@@ -8,6 +8,66 @@
  * common functions for all the system
  */
 
+include_once("src/services/Transact/Transact.php");
+$transact = new \src\services\Transact();
+
+define("MSG_PADRAO", $transact::MSG_PADRAO);
+define("MSG_ERRO", $transact::MSG_ERRO);
+define("MSG_AVISO", $transact::MSG_AVISO);
+define("MSG_SUCESSO", $transact::MSG_SUCESSO);
+define("MSG_DEBUG", $transact::MSG_DEBUG);
+
+// compatibilidade com código herdado
+function finaliza(){
+    global $transact;
+    $transact->finaliza();
+}
+function filtraFilial($campo, $modulo, $inclui_newline = true){
+    global $transact;
+    return $transact->filtraFilial($campo, $modulo, $inclui_newline);
+}
+
+function mensagem($msg, $tag = MSG_PADRAO){
+    global $transact;
+    $transact->mensagem($msg, $tag);
+}
+function doCommit($con){
+    global $transact;
+    $transact->doCommit($con);
+}
+function doRollback($con){
+    global $transact;
+    $transact->doRollback($con);
+}
+function getUrlRetorno(){
+    global $transact;
+    return $transact->getUrlRetorno();
+}
+function iniciaTransacao($con){
+    global $transact;
+    $transact->iniciaTransacao($con);
+}
+
+function validaCampo($campo, $nome){
+    global $transact;
+    $transact->validaCampo($campo, $nome);
+}
+
+function retornoPadrao($stmt, $sucesso = "Sucesso!", $erro = "Será que você deixou algum campo em branco?"){
+    global $transact;
+    return $transact->retornoPadrao($stmt, $sucesso, $erro);
+}
+
+function newHandle($tabela, $con){
+    global $transact;
+    return $transact->newHandle($tabela);
+}
+
+function redir($con){
+    global $transact;
+    $transact->redir($con);
+}
+
 /**
  * @param $string
  * @return null|string|string[]
@@ -63,26 +123,6 @@ function encrypt($string, $param_deprecado = null) {
 
 function decrypt($string, $param_deprecado = null) {
     return base64_decode(base64_decode(base64_decode($string)));
-}
-
-// url de retorno para a mesma página
-function getUrlRetorno() {
-    // monta url
-    $url = _pasta."?";
-
-    // filtra parâmetros vazios
-    $params = explode("&", $_SERVER["QUERY_STRING"]);
-
-    foreach($params as $param) {
-        $partes = explode("=", $param);
-        if(!empty($partes[1])) {
-            $url .= "{$partes[0]}={$partes[1]}&";
-        }
-    }
-
-    // remove o último separador
-    $url = trim($url, "&");
-    return $url;
 }
 
 /**
@@ -219,6 +259,46 @@ function right($str, $length) {
     return substr($str, -$length);
 }
 
+// preenche string de tamanho fixo com zeros
+function insereZeros($str, $qtd, $lado = STR_PAD_LEFT) {
+    // faz pad de número negativo?
+    if(strpos($str, "-") !== false) {
+        $str = str_replace("-", "", $str);
+        $str = str_pad($str, $qtd, "0", $lado);
+        $str = "-{$str}";
+    }
+    else {
+        $str = str_pad($str, $qtd, "0", $lado);
+    }
+
+    return $str;
+}
+
+// preenche string de tamanho fixo com brancos
+function insereBrancos($str, $qtd, $lado = STR_PAD_LEFT) {
+    $str = str_pad($str, $qtd, ' ', $lado);
+    $str = substr($str, 0, $qtd);
+    return $str;
+}
+
+// converte array de valores em uma lista separada por vírgulas
+function arrayToString($array, $aspas = true) {
+    $i = 0;
+    $out = '';
+    if(isset($array)){
+        foreach($array as $string){
+            if($i > 0)
+                $out .= ',';
+            if($aspas)
+                $out .= "'" . $string . "'";
+            else
+                $out .= $string;
+            $i++;
+        }
+    }
+    return $out;
+}
+
 function validaVazio($campo) {
     if(empty($campo))
         return null;
@@ -276,4 +356,49 @@ function noZeroes($campo) {
 // valores monetários
 function formataValor($val) {
     return number_format((float)$val, __CASAS_DECIMAIS__, '.', '');
+}
+
+// filtra caracteres não-numéricos
+function apenasNumeros($string) {
+    $string = preg_replace('/[^0-9]/', '', $string);
+    return $string;
+}
+
+// converte checkbox em valor lógico do benner
+function logico($campo) {
+    if(isset($_REQUEST[$campo]))
+        return "S";
+    else
+        return "N";
+}
+
+// converte true/false em valor lógico do benner
+function boolToLogico($valor) {
+    if($valor)
+        return "S";
+    else
+        return "N";
+}
+
+/**
+ * limpaString
+ * Remove todos dos caracteres especiais do texto e os acentos
+ * preservando apenas letras de A-Z numeros de 0-9 e os caracteres @ , - ; : / _
+ *
+ * @name limpaString
+ * @param string $texto String a ser limpa
+ * @return  string Texto sem caractere especiais
+ */
+function limpaString($texto, $preg = true){
+    $aFind = array( '&', 'á', 'à', 'ã', 'â', 'é', 'ê',
+        'í', 'ó', 'ô', 'õ', 'ú', 'ü', 'ç', 'Á', 'À', 'Ã', 'Â',
+        'É', 'Ê', 'Í', 'Ó', 'Ô', 'Õ', 'Ú', 'Ü', 'Ç');
+
+    $aSubs = array( 'e', 'a', 'a', 'a', 'a', 'e', 'e',
+        'i', 'o', 'o', 'o', 'u', 'u', 'c', 'A', 'A', 'A', 'A',
+        'E', 'E', 'I', 'O', 'O', 'O', 'U', 'U', 'C');
+
+    $novoTexto = str_replace($aFind, $aSubs, $texto);
+    if($preg) $novoTexto = preg_replace("/[^a-zA-Z0-9 @,-.;:\/_]/", "", $novoTexto);
+    return $novoTexto;
 }

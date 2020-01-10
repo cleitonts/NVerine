@@ -45,7 +45,7 @@ class FaturamentoImportacaoETT extends FaturamentoETT
         $xml = new XMLReader();
 
         // se o arquivo não existir, provavelmente não foi importado ainda!
-        $arq = "uploads/xml/nfe{$this->nota_fiscal->chave_referencia}.compra.xml";
+        $arq = _base_path."xml/nfe{$this->nota_fiscal->chave_referencia}.compra.xml";
         if (!file_exists($arq)) return false;
 
         // tenta abrir arquivo

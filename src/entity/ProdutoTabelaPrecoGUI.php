@@ -1,10 +1,13 @@
 <?php
+
+
 namespace src\entity;
-use ExtPDO as PDO;
 
+use src\services\Transact\ExtPDO as PDO;
 
-class FornecedoresGUI extends ObjectGUI implements InterfaceGUI
+class ProdutoTabelaPrecoGUI extends ObjectGUI implements InterfaceGUI
 {
+    public $pesquisa = array();
 
     /**
      * @param $linha
@@ -24,18 +27,20 @@ class FornecedoresGUI extends ObjectGUI implements InterfaceGUI
     public function fetch()
     {
         global $conexao;
-        $sql = "SELECT INDICE, PORCENTAGEM, NOME, QUANTIDADE FROM K_FN_TABELAPRECOS";
-        $smtp = $conexao->prepare($sql);
-        $smtp->execute();
-        $tabelas = $smtp->fetchAll(\PDO::FETCH_OBJ);
+        $sql = "SELECT HANDLE, INDICE, PORCENTAGEM, NOME, QUANTIDADE FROM K_FN_TABELAPRECOS WHERE PRODUTO = :codigo";
+        $stmt = $conexao->prepare($sql);
+        $stmt->bindValue(":codigo", $this->pesquisa["pesq_produto"]);
+        $stmt->execute();
+        $tabelas = $stmt->fetchAll(PDO::FETCH_OBJ);
 
         if(!empty($tabelas)){
             foreach($tabelas as $key => $t){
-                $item = new TabelaPrecosETT();
+                $item = new ProdutoTabelaPrecoETT();
+                $item->handle = $t->HANDLE;
                 $item->indice = $t->INDICE;
-                $item->porcentagem = $t->PORCENTAGEM;
+                $item->perc_tab = formataValor($t->PORCENTAGEM);
                 $item->nome = $t->NOME;
-                $item->quantidade = $t->QUANTIDADE;
+                $item->qtd_tab = $t->QUANTIDADE;
                 $this->itens[] = $item;
             }
         }

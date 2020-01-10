@@ -27,7 +27,7 @@ if(!isset($_SESSION["ID"])) {
 
     <title><?=__NOME_SISTEMA__?></title>
     <link rel="shortcut icon" href="imagens/favicon.png" type="image/x-icon">
-    <meta name="author" content="Ambiente Solido">
+    <meta name="author" content="Cleiton Terassi Sorrilha">
 
     <!-- mobile specific metas
     ================================================== -->

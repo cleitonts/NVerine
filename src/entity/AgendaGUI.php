@@ -76,7 +76,7 @@ class AgendaGUI extends ObjectGUI implements InterfaceGUI
         }
 
         if (!empty($this->pesquisa['pesq_num'])) {
-            $where .= " AND A.HANDLE = :HANDLE \n";
+            $where .= " AND A.HANDLE = :handle \n";
         }
         if (!empty($this->pesquisa['pesq_data_inicial'])) {
             $where .= " AND A.DATA >= :pesq_data_inicial \n";
@@ -100,8 +100,10 @@ class AgendaGUI extends ObjectGUI implements InterfaceGUI
             $where .= " AND A.TURMA = :pesq_turma \n";
         }
 
+
         // tras os indices da lista
-        $sql = "SELECT P.NOME AS NOMEPESSOA, F.NOME AS NOMEESCOLA, T.NOME AS NOMETURMA, R.NOME AS NOMEREGIAO, D.NOME AS RESPONSAVEL,
+        $sql = "SELECT {$this->top} P.NOME AS NOMEPESSOA, F.NOME AS NOMEESCOLA, 
+                T.NOME AS NOMETURMA, R.NOME AS NOMEREGIAO, D.NOME AS RESPONSAVEL,
                 A.*
                 FROM K_AGENDA A 
                 LEFT JOIN K_FN_PESSOA P ON P.HANDLE = A.PESSOA
@@ -115,7 +117,7 @@ class AgendaGUI extends ObjectGUI implements InterfaceGUI
 
 
         $stmt = $conexao->prepare($sql);
-        if (!empty($this->pesquisa['pesq_num'])) {$stmt->bindValue(':HANDLE', $this->pesquisa['pesq_num']);}
+        if (!empty($this->pesquisa['pesq_num'])) {$stmt->bindValue(':handle', $this->pesquisa['pesq_num']);}
         if (!empty($this->pesquisa['pesq_data_inicial'])) {$stmt->bindValue(':pesq_data_inicial', converteData($this->pesquisa['pesq_data_inicial']));} 
         if (!empty($this->pesquisa['pesq_data_final'])) {$stmt->bindValue(':pesq_data_final', converteData($this->pesquisa['pesq_data_final']));}
         if (!empty($this->pesquisa['pesq_cod_pessoa'])) {$stmt->bindValue(':pesq_cod_pessoa', $this->pesquisa['pesq_cod_pessoa']);}
@@ -123,7 +125,9 @@ class AgendaGUI extends ObjectGUI implements InterfaceGUI
         if (!empty($this->pesquisa['pesq_regiao'])) {$stmt->bindValue(':pesq_regiao', $this->pesquisa['pesq_regiao']);}
         if (!empty($this->pesquisa['pesq_escola'])) {$stmt->bindValue(':pesq_escola', $this->pesquisa['pesq_escola']);}
         if (!empty($this->pesquisa['pesq_turma'])) {$stmt->bindValue(':pesq_turma', $this->pesquisa['pesq_turma']);}
+
         $stmt->execute();
+
         $listas = $stmt->fetchAll(PDO::FETCH_OBJ);
         $i = 0; //inicia contador
 
@@ -131,12 +135,16 @@ class AgendaGUI extends ObjectGUI implements InterfaceGUI
             foreach ($listas as $r) {
                 $item = new AgendaETT();
                 $item->handle = $r->HANDLE;
-                $item->data_inicial = new \DateTime($r->DATA);
-                $item->data_final = new \DateTime($r->DATAFINAL);
+                $item->cont = $i;
+                
                 $item->hora_final = $r->HORAFINAL;
                 $item->hora_inicial = $r->HORA;
+
+                $item->data_inicial = new \DateTime($r->DATA);
+                $item->data_final = new \DateTime($r->DATAFINAL);
                 $item->data_inicial = $item->data_inicial->format('Y-m-d');
                 $item->data_final = $item->data_final->format('Y-m-d');
+
                 $item->titulo = $r->TITULO;
                 $item->tipo_evento = $r->TIPO;
                 $item->pessoa = $r->NOMEPESSOA;
@@ -154,7 +162,7 @@ class AgendaGUI extends ObjectGUI implements InterfaceGUI
                 $this->itens[] = $item;
 
                 // alguns eventos precisam marcar a data final como se fosse outro evento
-                if(in_array($item->tipo_evento, array($item::DIV_BIMESTRE, $item::DIV_TRIMESTRE, $item::PERIODO_ANO, $item::PERIODO_SEMESTRE, $item::FERIAS))){
+                if(in_array($item->tipo_evento, array($item::DIV_BIMESTRE, $item::DIV_TRIMESTRE, $item::PERIODO_ANO, $item::PERIODO_SEMESTRE))){
                     $item = clone $item;
                     $item->titulo = "Final ".$item->titulo;
                     $item->data_inicial = $item->data_final;

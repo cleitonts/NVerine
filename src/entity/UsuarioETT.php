@@ -9,6 +9,7 @@
 namespace src\entity;
 
 use src\services\Transact\ExtPDO as PDO;
+use Upload;
 
 class UsuarioETT extends ObjectETT
 {

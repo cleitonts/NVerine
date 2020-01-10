@@ -8,7 +8,6 @@
 
 namespace src\entity;
 
-use src\creator\widget\Tools;
 use src\services\Transact\ExtPDO as PDO;
 
 class CadastroETT extends ObjectETT
@@ -29,7 +28,7 @@ class CadastroETT extends ObjectETT
 		'K_DISCIPLINA', 'K_AREACONHECIMENTO',
 		'K_PREFIXO', 'K_REGIAO', 'K_PRODUCAOETAPAS', 'K_PRODUCAOTERMINAL',
 		'K_ALUNOSITUACAO', 'K_TIPOOCORRENCIA', 'K_USUARIOSNIVEIS',
-		'K_MODELO', 'K_FABRICANTE', 'K_SERIE'
+		'K_MODELO', 'K_FABRICANTE', 'K_SERIE', 'K_DICIONARIO'
 		";
 
     /* propriedades públicas
@@ -242,7 +241,7 @@ class CadastroETT extends ObjectETT
         // recupera dados da classe genérica
         $cadastro = new CadastroGUI($retorno["table"]);
 
-        if (!empty($handle)) $cadastro->pesquisa["pesq_num"] = $handle;
+        $cadastro->pesquisa["pesq_num"] = $handle;
         $cadastro->fetch();
 
         // ajusta sitemap
@@ -262,6 +261,11 @@ class CadastroETT extends ObjectETT
         // monta string de campos e valores
         $campos = "";
         $valores = "";
+
+        dumper($_SESSION);
+
+        // novo handle
+        $obj->HANDLE = newHandle($_SESSION['tabela']);
 
         // campos
         foreach($obj as $key => $value) {

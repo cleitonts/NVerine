@@ -1252,7 +1252,7 @@ class FaturamentoExportacaoETT extends FaturamentoImportacaoETT
         $chave = substr($chave, 7, 44);
 
         // escreve arquivo novo com o nome proposto pelo manual da NF-e
-        $arq = "uploads/nfe/{$chave}_{$tipo}_procEventoNFe.xml";
+        $arq = _base_path."nfe/{$chave}_{$tipo}_procEventoNFe.xml";
 
         if (file_put_contents($arq, $str)) {
             // retorna o nome do arquivo criado para referência
@@ -1432,7 +1432,7 @@ class FaturamentoExportacaoETT extends FaturamentoImportacaoETT
              * TO-DO: exibir uma mensagem pedindo para reconstruir xml assinado
              * pela rotina "exportar xml"
              */
-            $arq = "uploads/xml/nfe{$this->nota_fiscal->chave}.xml";
+            $arq = _base_path."xml/nfe{$this->nota_fiscal->chave}.xml";
 
             if (file_exists($arq)) {
                 include_once("class/NotaFiscal.php");

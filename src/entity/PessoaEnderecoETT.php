@@ -51,13 +51,13 @@ class PessoaEnderecoETT extends ObjectETT
         global $transact;
 
         // campos obrigatorios
-        $transact->validaCampo($this->cidade, "Cidade");
-        $transact->validaCampo($this->bairro, "Bairro");
-        $transact->validaCampo($this->logradouro, "Logradouro");
-        $transact->validaCampo($this->numero, "Número");
-        $transact->validaCampo($this->cep, "Cep");
-        $transact->validaCampo($this->cep, "Estado");
-        $transact->validaCampo($this->cod_pessoa, "Pessoa");
+        validaCampo($this->cidade, "Cidade");
+        validaCampo($this->bairro, "Bairro");
+        validaCampo($this->logradouro, "Logradouro");
+        validaCampo($this->numero, "Número");
+        validaCampo($this->cep, "Cep");
+        validaCampo($this->cep, "Estado");
+        validaCampo($this->cod_pessoa, "Pessoa");
 
         // por acaso alguns campos estão entrando/puxando espaço
         $this->logradouro = trim($this->logradouro);

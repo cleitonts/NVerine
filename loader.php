@@ -1,12 +1,17 @@
 <?php
-
 include("functions.php");
 include("src/services/Dates.php");
-include("src/services/Transact/Transact.php");
 
 use src\services\Transact\ExtPDO;
 
 ini_set("default_charset", "ISO-8859-1");
+
+// identidade
+@define("__NOME_SISTEMA__",				"NVerine");
+@define("__DIR_IDENTIDADE__",			"");
+define("__MAKER__",						"TSBrothers");
+define("__MAKER_WEBSITE__",				"http://www.tsbrothers.com.br");
+define("_base_path",				    "uploads/");
 
 // versão do arquivo de configuração
 $versao_config_atual = 1;
@@ -23,7 +28,9 @@ $ini = @parse_ini_file("uploads/config.ini.php", false);
 
 if(!$ini) {
     // não temos um arquivo!
-    echo("O arquivo <code>config.ini.php</code> não foi encontrado. O instalador do sistema será executado agora.");
+    ini_set("display_errors", 1);
+    error_reporting(E_ERROR | E_PARSE | E_RECOVERABLE_ERROR);
+    include("instalador.php");
     die();
 }
 
@@ -69,12 +76,6 @@ if($ini["manutencao"]) {
 @define("__SMTP_USER__",				$ini["smtp_user"]);
 @define("__SMTP_PASS__",				$ini["smtp_pass"]);
 @define("__SMTP_SECURE__",				$ini["smtp_secure"]);
-
-// identidade
-@define("__NOME_SISTEMA__",				$ini["nome_sistema"]);
-@define("__DIR_IDENTIDADE__",			$ini["dir_identidade"]);
-define("__MAKER__",						"Ambiente Sólido");
-define("__MAKER_WEBSITE__",				"http://www.maiscompleto.com.br");
 
 // chaves deprecadas do current - remover?
 define("__PESQ_PORCENTO__", true);
@@ -245,7 +246,6 @@ $agenda->pesquisa["pesq_data_inicial"] = hoje();
 $agenda->pesquisa["pesq_data_final"] = somaDias(hoje(), 30);
 $agenda->top = "TOP 100";
 $agenda->fetch();
-
 
 /**
  * @param $string

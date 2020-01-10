@@ -30,7 +30,7 @@ class Dumper
         // guarda a linha e o arquivo na variavel a ser printada
         $arr = array();
         $arr["back_file"] = $backtrace[0]["file"];
-        $arr["back_line"] = $backtrace[0]["line"];
+        $arr["back_line"] = $backtrace[0]["line"] . " - ".date('H:m:s.') . round(microtime(true) / 1000000);
         $arr["dump"] = $var;
 
         $dumper->dumped[] = $arr;

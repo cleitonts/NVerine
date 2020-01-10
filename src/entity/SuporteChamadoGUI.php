@@ -8,7 +8,7 @@
 
 namespace src\entity;
 
-use ExtPDO as PDO;
+use src\services\Transact\ExtPDO as PDO;
 
 class SuporteChamadoGUI extends ObjectGUI
 {
@@ -148,7 +148,8 @@ class SuporteChamadoGUI extends ObjectGUI
 				LEFT JOIN PD_PRODUTOS P ON C.PRODUTO = P.HANDLE
 				LEFT JOIN K_FN_PESSOA CL ON C.CLIENTE = CL.HANDLE
 				{$where}
-				ORDER BY C.AFTER ASC, C.PRIORIDADE ASC, C.STATUS ASC, C.HANDLE DESC";
+				AND C.HANDLE > 10
+				ORDER BY C.STATUS ASC, C.AFTER DESC, C.HANDLE";
         $stmt = $conexao->prepare($sql);
 
         if (!empty($this->pesquisa["pesq_chamado"])) $stmt->bindValue(":chamado", $this->pesquisa["pesq_chamado"]);
@@ -186,7 +187,7 @@ class SuporteChamadoGUI extends ObjectGUI
             $item->responsavel = empty($r->NOMERESPONSAVEL) ? "--" : formataCase($r->NOMERESPONSAVEL, true);
             $item->cod_responsavel = $r->RESPONSAVEL;
             $item->prazo = $r->PRAZO;
-            $item->atraso = empty($item->prazo) || $item->cod_status >= SuporteChamadoETT::STATUS_RESOLVIDO ? "--" : insereZeros(diasAtraso($r->PRAZO), 2);
+            $item->atraso = empty($item->prazo) || $item->cod_status >= SuporteChamadoETT::STATUS_CTRL_QUALIDADE ? "--" : insereZeros(diasAtraso($r->PRAZO), 2);
             $item->reporter = formataCase($r->NOMEREPORTER, true);
             $item->cod_reporter = $r->REPORTER;
             $item->contato_nome = $r->CONTATONOME;
@@ -206,7 +207,7 @@ class SuporteChamadoGUI extends ObjectGUI
             $this->totalizadores["Responsáveis"][$item->responsavel]++;
             $this->totalizadores["Reporters"][$item->reporter]++;
 
-            if (!empty($this->pesquisa["pesq_chamado"])){
+            if (!empty($this->pesquisa["pesq_chamado"])) {
                 $historico = new SuporteHistoricoGUI();
                 $historico->chamado = $item->handle;
                 $historico->fetch();
@@ -219,12 +220,12 @@ class SuporteChamadoGUI extends ObjectGUI
                 $dias_vencimento = diasEntre($r->DATARESOLUCAO, agora());
 
                 // insere nos vencidos?
-                if ($item->status == SuporteChamadoETT::STATUS_RESOLVIDO && $dias_vencimento >= 30) $this->vencidos[] = $item->handle;
+                if ($item->status == SuporteChamadoETT::STATUS_CTRL_QUALIDADE && $dias_vencimento >= 30) $this->vencidos[] = $item->handle;
 
                 // soma contadores para médias
                 $this->dias_resolucao += $dias_resolucao;
                 $this->resolvidos++;
-                if ($item->status >= SuporteChamadoETT::STATUS_VALIDADO) $this->encerrados++;
+                if ($item->status >= SuporteChamadoETT::STATUS_HOMOLOGADO) $this->encerrados++;
             }
 
             array_push($this->itens, $item);

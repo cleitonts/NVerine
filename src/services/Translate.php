@@ -132,7 +132,8 @@ class Translate
                 $value = str_replace(",", ".", $value);
             }
         }
-        if(strpos($prop, 'valor') !== false){
+        if(strpos($prop, 'valor') !== false ||
+            strpos($prop, 'preco') !== false){
             if(strpos($value, ',') !== false){
                 $value = str_replace(".", "", $value);
                 $value = str_replace(",", ".", $value);

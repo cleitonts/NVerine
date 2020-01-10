@@ -11,22 +11,25 @@ function pageUpdate(){
     // });
 
     $('#campo_data_diario').on('dp.change', function(e){
-        if(e.date){
-            spinner(true);
-            var data = e.date.format("DD-MM-YYYY");
-            var turma = $("#campo_handle_turma").val();
+        const data = $(this).val();
+        getGrade(data);
+    });
 
-            $.get("json.php?pagina=turma_horario", {pesq_turma: turma, pesq_data: data}).done(function (data) {
-                montaGrade(JSON.parse(data));
-
-            });
-        }else{
-
-        }
+    $('#campo_professor').on('changed.bs.select', function(e){
+        $('#campo_data_diario').trigger('dp.change');
     });
 
     $("#dynamic_conteudo .novo_item").css("display", "none");
 }
+
+function getGrade(data){
+    spinner(true);
+    var turma = $("#campo_handle_turma").val();
+    var professor = $("#campo_professor").val();
+    $.get("json.php?pagina=turma_horario", {pesq_turma: turma, pesq_data: data, pesq_professor: professor}).done(function (data) {
+        montaGrade(JSON.parse(data));
+    })
+};
 
 function montaGrade(valores){
     // limpa lixo

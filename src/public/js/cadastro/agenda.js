@@ -1,13 +1,7 @@
 function pageUpdate() {
 
     // carrega primeira vez quando entra na tela
-    $.get("json.php?pagina=regioes").done(function (data) {
-        spinner(true);
-        var obj = $("#campo_regiao");
-        geraOptions(JSON.parse(data), obj);
-        campoEscola($(obj).val());
-        spinner(false);
-    });
+    getRegiao();
 
     // trigger para recarregar campo de escolas
     $("#campo_regiao").change(function () {
@@ -35,7 +29,7 @@ function pageUpdate() {
         },
         select: function(event, ui) {
             $("#campo_aluno").val(ui.item.value);
-            $("#campo_cod_aluno").val(ui.item.id);
+            $("#campo_cod_pessoa").val(ui.item.id).closest(".form-group").addClass("is-filled");
         }
     });
 
@@ -43,7 +37,7 @@ function pageUpdate() {
     $("#campo_pessoa").autocomplete({
         source: function(request, response) {
             $.ajax({
-                url: "json.php?pagina=pessoa",
+                url: "json.php?pagina=pessoas",
                 dataType: "json",
                 data: {term: request.term},
                 success: function(data) {response(data);}
@@ -51,7 +45,7 @@ function pageUpdate() {
         },
         select: function(event, ui) {
             $("#campo_pessoa").val(ui.item.value);
-            $("#campo_cod_pessoa").val(ui.item.id);
+            $("#campo_cod_pessoa").val(ui.item.id).closest(".form-group").addClass("is-filled");
         }
     });
 
@@ -69,6 +63,17 @@ function pageUpdate() {
             $("#campo_responsavel").val(ui.item.value);
             $("#campo_cod_responsavel").val(ui.item.id);
         }
+    });
+}
+
+// deixando dentro de uma função para o spinner funcionar corretamente
+function getRegiao(){
+    spinner(true);
+    $.get("json.php?pagina=regioes").done(function (data) {
+        var obj = $("#campo_regiao");
+        geraOptions(JSON.parse(data), obj);
+        campoEscola($(obj).val());
+        spinner(false);
     });
 }
 
@@ -104,7 +109,7 @@ function geraOptions(val, obj){
     $(obj).html("");
 
     // adiciona linha em branco
-    $(obj).append('<option value=""></option>');
+    $(obj).append('<option value="">\u00A0</option>');
 
     for(var i = 0; i < val.length; i++){
         if(padrao == (i + 1)){

@@ -1,5 +1,4 @@
 <?php
-
 spl_autoload_register(function ($class) {
     include str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
 });
@@ -27,7 +26,7 @@ if(!isset($_SESSION["ID"])) {
     <meta name="robots" content="noindex, nofollow">
 
     <title><?=__NOME_SISTEMA__?></title>
-    <meta name="author" content="Ambiente Solido">
+    <meta name="author" content="Cleiton Terassi Sorrilha">
 
     <!-- mobile specific metas
     ================================================== -->
@@ -42,6 +41,7 @@ if(!isset($_SESSION["ID"])) {
     <!-- CSS
     ================================================== -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="<?php asset('css/adm/chartlist.min.css') ?>">
     <link rel="stylesheet" href="<?php asset('css/adm/material-dashboard.css?v=2.0.1') ?>">
     <link rel="stylesheet" href="<?php asset('css/adm/demo.css') ?>">
     <link rel="stylesheet" href="<?php asset('css/adm/theme.css') ?>">
@@ -396,14 +396,11 @@ if(!isset($_SESSION["ID"])) {
                 Central de ajuda
             </button>
             <div class="dropdown-menu" style="top:-190px;left:-130px;">
-                <h4 class="dropdown-header"><i class="fa fa-envelope-o"></i>&ensp;suporte@maiscompleto.com.br</h4>
-
-                <?php if(strpos($_SERVER["SERVER_NAME"], "equipe.ambientesolido") === false) { ?>
-                    <a class="dropdown-item" href="#" onclick="destinoMenu('abre_chamado&u=<?=urlencode(getUrlRetorno())?>')">Relatar problema</a>
-                <?php } ?>
+                <h4 class="dropdown-header"><i class="fa fa-envelope-o"></i>&ensp;cleitonsorrilha@gmail.com</h4>
+                <a class="dropdown-item" href="#" onclick="destinoMenu('abre_chamado&u=<?=urlencode(getUrlRetorno())?>')">Relatar problema</a>
                 <a class="dropdown-item" href="#" onclick="destinoMenu('ajuda')">Documentação online</a>
                 <a class="dropdown-item" href="#" onclick="$('#form_debug').submit()">Habilitar <i>debug</i></a>
-                <a class="dropdown-item" href="#" onclick="$('.about').fadeIn()">Sobre o Mais Completo...</a>
+                <a class="dropdown-item" href="#" onclick="$('.about').fadeIn()">Sobre o NVerine...</a>
             </div>
         </div>
 

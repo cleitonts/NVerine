@@ -25,7 +25,6 @@ class PessoaETT extends ObjectETT
     public $cpf_cnpj;
     public $rg;                    // ou inscrição PJ
     public $cnae;                // PJ apenas
-    public $imagem;                // url da imagem no servidor
     public $observacoes;        // área de texto
     public $segmento;            // segmento de negócio
     public $vendedor;            // usuário do sistema - amarração para vendas
@@ -95,7 +94,6 @@ class PessoaETT extends ObjectETT
     public function cadastra()
     {
         global $conexao;
-        global $transact;
 
         // valida coisas
         $this->checaDuplicidade();
@@ -172,6 +170,7 @@ class PessoaETT extends ObjectETT
 
         retornoPadrao($stmt, "Cabeçalho da pessoa atualizada com sucesso.",
             "Não foi possível atualizar o cabeçalho da pessoa. Por favor, confira se há campos em branco ou valores de tipo inconsistente.");
+
     }
 
     public static function getListaPreco()
@@ -190,50 +189,8 @@ class PessoaETT extends ObjectETT
         return $arr;
     }
 
-    public static function getSegmento()
-    {
-        global $conexao;
-
-        $sql = "SELECT * FROM K_CRM_SEGMENTOS";
-        $stmt = $conexao->prepare($sql);
-        $stmt->execute();
-        $f = $stmt->fetchAll(PDO::FETCH_OBJ);
-
-        $arr = array();
-
-        // cria opção vazia
-        $arr["handle"][] = "";
-        $arr["nome"][] = "";
-        foreach ($f as $r) {
-            $arr["handle"][] = $r->HANDLE;
-            $arr["nome"][] = $r->NOME;
-        }
-        return $arr;
-    }
-
-    public static function getArea()
-    {
-        global $conexao;
-
-        $sql = "SELECT * FROM K_FN_AREA";
-        $stmt = $conexao->prepare($sql);
-        $stmt->execute();
-        $f = $stmt->fetchAll(PDO::FETCH_OBJ);
-
-        $arr = array();
-
-        // cria opção vazia
-        $arr["handle"][] = "";
-        $arr["nome"][] = "";
-        foreach ($f as $r) {
-            $arr["handle"][] = $r->HANDLE;
-            $arr["nome"][] = $r->NOME;
-        }
-        return $arr;
-    }
-
     // rápida atualização de nome
-    public function atualizaNome($nome)
+    public function atualizaNome2($nome)
     {
         $stmt = $this->updateStatement("K_FN_PESSOA", array(
             "HANDLE" => $this->handle,

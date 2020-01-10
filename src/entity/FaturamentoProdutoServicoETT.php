@@ -8,10 +8,8 @@
 
 namespace src\entity;
 
-include_once ("class/Estoque.php");
 
-use ExtPDO as PDO;
-use MovimentoEstoque;
+use src\services\Transact\ExtPDO as PDO;
 
 class FaturamentoProdutoServicoETT extends ObjectETT
 {
@@ -160,7 +158,7 @@ class FaturamentoProdutoServicoETT extends ObjectETT
         global $transact;
 
         // campos obrigatorios
-        $transact->validaCampo($this->cod_produto, "Produto");
+        validaCampo($this->cod_produto, "Produto");
     }
 
 
@@ -331,7 +329,7 @@ class FaturamentoProdutoServicoETT extends ObjectETT
         retornoPadrao($stmt, "Dados de estoque atualizados.", "Não foi possível realizar a baixa do estoque do produto cód. #{$this->produto}. Confira saldo válido!");
 
         // exporta movimento de estoque
-        $estoque = new MovimentoEstoque();
+        $estoque = new MovimentoEstoqueETT();
         $estoque->produto = $this->produto;
         $estoque->endereco = $this->endereco;
         $estoque->lote = $this->lote;
@@ -340,9 +338,9 @@ class FaturamentoProdutoServicoETT extends ObjectETT
         $estoque->numero_orcamento = $this->nota;
 
         if ($this->tipo_nota == "E") {
-            $estoque->origem = MovimentoEstoque::ME_COMPRAS;
+            $estoque->origem = MovimentoEstoqueETT::ME_COMPRAS;
         } elseif ($this->tipo_nota == "S") {
-            $estoque->origem = MovimentoEstoque::ME_VENDAS;
+            $estoque->origem = MovimentoEstoqueETT::ME_VENDAS;
             $estoque->quantidade = $estoque->quantidade * -1; // importante! classe de estoque não trata se é entrada ou saída
         }
 
@@ -376,14 +374,14 @@ class FaturamentoProdutoServicoETT extends ObjectETT
         retornoPadrao($stmt, "Estoque foi marcado como devolvido.", "Não foi possível realizar a devolução do estoque do produto cód. #{$this->produto}. Confira saldo válido!");
 
         // exporta movimento reverso de estoque
-        $estoque = new MovimentoEstoque();
+        $estoque = new MovimentoEstoqueETT();
         $estoque->produto = $this->produto;
         $estoque->endereco = $this->endereco;
         $estoque->lote = $this->lote;
         $estoque->quantidade = $anterior->QTDENTREGUE * -1;
         $estoque->valor_unitario = $this->valor_unitario; // tem que incluir descontos?
         $estoque->numero_orcamento = $this->nota;
-        $estoque->origem = MovimentoEstoque::ME_DEVOLUCOES;
+        $estoque->origem = MovimentoEstoqueETT::ME_DEVOLUCOES;
 
         if ($this->tipo_nota == "S") {
             $estoque->quantidade = $estoque->quantidade * -1; // importante! classe de estoque não trata se é entrada ou saída

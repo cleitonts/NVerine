@@ -4,42 +4,42 @@ $menu = array(
         "Pessoa" => "?pagina=pessoa",
         "Produto" => "?pagina=produto",
         "Empresa" => "?pagina=cadastro&tn=Empresa&tabela=".encrypt("K_FN_FILIAL"),
-        "Forma de pagamento" => "index.php?pagina=cadastro&tn=Forma de pagamento&tabela=".encrypt("FN_FORMASPAGAMENTO"),
-        "Segmento de negócio" => "index.php?pagina=cadastro&tn=Segmento&tabela=".encrypt("K_CRM_SEGMENTOS"),
-        "Área" => "index.php?pagina=cadastro&tn=Área&tabela=".encrypt("K_FN_AREA"),
-        "Unidade" => "index.php?pagina=cadastro&tn=Unidade&tabela=".encrypt("CM_UNIDADESMEDIDA"),
+        "Forma de pagamento" => "?pagina=cadastro&tn=Forma de pagamento&tabela=".encrypt("FN_FORMASPAGAMENTO"),
+        "Segmento de negócio" => "?pagina=cadastro&tn=Segmento&tabela=".encrypt("K_CRM_SEGMENTOS"),
+        "Área" => "?pagina=cadastro&tn=Área&tabela=".encrypt("K_FN_AREA"),
+        "Unidade" => "?pagina=cadastro&tn=Unidade&tabela=".encrypt("CM_UNIDADESMEDIDA"),
     ),
 
     "Compras" => array(
-        "Notas de compra" => "index.php?pagina=faturamento_notas&pesq_tipo=E",
-        "Entrada de estoque" => "index.php?pagina=faturamento_expedicao&pesq_tipo=E",
-        "Devolução" => "index.php?pagina=faturamento_devolucao&pesq_tipo=E"
+        "Notas de compra" => "?pagina=faturamento_notas&pesq_tipo=E",
+        "Entrada de estoque" => "?pagina=faturamento_expedicao&pesq_tipo=E",
+        "Devolução" => "?pagina=faturamento_devolucao&pesq_tipo=E"
     ),
 
     "Vendas|Faturamento" => array(
-        "Notas de venda" => "index.php?pagina=faturamento_notas&pesq_tipo=S",
-        "Caixa" => "index.php?pagina=faturamento_duplicatas",
-        "Expedição" => "index.php?pagina=faturamento_expedicao&pesq_tipo=S",
-        "Devolução" => "index.php?pagina=faturamento_devolucao&pesq_tipo=S",
-        "Loja virtual" => "index.php?pagina=config_loja",
-        "Contratos" => "index.php?pagina=contrato"
+        "Notas de venda" => "?pagina=faturamento_notas&pesq_tipo=S",
+        "Caixa" => "?pagina=faturamento_duplicatas",
+        "Expedição" => "?pagina=faturamento_expedicao&pesq_tipo=S",
+        "Devolução" => "?pagina=faturamento_devolucao&pesq_tipo=S",
+        "Loja virtual" => "?pagina=config_loja",
+        "Contratos" => "?pagina=contrato"
     ),
 
     "Estoque" => array(
-        "Movimento de estoque" => "index.php?pagina=estoque",
-        "Saldo de produtos" => "index.php?pagina=estoque_produto",
-        "Inventário" => "index.php?pagina=estoque_inventario",
-        "Almoxarifado" => "index.php?pagina=cadastro&tn=Almoxarifado&tabela=".encrypt("K_FN_ALMOXARIFADO"),
-        "Endereço" => "index.php?pagina=cadastro&tn=Endereço&tabela=".encrypt("K_FN_ENDERECO")
+        "Movimento de estoque" => "?pagina=estoque",
+        "Saldo de produtos" => "?pagina=estoque_produto",
+        "Inventário" => "?pagina=estoque_inventario",
+        "Almoxarifado" => "?pagina=cadastro&tn=Almoxarifado&tabela=".encrypt("K_FN_ALMOXARIFADO"),
+        "Endereço" => "?pagina=cadastro&tn=Endereço&tabela=".encrypt("K_FN_ENDERECO")
     ),
 
     "Suporte" => array(
-        "Chamados" => "index.php?pagina=suporte_chamados",
-        "Dashboard" => "index.php?pagina=suporte_dashboard",
-        "Abrir chamado" => "index.php?pagina=suporte_novo",
-        "Kanban" => "index.php?pagina=suportekanban",
-        // "Clientes e sistemas" => "index.php?pagina=suporte_clientes",
-        // "Banco de horas" => "index.php?pagina=rh"
+        "Chamados" => "?pagina=suporte_chamados",
+        "Dashboard" => "?pagina=suporte_dashboard",
+        "Abrir chamado" => "?pagina=suporte_novo",
+        "Kanban" => "?pagina=suportekanban",
+        // "Clientes e sistemas" => "?pagina=suporte_clientes",
+        // "Banco de horas" => "?pagina=rh"
     )
 );
 
@@ -47,7 +47,6 @@ function getMenu()
 {
     global $menu;
     global $permissoes;
-    global $dicionario;
     // montagem do menu em HTML, SESSION
     $_SESSION["menu_itens"] = array();
 
@@ -71,11 +70,7 @@ function getMenu()
                 <?php
                 if (!empty($itens)) foreach ($itens as $titulo => $link) {
                     if (!$permissoes->bloqueia($titulo)) {
-                        $titulo = $titulo;
-
-                        ?>
-                        <li class="menu-list-item"><a href="<?= $link ?>" class="menu-link"><?= $titulo ?></a></li>
-                        <?php
+                        echo "<li class='menu-list-item'><a href='{$link}' class='menu-link'>{$titulo}</a></li>";
 
                         // guarda um registro de todos os itens gerados para pesquisa
                         $reg = array(

@@ -27,7 +27,7 @@ class agendaFORM implements ControladoraFORM
     public function createSearch()
     {
         // instancia a entidade
-        $gui = new AgendaGUI(0);
+        $gui = new AgendaGUI();
         $gui->setPesquisa();
         $gui->fetch();
         $gui = $gui->itens[0];
@@ -53,7 +53,6 @@ class agendaFORM implements ControladoraFORM
         $field->description = "Data Inicial";
         $field->name = "data_inicial";
         $field->class = "datepicker-date";
-        $field->property = "data_inicial";
         $field->size = 2;
         $tabs->form->field[] = $field;
 
@@ -63,7 +62,6 @@ class agendaFORM implements ControladoraFORM
         $field->description = "Data Final";
         $field->name = "data_final";
         $field->class = "datepicker-date";
-        $field->property = "data_final";
         $field->size = 2;
         $tabs->form->field[] = $field;
 
@@ -73,7 +71,6 @@ class agendaFORM implements ControladoraFORM
             $field->type = $field::TEXT;
             //$field->description = "Aluno";
             $field->name = "pessoa";
-            $field->property = "pessoa";
             $field->description = "Aluno";
             $field->size = 6;
             $tabs->form->field[] = $field;
@@ -83,7 +80,6 @@ class agendaFORM implements ControladoraFORM
             $field->type = $field::TEXT;
             $field->description = "Cód";
             $field->name = "cod_pessoa";
-            $field->property = "cod_pessoa";
             $field->size = 2;
             $tabs->form->field[] = $field;
 
@@ -92,7 +88,6 @@ class agendaFORM implements ControladoraFORM
             $field->type = $field::SELECT;
             $field->description = "Região";
             $field->name = "regiao";
-            $field->property = "cod_regiao";
             $field->options[] = new Options($gui->cod_regiao, $gui->regiao);  // trocar por valor default
             $field->size = 4;
             $tabs->form->field[] = $field;
@@ -102,7 +97,6 @@ class agendaFORM implements ControladoraFORM
             $field->type = $field::SELECT;
             //$field->description = "Escola";
             $field->name = "escola";
-            $field->property = "cod_escola";
             $field->options[] = new Options($gui->cod_escola, $gui->escola);
             $field->size = 4;
             $tabs->form->field[] = $field;
@@ -112,7 +106,6 @@ class agendaFORM implements ControladoraFORM
             $field->type = $field::SELECT;
             $field->description = "Turma";
             $field->name = "turma";
-            $field->property = "cod_turma";
             $field->options[] = new Options($gui->cod_turma, $gui->turma);
             $field->size = 4;
             $tabs->form->field[] = $field;
@@ -137,7 +130,6 @@ class agendaFORM implements ControladoraFORM
             $field->type = $field::TEXT;
             //$field->description = "Aluno";
             $field->name = "pessoa";
-            $field->property = "pessoa";
             $field->size = 6;
             $tabs->form->field[] = $field;
 
@@ -146,25 +138,15 @@ class agendaFORM implements ControladoraFORM
             $field->type = $field::TEXT;
             $field->description = "Cód";
             $field->name = "cod_pessoa";
-            $field->property = "cod_pessoa";
             $field->size = 2;
             $tabs->form->field[] = $field;
 
-            // cria novo campo
-            $listas = AgendaETT::getResponsavel();
-            $field = new Fields();
-            $field->type = $field::SELECT;
-            $field->name = "Responsavel";
-            $field->property = "responsavel";
-            $field->options = Options::byArray($listas["handle"], $listas["nome"]);
-            $field->size = 4;
-            $tabs->form->field[] = $field;
+            $tabs->form->field[] = Fields::fromTable(Fields::SELECT, 4, "Responsavel", "K_PD_USUARIOS", "NOME", "HANDLE", "", "responsavel");
         }
 
         Tools::footerSearch($tabs->form, 6);
 
         $widget->body->tabs[] = $tabs; // colocar o nome da tab
-
 
         $tabs = new Tabs();
         $tabs->icon = "fa fa-pencil";
@@ -187,12 +169,16 @@ class agendaFORM implements ControladoraFORM
         $widget->body->tabs["Calendario"] = $tabs; // colocar o nome da tab
 
         $tabs = new Tabs();
+        $tabs->function = "Tools.redirect_relatorio('?pagina=educacional_calendario_relatorios')";
+        $tabs->icon = "fa fa-bar-chart";
+        $widget->body->tabs["Relatorio"] = $tabs;
+
+        $tabs = new Tabs();
         $tabs->function = "Tools.redirect('?pagina=agenda&pesq_num=0')";
         $tabs->icon = "fa fa-plus";
         $widget->body->tabs["Inserir"] = $tabs;
 
         $widget->setDefaults();
-
 
         return $widget;
     }
@@ -210,6 +196,10 @@ class agendaFORM implements ControladoraFORM
             $gui->setPesquisa();
             $gui->fetch();
             $gui = $gui->itens[0];
+        }
+
+        if(empty($gui)){
+            return Tools::returnError("Registro não encontrado.");
         }
 
         $widget = new Widget();
@@ -274,7 +264,7 @@ class agendaFORM implements ControladoraFORM
             $field = new Fields();
             $field->type = $field::TEXT;
             $field->description = "Aluno";
-            $field->name = "pessoa";
+            $field->name = "aluno";
             $field->property = "pessoa";
             $field->size = 6;
             $div->field[] = $field;
@@ -339,7 +329,8 @@ class agendaFORM implements ControladoraFORM
             $field->size = 3;
             $div->field[] = $field;*/
 
-        }elseif(!__EDUCACIONAL__){
+        }
+        elseif(!__EDUCACIONAL__){
             // cria novo campo
             $field = new Fields();
             $field->type = $field::TEXT;
@@ -358,25 +349,7 @@ class agendaFORM implements ControladoraFORM
             $field->size = 3;
             $div->field[] = $field;
 
-            // cria novo campo
-            $listas = AgendaETT::getResponsavel();
-            $field = new Fields();
-            $field->type = $field::SELECT;
-            $field->name = "Responsavel";
-            $field->property = "responsavel";
-            $field->options = Options::byArray($listas["handle"], $listas["nome"]);
-            $field->size = 5;
-            $div->field[] = $field;
-
-            // cria novo campo
-            $listas = AgendaETT::getCRMStatus();
-            $field = new Fields();
-            $field->type = $field::DISABLED_SELECT;
-            $field->name = "Status";
-            $field->property = "status";
-            $field->options = Options::byArray($listas["handle"], $listas["nome"]);
-            $field->size = 3;
-            $div->field[] = $field;
+            $div->field[] = Fields::fromTable(Fields::SELECT, 3, "Status", "K_CRM_ETAPAS", "NOME", "HANDLE", "", "status");
 
             // cria novo campo
             $eventos = AgendaETT::getTipoAssunto();
@@ -494,8 +467,5 @@ class agendaFORM implements ControladoraFORM
         $widget->setDefaults();                 // pega todos os valores das entidades e popula
 
         return $widget;
-
     }
-
-
 }
