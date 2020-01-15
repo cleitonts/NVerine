@@ -2,25 +2,36 @@
  * faz o request de dados e renderiza em uma tabela
  */
 class Tabelas{
-    constructor(obj, name){
+    constructor(obj, table){
+        this.check = table.check;
+        this.destino = table.target + "&pesq_num=XhandleX";
+        this.class = table.entity;
+        this.relatorio = table.relatorio;
+        if(typeof this.relatorio === "undefined"){
+            this.relatorio = 0;
+        }
+
         let wrapper_table = document.createElement("div");
-        wrapper_table.id = name;
+        wrapper_table.id = table.name;
         wrapper_table.className = "card-body";
         wrapper_table.style = "overflow:hidden;";
 
-        this.class = "Faturamento\\NotaGUI";
         this.pesq_pagina = 1;
         this.only_headers = false;
         this.pesq_top = 10;
         this.ordena = 0;
         this.handle = null;
-        this.destino = false;
-        this.check = false;
         this.obj = wrapper_table;
-        this.id = wrapper_table.id;
         this.tabela = document.createElement("table");
-        this.tabela.id = "tabela_"+this.id;
         this.tabela.className = "table table-striped mb-1";
+
+        if(this.relatorio == 1){
+            this.tabela.className += " relatorio";
+            wrapper_table.id = "relatorio_"+table.name;
+        }
+
+        this.id = wrapper_table.id;
+        this.tabela.id = "tabela_"+this.id;
 
         let table_scroll = document.createElement("div");
         table_scroll.className = "table-responsive";
@@ -30,9 +41,11 @@ class Tabelas{
         $(wrapper_table).append(table_scroll);
         $(obj).append(wrapper_table);
 
-        Tabelas.geraPaginas(obj);
-        //this.geraEdicao();
-        this.atualizaNavegacao();
+        if(this.relatorio == 0) {
+            this.geraPaginas(obj);
+            //this.geraEdicao();
+            this.atualizaNavegacao();
+        }
     }
 
     sethandle(obj) {
@@ -132,11 +145,12 @@ class Tabelas{
     }
 
     // gera o controle de paginas
-    static geraPaginas(obj){
-        var div = document.createElement("div");
+    geraPaginas(obj){
+        const elemento = this;
+        const div = document.createElement("div");
         div.className = "col-md-12 p-0";
 
-        var select = {
+        const select = {
             class: "",
             description: "Registros por página",
             function: "tabelas.setTop(this)",
@@ -147,13 +161,36 @@ class Tabelas{
                 {description: 25, value: 25, checked: 'N'},
                 {description: 50, value: 50, checked: 'N'},
                 {description: 100, value: 100, checked: 'N'},
+                {description: "Todos", value: "", checked: 'N'},
             ],
             value: "10",
-            size: "3",
+            size: "3 col-6",
             type: "SELECT"
         };
 
+        const button = {
+            class: "btn-info",
+            options: [],
+            icon: "",
+            description: "Editar tabela",
+            function: "",
+            name: "edita_tabela",
+            size: "3 col-6 mt-4 float-right",
+            type: "BUTTON"
+        };
+
         Field.select(div, select);
+        Field.button("button", div, button);
+        $(div).find("#campo_edita_tabela").click(function () {
+
+            $(document).on('tabela_'+elemento.id, function (e, e1) {
+                elemento.editaTabela(e1);
+                elemento.only_headers = false;
+            });
+
+            elemento.only_headers = true;
+            elemento.getDados();
+        });
         $(obj).prepend(div);
     }
 
@@ -228,22 +265,22 @@ class Tabelas{
             {name: "pesq_pagina", value: this.pesq_pagina},
             {name: "ordena_por", value: this.ordena},
             {name: "class", value: this.class},
-            {name: "only_headers", value: this.only_headers}
+            {name: "only_headers", value: this.only_headers},
+            {name: "nome_tabela", value: this.tabela.id}
         );
 
         return dados;
     }
 
-    getDados(referencia = false){
+    getDados(referencia = false) {
         // antes de mais nada printa o spinner
         spinner(true);
 
         let myform = "";
 
-        if(referencia) {
+        if (referencia) {
             myform = $(referencia).find("#form_pesquisa");
-        }
-        else{
+        } else {
             myform = $("#form_pesquisa");
         }
 
@@ -254,7 +291,7 @@ class Tabelas{
         let submit = myform.serializeArray();
 
         // re-disabled the set of inputs that you previously enabled
-        disabled.attr('disabled','disabled');
+        disabled.attr('disabled', 'disabled');
 
         submit.push({name: "form_name", value: "form_pesquisa"});
 
@@ -265,8 +302,8 @@ class Tabelas{
         let pesquisa = elemento.montapesquisa();
 
         // completa com o formulario de pesquisa
-        if(typeof submit !== "undefined"){
-            for(var r in submit){
+        if (typeof submit !== "undefined") {
+            for (var r in submit) {
                 pesquisa.push(submit[r]);
             }
         }
@@ -276,9 +313,16 @@ class Tabelas{
             dataType: "json",
             type: 'POST',
             data: pesquisa
-        }).done(function(valores){
+        }).done(function (valores) {
+            // carrega o dumper
+            if (valores.dev_log.length != 0) {
+                // renderiza os prints
+                DevInfo.init(false);
+                DevInfo.renderDump(valores.dev_log);
+            }
+
             if (valores.render != null) {
-                if(!elemento.only_headers) {
+                if (!elemento.only_headers) {
                     // cria a wrapper da header
                     let header = document.createElement("thead");
                     //$(header).append(document.createElement("tr"));
@@ -295,40 +339,27 @@ class Tabelas{
                     $(elemento.tabela).append(header);
                     $(elemento.tabela).append(body);
 
-                    elemento.acoes();
-
-                    $(document).trigger('tabela_carregada', [valores]);
-                    // por ultimo, remove o spinner
-                    spinner(false);
+                    if (elemento.relatorio == 0) {
+                        elemento.acoes();
+                    }
                 }
-                // else{
-                //     obj.opcoes = valores.header;
-                //     back(obj);
-                //     spinner(false);
-                // }
-            }
-
-            if(valores.dev_log.length != 0) {
-
-                // renderiza os prints
-                DevInfo.init(false);
-                DevInfo.renderDump(valores.dev_log);
-            }
-        })
-            .fail(function(){
-                var popup = new Alert();
-                popup.typo = "danger";
-                popup.texto = "Tabela não encontrada";
-                popup.montaMensagem();
+                $(document).trigger('tabela_'+elemento.id, [valores.render]);
                 spinner(false);
-            });
+            }
+        }).fail(function () {
+            var popup = new Alert();
+            popup.typo = "danger";
+            popup.texto = "Tabela não encontrada";
+            popup.montaMensagem();
+            spinner(false);
+        });
     }
 
     static montaHeader(header, obj){
         $(obj).prepend("<th num='0'>&nbsp;</th>");
         if(tabelas.check == 1) $(obj).prepend("<th num='0'>&nbsp;</th>");
-        for (let i = 0; i <= header.length -1; i++) {
 
+        for (var i in header) {
             // cria a th e o texto
             let th = document.createElement("th");
             th.setAttribute("num", i);
@@ -368,7 +399,6 @@ class Tabelas{
                 // montas as tds
                 Tabelas.montaLinha(dados[i], linha);
 
-                // so carrega se tiver dados nas tabelas
                 this.sethandle(linha);
 
                 // joga no objeto da tbody
@@ -377,8 +407,153 @@ class Tabelas{
         }
     }
 
+    editaTabela(val){
+        // limpa caso ja exista
+        $("#modal_edita_tabela .modal-body").html("");
+
+        const elemento = this;
+        var header = Object.assign({}, val.header);
+
+        const modal = new Modal();
+        modal.title = "Editar tabela";
+        modal.btnSuccess = "Enviar";
+        modal.btnCancel = "Cancelar";
+        modal.size = "modal-lg"; // "modal-lg, modal-sm";
+        modal.btnSuccessAct = function() {Tabelas.atualizaHeader()};
+        modal.name = "modal_edita_tabela";
+        modal.no_footer = false;
+
+        var rendered = modal.render();
+
+        // itera primeiro os ativos e exclui do array original
+        let elemento_ativo = `<div class="col-6 pl-1"><h3 class="my-1">Ativos</h3><ul class="list-group mt-0" id="edita_tabela_ativos">`;
+        for(var i in val.exibe){
+            var index = i.replace("e", "");
+            elemento_ativo += `<li class="list-group-item d-block p-2" data-nome="${header[index]}" data-num="${index}">
+                                    <button type="button" class="item_left btn py-1 px-3 my-0 btn-sm btn-info d-block float-left fa fa-angle-left"></button>
+                                    ${header[index]}
+                                    <button type="button" class="d-none item_right btn my-0 py-1 px-3 btn-sm btn-info float-right fa fa-angle-right"></button>
+                                    <div class="item_control d-block float-right">
+                                        <button type="button" class="item_up btn py-0 px-3 d-block btn-sm btn-info fa fa-angle-up"></button>
+                                        <button type="button" class="item_down btn py-0 px-3 d-block btn-sm btn-info fa fa-angle-down"></button>
+                                    </div>
+                                </li>`;
+            delete header[index];
+        }
+        elemento_ativo += `</ul></div>`;
+
+        // itera o restante dos elementos
+        let elemento_inativo = `<div class="col-6 pr-1"><h3 class="my-1">Inativos</h3><ul class="list-group mt-0" id="edita_tabela_inativos">`;
+        for (var i in header){
+            elemento_inativo += `<li class="list-group-item d-block p-2" data-nome="${header[i]}" data-num="${i}">
+                                    <button type="button" class="item_left btn py-1 d-none px-3 my-0 btn-sm btn-info float-left fa fa-angle-left"></button>
+                                    ${header[i]} 
+                                    <button type="button" class="d-block item_right btn my-0 py-1 px-3 btn-sm btn-info float-right fa fa-angle-right"></button>
+                                    <div class="item_control d-none float-right">
+                                        <button type="button" class="item_up btn py-0 px-3 d-block btn-sm btn-info fa fa-angle-up"></button>
+                                        <button type="button" class="item_down btn py-0 px-3 d-block btn-sm btn-info fa fa-angle-down"></button>
+                                    </div>
+                                </li>`;
+        }
+        elemento_inativo += `</ul></div>`;
+
+        const html_static = `<input type="hidden" id="tabela_editar" value="${this.tabela.id}"><div class="row">${elemento_inativo} ${elemento_ativo}</div>`;
+        $("#main-content").append(rendered);
+        $("#modal_edita_tabela .modal-body").append(html_static);
+        $("#modal_edita_tabela").modal("show");
+
+        // funções
+        $(".item_left").click(function(){
+            const li = $(this).closest("li")[0];
+            $(li).find(".item_control").toggleClass("d-block d-none");
+            $(li).find(".item_left").toggleClass("d-block d-none");
+            $(li).find(".item_right").toggleClass("d-block d-none");
+
+            $("#edita_tabela_inativos").append(li);
+        });
+        $(".item_right").click(function(){
+            const li = $(this).closest("li")[0];
+            $(li).find(".item_control").toggleClass("d-block d-none");
+            $(li).find(".item_left").toggleClass("d-block d-none");
+            $(li).find(".item_right").toggleClass("d-block d-none");
+
+            $("#edita_tabela_ativos").append(li);
+        });
+        $(".item_up").click(function(){
+            const li = $(this).closest("li")[0];
+            const i = parseInt($(li).index());
+
+            if(i === 0){
+                return;
+            }
+
+            $("#edita_tabela_ativos li:nth-child("+i+")").before(li);
+        });
+        $(".item_down").click(function(){
+            const li = $(this).closest("li")[0];
+            const i = parseInt($(li).index() + 2);
+
+            if(($("#edita_tabela_ativos li").length +1) === i){
+                return;
+            }
+
+            $("#edita_tabela_ativos li:nth-child("+i+")").after(li);
+        });
+    }
+
+    static atualizaHeader(){
+        spinner(true);
+
+        let submit = [{name: "tabela", value: $("#tabela_editar").val()}];
+
+        var i = 0;
+        $("#edita_tabela_inativos li").each(function () {
+            submit.push(
+                    {name: "inativo["+i+"][nome]", value: $(this).attr("data-nome")},
+                    {name: "inativo["+i+"][num]", value: $(this).attr("data-num")},
+                    {name: "inativo["+i+"][pos]", value: i.toString()}
+                );
+            i++;
+        });
+
+        var i = 0;
+        $("#edita_tabela_ativos li").each(function () {
+            submit.push(
+                {name: "ativo["+i+"][nome]", value: $(this).attr("data-nome")},
+                {name: "ativo["+i+"][num]", value: $(this).attr("data-num")},
+                {name: "ativo["+i+"][pos]", value: i.toString()}
+            );
+            i++;
+        });
+
+        $.ajax({
+            url: "actions.php?pagina=atualizaheaders",
+            dataType: "json",
+            type: 'POST',
+            data: submit
+        }).done(function (valores) {
+            Message.adiciona(valores.messages);
+
+            if (valores.retorno.length > 0) {
+                Tools.redirect(valores.retorno, false, false);
+            }
+            if (valores.dev_log.length != 0) {
+                DevInfo.init();
+                DevInfo.renderDump(valores.dev_log);
+            }
+            spinner(false);
+        })
+            .fail(function () {
+                spinner(false);
+                var popup = new Alert();
+                popup.typo = "danger";
+                popup.texto = "Não foi possível enviar os dados, tente atualizar a página";
+                popup.montaMensagem();
+            });
+    }
+
     static montaLinha(dados, obj){
-        for (let i = 0; i <= dados.colunas.length -1; i++) {
+        for (const i in dados.colunas) {
             let td = document.createElement("td");
             td.className = "tabc "+dados.classes[i];
             td.innerHTML = dados.colunas[i];

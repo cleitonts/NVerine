@@ -10,7 +10,7 @@ class Header{
      */
     static create(obj, header){
         let html = document.createElement("div");
-        html.className = "card-header row card-header-info card-header-primary " + header.class;
+        html.className = "card-header row card-header card-header-primary " + header.class;
 
         var grid1 = document.createElement("div");
         grid1.className = "col-md-4";

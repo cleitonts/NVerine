@@ -41,6 +41,12 @@ class Tabs
     public $charts = array();
 
     /**
+     * @var bool
+     * controla se a tabela que está sendo gerada é um relatório
+     */
+    public $relatorio = false;
+
+    /**
      * @var string
      * caso o nome dentro da header seja apenas um botão
      * ex: Retornar

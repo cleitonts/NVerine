@@ -21,10 +21,17 @@ if(isset($_SESSION["ID"])) {
 
     // busca conteúdo dinâmico
     $pagina_controller = str_replace(".php", "", $pagina)."CONTROLLER"; // sanitiza
-
     $arq_controller = "src/views/controller/{$pagina_controller}";
-
     $pagina_controller = str_replace("/", "\\", $arq_controller);
+
+    // verifica se é um relatório
+    if (substr($pagina, 0, 10) == "relatorio_") {
+        $pagina = substr($pagina, 10);
+
+        $pagina_controller = str_replace(".php", "", $pagina)."RELATORIO"; // sanitiza
+        $arq_controller = "src/views/relatorio/{$pagina_controller}";
+        $pagina_controller = str_replace("/", "\\", $arq_controller);
+    }
 
     if(file_exists("{$arq_controller}.php")) {
         include_once($arq_controller."php");

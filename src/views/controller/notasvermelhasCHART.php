@@ -29,7 +29,7 @@ class notasvermelhasCHART implements ControladoraCHART
     public function chartGUI()
     {
         $widget = new Widget();
-        $widget->includes[] = "src/public/js/relatorios/notasvermelhasCHART.js";
+        $widget->includes[] = "src/public/js/relatorio/notasvermelhasCHART.js";
         $widget->header->title = "Quantidade de alunos com notas abaixo da média";
         //$widget->header->icon = "fa fa-truck";
 

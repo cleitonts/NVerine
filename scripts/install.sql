@@ -1,8 +1,16 @@
 START TRANSACTION;
 
 /* ================================================================================================================== 
-    Tabelas globais, usadas em mais de um módulo  
+    TabelasETT globais, usadas em mais de um módulo
 */
+
+CREATE TABLE METADADOS_TABELAS(
+	HANDLE int PRIMARY KEY NOT NULL,
+    NOME_TABELA varchar(50) NOT NULL,
+    USUARIO int NOT NULL,
+    COLUNA int NOT NULL,
+    POSICAO int
+);
 
 CREATE TABLE K_PREFIXO
 (

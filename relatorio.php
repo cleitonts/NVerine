@@ -106,12 +106,12 @@ $ts_inicio = time();
 	<div id="imprimir" class="data data_relatorio width-mobile">			
 		<!-- conteúdo dinâmico -->					
 		<?php
-		$pag = "includes/relatorios/clientes/".apenasNumeros(__CNPJ__)."/{$_GET['pagina']}.php";
+		$pag = "includes/relatorio/clientes/".apenasNumeros(__CNPJ__)."/{$_GET['pagina']}.php";
 		if(file_exists($pag)) {
 			include($pag);
 		}
 		else {
-			$pag = "includes/relatorios/{$_REQUEST['pagina']}.php";
+			$pag = "includes/relatorio/{$_REQUEST['pagina']}.php";
 		
 			if(!file_exists($pag)) {
 				mensagemErro("Página não encontrada");

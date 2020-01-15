@@ -132,11 +132,7 @@ class Body{
                 wrapper.className = "mt-4 row";
 
                 // instancia as tabelas
-                tabelas = new Tabelas(wrapper, atual.table.name);
-                tabelas.check = atual.table.check;
-                tabelas.destino = atual.table.target + "&pesq_num=XhandleX";
-                //tabelas.file = "Produto";
-                tabelas.class = atual.table.entity;
+                tabelas = new Tabelas(wrapper, atual.table);
                 tabelas.getDados(obj);
 
                 $(obj).append(wrapper);

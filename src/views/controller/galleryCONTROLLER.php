@@ -41,7 +41,7 @@ class galleryCONTROLLER implements ControladoraCONTROLLER
         if(!empty($_FILES)){
             foreach ($_FILES as $file){
                 $galeria = new GaleriaETT($_REQUEST["target"]);
-                $galeria->nome = $_REQUEST["nome"];
+                $galeria->nome = utf8_decode($_REQUEST["nome"]);
                 $galeria->referencia = $_REQUEST["referencia"];
                 $galeria->legenda = $_REQUEST["legenda"];
                 $galeria->upload($file);

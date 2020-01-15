@@ -19,9 +19,7 @@ class GaleriaETT extends ObjectETT
     const TARGET_FINANCEIRO = 2;
     const TARGET_SUPORTE = 3;
 
-    const _BIBLIOTECA_ = "http://www.maiscompleto.com.br";
-    //const _BIBLIOTECA_ = "http://192.168.0.26";
-    //const _CAMINHO_ = "/home/cleiton/html";
+    const _CAMINHO_ = "uploads/galeria/";
 
     public $referencia; // handle da tabela de referencia
     public $target;     // diretorio
@@ -32,40 +30,49 @@ class GaleriaETT extends ObjectETT
     public $ativo;
     public $ordem;
     public $nome;
-    public $path;
 
     public function __construct($target = "N")
     {
-        if($target == "N"){
+        if ($target == "N") {
             return;
         }
 
         $this->target = $target;
-        $this->path = self::getPath($this->target);
         $this->dir = self::getDir($this->target);
 
         // check se pasta existe
-        if(!file_exists($this->dir)){
+        if (!file_exists($this->dir)) {
             mkdir($this->dir, 0775, true);
         }
     }
 
-    public function validaForm(){
+    public function validaForm()
+    {
         // campos obrigatorios
         validaCampo($this->target, "Target");
         validaCampo($this->nome, "Nome");
         validaCampo($this->referencia, "Referencia");
         validaCampo($this->legenda, "Legenda");
     }
+
     /**
      * @param $file
      * passar item a item do array
      */
-    public function upload($file){
+    public function upload($file)
+    {
 
-        $this->url = self::_BIBLIOTECA_ . $this->path . $this->nome;
+        $tipo = explode(".", $this->nome);
 
-        if(in_array($this->target, array(self::TARGET_PESSOA, self::TARGET_PRODUTO))){
+        if(count($tipo) <> 2){
+            mensagem("O unico ponto deve ser o da extensão do arquivo", MSG_ERRO);
+            finaliza();
+        }
+
+        $this->nome = sanitize($tipo[0]).".".$tipo[1];
+        $this->url = self::getDir($this->target) . $this->nome;
+
+        if (in_array($this->target, array(self::TARGET_PESSOA, self::TARGET_PRODUTO))) {
             $this->checkImage();
         }
 
@@ -80,13 +87,14 @@ class GaleriaETT extends ObjectETT
         /**
          * essa parte precisa ser a ultima para o rollback funcionar corretamente
          */
-        Upload::upload($this->dir.$this->nome, $file["tmp_name"], $this->nome);
+        Upload::upload($this->dir . $this->nome, $file["tmp_name"], $this->nome);
     }
 
     /**
      * salva os dados na tabela
      */
-    public function cadastra() {
+    public function cadastra()
+    {
         global $conexao;
 
         $this->validaForm();
@@ -108,11 +116,12 @@ class GaleriaETT extends ObjectETT
     }
 
     // atualiza informações da imagem, inclusive o nome
-    public function atualiza($old_nome){
+    public function atualiza($old_nome)
+    {
         global $conexao;
         $this->validaForm();
 
-        $url = self::_BIBLIOTECA_ . $this->path;
+        $url = self::getDir($this->target);
         $old_url = $url . $old_nome;
         $this->url = $url . $this->nome;
 
@@ -133,21 +142,21 @@ class GaleriaETT extends ObjectETT
         retornoPadrao($stmt, "Imagem {$old_nome} atualizada.", "Não foi possível atualizar a imagem {$old_nome}");
 
         // ultima coisa a fazer
-        if (file_exists($this->dir.$old_nome)) {
-            rename($this->dir.$old_nome, $this->dir.$this->nome);
+        if (file_exists($this->dir . $old_nome)) {
+            rename($this->dir . $old_nome, $this->dir . $this->nome);
             mensagem("Arquivo atualizado na pasta");
-        }
-        else{
+        } else {
             mensagem("Arquivo não foi encontrado na pasta", MSG_ERRO);
             finaliza();
         }
     }
 
     // deleta imagem e apaga na tabela
-    public function delete(){
+    public function delete()
+    {
         global $conexao;
 
-        $this->url = self::_BIBLIOTECA_ . $this->path . $this->nome;
+        $this->url = self::getDir($this->target) . $this->nome;
 
         // ultima coisa a fazer, para rollback funcionar corretamente
         $sql = "DELETE FROM K_GALERIA WHERE TARGET = :target AND URL = :url AND REFERENCIA = :referencia";
@@ -160,11 +169,10 @@ class GaleriaETT extends ObjectETT
 
         mensagem("Arquivo {$this->nome} foi removido do banco de dados!");
 
-        if (file_exists($this->dir.$this->nome)) {
-            unlink($this->dir.$this->nome);
+        if (file_exists($this->dir . $this->nome)) {
+            unlink($this->dir . $this->nome);
             mensagem("Arquivo deletado da pasta");
-        }
-        else{
+        } else {
             mensagem("Arquivo não foi encontrado na pasta");
         }
     }
@@ -172,25 +180,28 @@ class GaleriaETT extends ObjectETT
     /**
      * verifica se está tentando subir uma imagem
      */
-    private function checkImage(){
-        $imageFileType = strtolower(pathinfo($this->dir."/".$this->nome,PATHINFO_EXTENSION));
+    private function checkImage()
+    {
+        $imageFileType = strtolower(pathinfo($this->dir . "/" . $this->nome, PATHINFO_EXTENSION));
 
-        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-            && $imageFileType != "gif" ) {
+        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+            && $imageFileType != "gif") {
             mensagem("Desculpe, somente JPG, JPEG, PNG e GIF são permitidos", MSG_ERRO);
             finaliza();
         }
     }
 
-    private function checkExists(){
+    private function checkExists()
+    {
         // Check if file already exists
-        if (file_exists($this->dir."/".$this->nome)) {
+        if (file_exists($this->dir . "/" . $this->nome)) {
             mensagem("Um arquivo com o mesmo nome ja existe.", MSG_ERRO);
             finaliza();
         }
     }
 
-    private function checkSize($file){
+    private function checkSize($file)
+    {
         // Check file size
         if ($file["size"] > 50000000) {
             mensagem("Desculpe, seu arquivo é muito grande (> 50mb)", MSG_ERRO);
@@ -199,16 +210,14 @@ class GaleriaETT extends ObjectETT
     }
 
     // caminho parcial, tanto para url quanto para pasta
-    public static function getPath($target){
-        if(_base_path == "uploads/") {
-            return "/biblioteca/images/" . sanitize(strtolower(__DB_NAME__)) . "/"
-                . strtolower(sanitize(str_replace(" ", "", __SISTEMA__))) . "/" . self::getTarget($target);
-        }
-        return "/biblioteca/images/" . strtolower(sanitize(str_replace(" ", "", __SISTEMA__))) . "/" . self::getTarget($target);
+    public static function getPath($target)
+    {
+        return strtolower(sanitize(str_replace(" ", "", __SISTEMA__))) . "/" . self::getTarget($target);
     }
 
     // retorna somente pasta interna
-    public static function getTarget($target){
+    public static function getTarget($target)
+    {
         switch ($target) {
             case self::TARGET_PESSOA :
                 return "pessoa/";
@@ -226,10 +235,6 @@ class GaleriaETT extends ObjectETT
     // retorna caminho completo para a pasta
     public static function getDir($target)
     {
-        if(_base_path == "uploads/"){
-            return "/home/sistemas/web/maiscompleto".self::getPath($target);
-        }
-        dumper(_base_path.self::getPath($target));
-        return _base_path.self::getPath($target);
+        return self::_CAMINHO_ . self::getPath($target);
     }
 }

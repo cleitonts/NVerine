@@ -81,7 +81,7 @@ if(!isset($_SESSION["ID"])) {
     <script src="<?php asset('js/widget/Form.js') ?>"></script>
     <script src="<?php asset('js/widget/Header.js') ?>"></script>
     <script src="<?php asset('js/widget/Message.js') ?>"></script>
-    <script src="<?php asset('js/widget/Tabelas.js') ?>"></script>
+    <script src="<?php asset('js/widget/TabelasETT.js') ?>"></script>
     <script src="<?php asset('js/widget/Tools.js') ?>"></script>
     <script src="<?php asset('js/adm/js.js') ?>"></script-->
 

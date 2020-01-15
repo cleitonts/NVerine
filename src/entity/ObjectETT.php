@@ -8,6 +8,8 @@
 
 namespace src\entity;
 
+use src\services\Transact\ExtPDO as PDO;
+
 abstract class ObjectETT
 {
     public $nome;

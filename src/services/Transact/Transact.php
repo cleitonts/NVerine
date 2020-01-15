@@ -242,10 +242,10 @@ class Transact
     }
 
     // url de retorno para a mesma página
-    public function getUrlRetorno($index = "index.php")
+    public function getUrlRetorno()
     {
         // monta url
-        $url = _pasta . $index . "?";
+        $url = _pasta . "index.php" . "?";
 
         // filtra parâmetros vazios
         $params = explode("&", $_SERVER["QUERY_STRING"]);

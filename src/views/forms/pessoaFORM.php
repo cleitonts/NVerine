@@ -85,7 +85,7 @@ class pessoaFORM implements ControladoraFORM
         $field->size = 6;
         $tabs->form->field[] = $field;
 
-        Tools::footerSearch($tabs->form, 6);
+        Tools::footerSearch($tabs->form, 9);
 
         $field = new Fields();
         $field->type = $field::BUTTON;
@@ -93,14 +93,8 @@ class pessoaFORM implements ControladoraFORM
         $field->class = "btn-info float-right";
         $field->function = "malaDireta()";
         $field->size = 3;
-        $tabs->form->field[] = $field;
 
         $widget->body->tabs["pesquisar"] = $tabs; // colocar o nome da tab
-
-        $tab = new Tabs();
-        $tab->function = "destinoMenu('cadastro_pessoa_relatorios&retorno=".urlencode(getUrlRetorno())."')";
-        $tab->icon = "fa fa-bar-chart";
-        $widget->body->tabs["Relatórios"] = $tab;
 
         $tabs = new Tabs();
         $tabs->function = "Tools.redirect('?pagina=pessoa&pesq_num=0')";

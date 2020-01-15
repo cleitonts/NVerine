@@ -30,7 +30,11 @@ if ($_REQUEST["act"] == "login"){
 // so mostra se estiver logado
 elseif(isset($_SESSION["ID"])) {
     // envio de form que alteram as propriedades do config.ini
-    if(in_array($_REQUEST["pagina"], array("toggledebug", "toggleverempresa")) ){
+    if(in_array($_REQUEST["pagina"], array("toggledebug", "toggleverempresa", "atualizaheaders")) ){
+        $mensagens->retorno = "refresh";
+
+        iniciaTransacao($conexao);
+
         switch ($_REQUEST["pagina"]) {
             case "toggledebug":
 
@@ -71,13 +75,29 @@ elseif(isset($_SESSION["ID"])) {
                     $transact->mensagem("Você está agora visualizando todas as filiais da empresa atual.", MSG_ERRO);
                 }
                 break;
+            case "atualizaheaders":
+                $tabela = new \src\services\Metadados\TabelasETT();
+                $tabela->nome_tabela = utf8_decode($_REQUEST["tabela"]);
+                $tabela->limpa();
+
+                foreach ($_REQUEST["inativo"] as $r){
+                    $tabela->coluna = $r["num"];
+                    $tabela->posicao = null;
+                    $tabela->cadastra();
+                }
+
+                foreach ($_REQUEST["ativo"] as $r){
+                    $tabela->coluna = $r["num"];
+                    $tabela->posicao = $r["pos"];
+                    $tabela->cadastra();
+                }
+                mensagem("Relatório atualizado atualize a tela para aplicar", MSG_ERRO);
+                break;
             default:
-                $transact->mensagem("burrice", MSG_ERRO);
+                mensagem("burrice", MSG_ERRO);
         }
 
-        $mensagens->retorno = "refresh";
-        $mensagens->pronto(); // só isso!
-        die();
+        redir($conexao);
     }
 
     // instancia o form para fazer a tradução

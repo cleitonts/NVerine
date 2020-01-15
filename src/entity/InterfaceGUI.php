@@ -15,7 +15,7 @@ interface InterfaceGUI
      * InterfaceGUI constructor.
      * @param null $handle
      * entre outras coisas no momento da inicialização,
-     * monta o header com nomes de colunas para os relatorios
+     * monta o header com nomes de colunas para os relatorio
      */
     public function __construct($handle = null);
 
@@ -23,7 +23,7 @@ interface InterfaceGUI
      * @param $linha
      * @param $coluna
      * @return mixed
-     * valor dos campos para exibir nos relatorios
+     * valor dos campos para exibir nos relatorio
      */
     public function getCampo($linha, $coluna);
 

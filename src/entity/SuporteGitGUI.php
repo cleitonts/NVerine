@@ -19,7 +19,7 @@ class SuporteGitGUI extends ObjectGUI
      * @param $linha
      * @param $coluna
      * @return mixed
-     * valor dos campos para exibir nos relatorios
+     * valor dos campos para exibir nos relatorio
      */
     public function getCampo($linha, $coluna)
     {

@@ -41,7 +41,7 @@ if(!isset($_SESSION["ID"])) {
     <!-- CSS
     ================================================== -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="<?php asset('css/adm/chartlist.min.css') ?>">
+    <link rel="stylesheet" href="<?php asset('css/adm/chartist.min.css') ?>">
     <link rel="stylesheet" href="<?php asset('css/adm/material-dashboard.css?v=2.0.1') ?>">
     <link rel="stylesheet" href="<?php asset('css/adm/demo.css') ?>">
     <link rel="stylesheet" href="<?php asset('css/adm/theme.css') ?>">
@@ -62,7 +62,7 @@ if(!isset($_SESSION["ID"])) {
     <script src="<?php asset('js/adm/bootstrap-material-design.js') ?>"></script>
     <script src="<?php asset('js/adm/plugins/moment.min.js') ?>"></script>
     <script src="<?php asset('js/adm/plugins/bootstrap-datetimepicker.min.js') ?>"></script>
-    <script src="<?php asset('js/adm/plugins/chartist.min.js') ?>"></script>
+    <script src="<?php asset('js/adm/plugins/chart.min.js') ?>"></script>
     <script src="<?php asset('js/adm/plugins/arrive.min.js') ?>"></script>
     <script src="<?php asset('js/adm/plugins/bootstrap-notify.js') ?>"></script>
     <script src="<?php asset('js/adm/plugins/bootstrap-selectpicker.js') ?>"></script>

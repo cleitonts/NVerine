@@ -637,6 +637,22 @@ table .bmd-form-group{
     position: initial;
 }
 
+.table.relatorio th, .table.relatorio td{
+    font-size: .8em;
+    padding: 2px 5px !important;
+    border: none;
+    border-bottom: 1px dotted rgba(0, 0, 0, .5);
+    border-right: 1px dotted rgba(0, 0, 0, .5);
+}
+
+.table.relatorio th{
+    border-top: 1px dotted rgba(0, 0, 0, .5);
+}
+
+.table.relatorio tbody, .table.relatorio thead {
+    border-left: 1px dotted rgba(0, 0, 0, .5);
+}
+
 .control.input-group{
     padding: 0;
 }
@@ -675,6 +691,31 @@ table.table input.larger, table.table select:not(.selectpicker), table.table .bo
 
 .bootstrap-select .dropdown-menu{
     width: 300px;
+}
+
+#modal_edita_tabela ul{
+    height: calc((var(--vh, 1vh) * 100) - 400px);
+    overflow-y: scroll;
+}
+
+#modal_edita_tabela li {
+    border: 1px solid #dee2e6;
+    border-top: none;
+    line-height: 24px;
+    width: 100%;
+    font-size: .8em;
+}
+
+#modal_edita_tabela li .item_up{
+    margin-top: -7px;
+}
+
+#modal_edita_tabela li .item_down{
+    margin-bottom: -6px;
+}
+
+#modal_edita_tabela li:first-child {
+    border-top: 1px solid #dee2e6;
 }
 
 .bootstrap-select .dropdown-menu li{

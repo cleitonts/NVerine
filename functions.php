@@ -43,6 +43,14 @@ function getUrlRetorno(){
     global $transact;
     return $transact->getUrlRetorno();
 }
+
+// retorna somente a pagina e parametros
+function getPaginaRetorno(){
+    global $transact;
+    $temp =  $transact->getUrlRetorno();
+    return str_replace(_pasta . "index.php", "", $temp);
+}
+
 function iniciaTransacao($con){
     global $transact;
     $transact->iniciaTransacao($con);

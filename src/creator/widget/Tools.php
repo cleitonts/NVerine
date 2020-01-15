@@ -81,21 +81,30 @@ class Tools {
      * Adiciona os botões de ação nos forms de pesquisa
      */
     public static function footerSearch(Form $obj, $size){
-        // botão de pesquisa
-        $field = new Fields();
-        $field->type = $field::SUBMIT;
-        $field->name = "Pesquisar";
-        $field->size = $size / 2;
-        $field->class = "btn-success float-right";
-        $obj->field[] = $field;
+
+        // ajusta tamanhos caso seja numero impar
+        $tam = intval($size / 2);
+        $div = $tam;
+
+        if($size % 2 > 0){
+            $div += $size % 2;
+        }
 
         // botão de limpar
         $field = new Fields();
         $field->type = $field::BUTTON;
         $field->name = "Limpar";
-        $field->size = $size / 2;
+        $field->size = $tam;
         $field->function = "limpaCampos()";
         $field->class = "btn-warning float-right";
+        $obj->field[] = $field;
+
+        // botão de pesquisa
+        $field = new Fields();
+        $field->type = $field::SUBMIT;
+        $field->name = "Pesquisar";
+        $field->size = $div;
+        $field->class = "btn-success float-right";
         $obj->field[] = $field;
     }
 

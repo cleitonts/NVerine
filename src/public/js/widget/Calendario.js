@@ -775,7 +775,7 @@ function ModalCalendario(obj){
     // cria a wrapper da header
     let header = document.createElement("thead");
     $(header).append(document.createElement("tr"));
-    Tabelas.montaHeader(calendario_eventos["header"], header);
+    TabelasETT.montaHeader(calendario_eventos["header"], header);
 
     // cria a wrapper da body
     let body = document.createElement("tbody");
@@ -785,7 +785,7 @@ function ModalCalendario(obj){
         linha.setAttribute("num", atual[i].handle);
 
         // montas as tds
-        Tabelas.montaLinha(atual[i], linha);
+        TabelasETT.montaLinha(atual[i], linha);
 
         let handle = $(linha).attr("num");
         let retorno = window.location.href;
