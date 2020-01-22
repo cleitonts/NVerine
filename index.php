@@ -68,7 +68,6 @@ if(!isset($_SESSION["ID"])) {
     <script src="<?php asset('js/adm/plugins/bootstrap-selectpicker.js') ?>"></script>
     <script src="<?php asset('js/adm/material-dashboard.js?v=2.0.0') ?>"></script>
     <script src="<?php asset('js/adm/plugins/jasny-bootstrap.min.js') ?>"></script>
-    <script src="<?php asset('js/adm/demo.js') ?>"></script>
     <script src="<?php asset('js/adm/plugins/jquery.mask.min.js') ?>"></script>
 
     <!-- Bundle novo template -->
@@ -99,7 +98,7 @@ if(!isset($_SESSION["ID"])) {
     const __COMISSAO_FATOR__ = <?= (empty(__COMISSAO_FATOR__))? 0 : __COMISSAO_FATOR__; ?> ;
     const __COMISSAO_PERC__ = <?= (empty(__COMISSAO_PERC__))? 0 : __COMISSAO_PERC__; ?> ;
     const __CASAS_DECIMAIS__ = <?= (empty(__CASAS_DECIMAIS__))? 0 : __CASAS_DECIMAIS__; ?> ;
-    const __PASTA__ = '' ;
+    const __PASTA__ = <?= (empty(_pasta))? "\"\"" : _pasta; ?> ;
     const __MAX_DESCONTO_VENDA__ = <?= (empty(__MAX_DESCONTO_VENDA__))? 0 : __MAX_DESCONTO_VENDA__; ?>;
     const __MODELO_NF__ = <?= (empty(__MODELO_NF__))? 0 : __MODELO_NF__;?>;
 

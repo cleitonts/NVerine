@@ -73,7 +73,7 @@ class Alert{
             //onClosed: null,
             //icon_type: 'class',
             template:   '<div data-notify="container" class="col-12 col-sm-3 col-md-3 col-xs-3 alert alert-{0}" role="alert">' +
-                            '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+                            '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">x</button>' +
                             '<i data-notify="icon" class="material-icons">notifications</i> ' +
                             '<span data-notify="title">{1}</span> ' +
                             '<span data-notify="message">{2}</span>' +

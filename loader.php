@@ -4,14 +4,14 @@ include("src/services/Dates.php");
 
 use src\services\Transact\ExtPDO;
 
-ini_set("default_charset", "UTF-8");
+ini_set("default_charset", "ISO-8859-1");
 
 // identidade
 @define("__NOME_SISTEMA__",				"NVerine");
 @define("__DIR_IDENTIDADE__",			"");
 define("__MAKER__",						"TSBrothers");
 define("__MAKER_WEBSITE__",				"http://www.tsbrothers.com.br");
-
+define("_pasta", "");
 // versão do arquivo de configuração
 $versao_config_atual = 1;
 

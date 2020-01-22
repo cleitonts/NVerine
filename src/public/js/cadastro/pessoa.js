@@ -86,10 +86,18 @@ function triggerUpdate(){
                         //if(retorno.localidade == "Brasília") retorno.localidade = "Brasilia";
 
                         if(num >= 0) {
-                            if(retorno.logradouro.length > 0) $("#campo_logradouro_"+num).val(retorno.logradouro);
-                            if(retorno.complemento.length > 0) $("#campo_complemento_"+num).val(retorno.complemento);
-                            if(retorno.bairro.length > 0) $("#campo_bairro_"+num).val(retorno.bairro);
-
+                            if(retorno.logradouro.length > 0) {
+                                $("#campo_logradouro_" + num).val(retorno.logradouro)
+                                    .closest(".form-group").addClass("is-filled");
+                            }
+                            if(retorno.complemento.length > 0) {
+                                $("#campo_complemento_" + num).val(retorno.complemento)
+                                    .closest(".form-group").addClass("is-filled");
+                            }
+                            if(retorno.bairro.length > 0) {
+                                $("#campo_bairro_" + num).val(retorno.bairro)
+                                    .closest(".form-group").addClass("is-filled");
+                            }
                             //pega o valor primeiro
                             var val = $("#campo_uf_"+num).find("[label='"+retorno.uf+"']").attr('value');
 

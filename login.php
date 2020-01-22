@@ -24,7 +24,7 @@ $retorno = str_replace("?", "index.php?", getUrlRetorno());
 <head>
     <!--- basic page needs
     ================================================== -->
-    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#00acc1">
