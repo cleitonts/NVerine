@@ -32,7 +32,7 @@ if (strpos(dirname(__FILE__), 'releases_nverine') !== false) {
 
     define("_base_name", $arr[1]);
     define("_base_root", "../../bases");
-    define("_base_path", _base_root."/"._base_name."/gestao/");
+    define("_base_path", _base_root."/"._base_name."/erp/");
     if(!is_dir(_base_path)) {
         include("../../404.html");
         die();
