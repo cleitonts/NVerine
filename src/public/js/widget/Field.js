@@ -5,7 +5,7 @@ class Field{
 
     /**
      *
-     * @param obj ponto de inserção
+     * @param obj ponto de inserÃ§Ã£o
      * @param val valores a serem processados
      * @returns {HTMLDivElement}
      */
@@ -15,7 +15,7 @@ class Field{
         wrapper.id = "wrapper_"+val.name;
 
         let control = document.createElement("div");
-        control.className = "control";    // não pode ter por padrão
+        control.className = "control";    // nÃ£o pode ter por padrÃ£o
         
         if(val.icon.length > 0){
             //control.className = "input-group form-control-lg";
@@ -58,7 +58,7 @@ class Field{
     /**
      *
      * @param type do input
-     * @param obj ponto de inserção
+     * @param obj ponto de inserÃ§Ã£o
      * @param val valores a serem processados
      * @param prefix do campo, ex: pesq_
      */
@@ -104,7 +104,7 @@ class Field{
             $(wrapper).find(".form-group").addClass("btn-group").append(perc);
         }
         
-        $(obj).append(wrapper);                     // joga na posição correta do form
+        $(obj).append(wrapper);                     // joga na posiÃ§Ã£o correta do form
     }
 
     static checkbox(obj, val, prefix){
@@ -300,7 +300,7 @@ class Field{
 
     /**
      *
-     * @param obj ponto de inserção
+     * @param obj ponto de inserÃ§Ã£o
      * @param val valores a serem processados
      * @param prefix do campo, ex: pesq_
      */
@@ -348,7 +348,7 @@ class Field{
 
     /**
      *
-     * @param obj ponto de inserção
+     * @param obj ponto de inserÃ§Ã£o
      * @param val valores a serem processados
      * @param prefix do campo, ex: pesq_
      */
@@ -376,7 +376,7 @@ class Field{
         input.id = "campo_"+val.name;
 
         if(val.function.length > 0) {
-            $(input).attr("onchange", val.function); // chama função a partir do valor do objeto
+            $(input).attr("onchange", val.function); // chama funÃ§Ã£o a partir do valor do objeto
         }
 
         // cria as options
@@ -406,7 +406,7 @@ class Field{
     /**
      *
      * @param type do input
-     * @param obj ponto de inserção
+     * @param obj ponto de inserÃ§Ã£o
      * @param val valores a serem processados
      * @param prefix do campo, ex: pesq_
      */
@@ -415,7 +415,7 @@ class Field{
         let html = document.createElement("div");
         html.className = "col-md-"+val.size;
 
-        // cria botão
+        // cria botÃ£o
         let button = document.createElement("button");
         button.type = type;
         button.className = `btn btn-block ${val.class}`;
@@ -429,7 +429,7 @@ class Field{
         button.id = "campo_"+val.name;
 
         if(val.function.length > 0) {
-            $(button).attr("onclick", val.function); // chama função a partir do valor do objeto
+            $(button).attr("onclick", val.function); // chama funÃ§Ã£o a partir do valor do objeto
         }
 
         // adiciona o node de texto ao button
@@ -468,10 +468,10 @@ class Field{
         if(type != "hidden"){
             let wrapper_input = document.createElement("td");   // o input espera essa div
             $(wrapper_input).append(input);                     // coloca o input dentro do seu wrapper
-            $(obj).append(wrapper_input);                       // joga na posição correta da tabela
+            $(obj).append(wrapper_input);                       // joga na posiÃ§Ã£o correta da tabela
         }
         else{
-            $(obj).append(input);                               // joga na posição correta da tabela
+            $(obj).append(input);                               // joga na posiÃ§Ã£o correta da tabela
         }
     }
 
@@ -486,7 +486,7 @@ class Field{
         wrapper.id = "label_"+val.name;
         wrapper.appendChild(document.createTextNode(val.value));
 
-        $(obj).append(wrapper);                     // joga na posição correta da tabela
+        $(obj).append(wrapper);                     // joga na posiÃ§Ã£o correta da tabela
     }
 
     /**

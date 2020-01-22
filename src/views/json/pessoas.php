@@ -1,6 +1,9 @@
 <?php
+$_REQUEST["pesq_nome"] = $_REQUEST["term"];
+
 $pessoas = new \src\entity\PessoaGUI();
 $pessoas->setPesquisa();
+$pessoas->top = "TOP 10";
 $pessoas->fetch();
 
 $arr = array();

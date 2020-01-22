@@ -29,6 +29,7 @@ class Fields
     const LABEL = "LABEL";        // semelhante ao readonly
     const AREA = "AREA";           // textarea
     const FILE = "FILE";
+    const PASSWORD = "PASSWORD";
 
     /**
      * @var string

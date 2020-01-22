@@ -8,7 +8,6 @@
 
 namespace src\services\UAC;
 
-use src\services\ExtPDO as PDO;
 
 /**
  * Class UAC

@@ -13,6 +13,7 @@ use src\services\Transact\ExtPDO as PDO;
 class CadastroETT extends ObjectETT
 {
     private $campos_sistema;
+    public static $protegidos = array("K_PD_USUARIOS");
 
     // esta lista define as tabelas permitidas de serem acessadas/alteradas por aqui
     const TABELAS_VALIDAS =
@@ -161,8 +162,6 @@ class CadastroETT extends ObjectETT
             $this->campos[] = "GRUPO";
             $this->campos[] = "REGIAO";
             $this->campos[] = "NIVEL";
-            $this->campos[] = "VENCIMENTO";
-            $this->campos[] = "COMISSAOVENDA";
         } elseif ($nome_tabela == "FN_FORMASPAGAMENTO") {
             $this->campos[] = "HANDLE";
             $this->campos[] = "NOME";
@@ -315,6 +314,9 @@ class CadastroETT extends ObjectETT
             if(!in_array($key, $this->campos_sistema)) {
                 if(!empty($update)) { $update .= ", "; }
 
+                if ($key == "SENHA"){
+                    $value = safercrypt($value);
+                }
                 if($value == "")
                     $update .= strtoupper(anti_injection($key))." = NULL";
                 else
@@ -333,13 +335,19 @@ class CadastroETT extends ObjectETT
         retornoPadrao($stmt, "Valores atualizados com sucesso!", "Erro na atualização do registro");
     }
 
-    public function deleta($obj) {
+    public function exclui($obj) {
         global $conexao;
 
-        if(!empty($handle) && is_numeric($handle)) {
+
+        if(in_array($_SESSION['tabela'], self::$protegidos)){
+            mensagem("Esta tabela está protegida contra deletes", MSG_ERRO);
+            finaliza();
+        }
+
+        if(!empty($obj->HANDLE) && is_numeric($obj->HANDLE)) {
             $sql = "DELETE FROM {$_SESSION['tabela']} WHERE HANDLE = :handle";
             $stmt = $conexao->prepare($sql);
-            $stmt->bindValue(":handle", $handle);
+            $stmt->bindValue(":handle", $obj->HANDLE);
             $stmt->execute();
 
             retornoPadrao($stmt, "Registro removido com sucesso.", "Este registro não pode ser removido.");

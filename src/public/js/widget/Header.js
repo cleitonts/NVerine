@@ -4,13 +4,13 @@
 class Header{
     /**
      *
-     * @param obj ponto de inserção
+     * @param obj ponto de inserÃ§Ã£o
      * @param header valores a serem processados
      * cria node da Header
      */
     static create(obj, header){
         let html = document.createElement("div");
-        html.className = "card-header row card-header card-header-primary " + header.class;
+        html.className = "card-header row card-header card-header-info " + header.class;
 
         var grid1 = document.createElement("div");
         grid1.className = "col-md-4";
@@ -27,7 +27,7 @@ class Header{
             btn.className = "btn btn-white btn-sm btn-round btn-fab fa fa-ellipsis-v";
             btn.id = "dropdownMenuButton";
             btn.href = "#";
-            btn.title = "Mais ações";
+            btn.title = "Mais aÃ§Ãµes";
             btn.setAttribute("data-toggle", "dropdown");
             btn.setAttribute("rolw", "button");
             btn.setAttribute("aria-haspopup", "true");
@@ -42,7 +42,7 @@ class Header{
                 item.href = "#";
                 item.className = "dropdown-item ";
                 $(item).append(document.createTextNode(header.menu[i].description));
-                $(item).attr("onclick", header.menu[i].function); // chama função a partir do valor do objeto
+                $(item).attr("onclick", header.menu[i].function); // chama funÃ§Ã£o a partir do valor do objeto
 
                 var icon = document.createElement("i");
                 icon.className = "mr-2 "+header.menu[i].icon;
@@ -103,7 +103,7 @@ class Header{
                 tab_link.href = "#sd"+(i+1);
 
                 if(header.tabs[i].function.length > 0) {
-                    $(tab_link).attr("onclick", header.tabs[i].function); // chama função a partir do valor do objeto
+                    $(tab_link).attr("onclick", header.tabs[i].function); // chama funÃ§Ã£o a partir do valor do objeto
                 }
 
                 if(i == 0){

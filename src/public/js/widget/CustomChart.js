@@ -16,7 +16,7 @@ class CustomChart{
         $(obj).append(wrapper);
     }
 
-    // esta funÁ„o configura bot„o de enviar pesquisa
+    // esta fun√ß√£o configura bot√£o de enviar pesquisa
     btnSend(val, html){
 
         var elemento = this;
@@ -61,7 +61,7 @@ class CustomChart{
         }).fail(function(){
             var popup = new Alert();
             popup.typo = "danger";
-            popup.texto = "Gr·fico n„o encontrado";
+            popup.texto = "Gr√°fico n√£o encontrado";
             popup.montaMensagem();
             spinner(false);
         })

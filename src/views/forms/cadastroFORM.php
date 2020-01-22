@@ -9,6 +9,7 @@
 namespace src\views\forms;
 
 
+use src\creator\widget\Component;
 use src\creator\widget\Fields;
 use src\creator\widget\Form;
 use src\creator\widget\Options;
@@ -17,6 +18,7 @@ use src\creator\widget\Tools;
 use src\creator\widget\Widget;
 use src\entity\CadastroETT;
 use src\entity\CadastroGUI;
+use src\entity\PessoaGUI;
 use src\views\ControladoraFORM;
 
 
@@ -60,6 +62,7 @@ class cadastroFORM implements ControladoraFORM
     public function createForm($handle = null)
     {
         global $__MODULO__;
+        global $conexao;
 
         $dados_tabela = CadastroETT::cadastroLoader();
         $cadastro = $dados_tabela["cadastro"];
@@ -79,7 +82,7 @@ class cadastroFORM implements ControladoraFORM
         }
         $widget->entity = $gui;
 
-        //$widget->includes[] = "src/public/js/cadastro/agenda.js";
+        $widget->includes[] = "src/public/js/cadastro/cadastro.js";
 
         // cria body e tabs
         $tabs = new Tabs();
@@ -88,11 +91,15 @@ class cadastroFORM implements ControladoraFORM
         // cria form
         $tabs->form = new Form();
         $tabs->form->method = "POST";
-        $tabs->form->name = "cadastro";
+        $tabs->form->name = "form_cadastro";
         $tabs->form->action = _pasta . "actions.php?pagina=cadastro";
 
-        $tabs->form->field[] = Fields::novo(Fields::HIDDEN, 0, "tabela", "", $dados_tabela["table_enc"]);
-        $tabs->form->field[] = Fields::novo(Fields::HIDDEN, 0, "tn", "", urlencode($dados_tabela["nome"]));
+        $div = new Component();
+        $div->tag = "div";
+        $div->attr = array("class" => "row");
+
+        $div->field[] = Fields::novo(Fields::HIDDEN, 0, "tabela", "", $dados_tabela["table_enc"]);
+        $div->field[] = Fields::novo(Fields::HIDDEN, 0, "tn", "", urlencode($dados_tabela["nome"]));
 
         foreach ($cadastro->tabela->campos as $r) {
             $campo = strtolower($r);
@@ -112,27 +119,38 @@ class cadastroFORM implements ControladoraFORM
 
             if ($campo == "handle") {
                 if ($handle > 0) {
-                    $tabs->form->field[] = Fields::novo(Fields::HIDDEN, 0, "atualiza", $r);
+                    $field = Fields::novo(Fields::HIDDEN, 0, "atualiza", $r);
                 } else {
-                    $handle = newHandle($tabela);
-                    $tabs->form->field[] = Fields::novo(Fields::HIDDEN, 0, "handle", $r);
+                    //$new_handle = newHandle($tabela, $conexao);
+                    $field = Fields::novo(Fields::HIDDEN, 0, "handle", $r);
                 }
-                $tabs->form->field[] = Fields::novo(Fields::LABEL, $tam, "Cód. registro", $r);
+                $div->field[] = $field;
+                $field = Fields::novo(Fields::LABEL, $tam, "Cód. registro", $r);
             } elseif ($campo == "filial" || $campo == "k_filial") {
                 $field = Fields::fromTable(Fields::SELECT, $tam, $campo, "K_FN_FILIAL", "NOME", "HANDLE", "", $r);
                 $field->description = "Filial";
-                $tabs->form->field[] = $field;
             } elseif ($campo == "regiao") {
                 $field = Fields::fromTable(Fields::SELECT, $tam, $campo, "K_REGIAO", "NOME", "HANDLE", "", $r);
                 $field->description = "Região";
-                $tabs->form->field[] = $field;
             } elseif ($campo == "senha") {
-                //widgetSenha($tam2, $campo, "Senha");
-                //widgetBotao($tam2, "randomizaSenha('{$senha}', '{$senha_hash}')", "<i class='fa fa-cog'></i> Gerar nova senha", "l", "btn-success btn-flat-3d grid-12", true);
+                $field = new Fields();
+                $field->type = $field::PASSWORD;
+                $field->property = $r;
+                $field->value = "sonha";
+                $field->size = $tam / 2;
+                $field->name = $campo;
+                $field->description = "Senha";
+                $div->field[] = $field;
+
+                $field = new Fields();
+                $field->type = $field::BUTTON;
+                $field->size = $tam / 2 ." mt-3";
+                $field->description = "Gerar nova senha";
+                $field->class = "btn-warning";
+                $field->function = "makeid(5)";
             } elseif ($campo == "usuario") {
                 $field = Fields::fromTable(Fields::SELECT, $tam, $campo, "K_PD_USUARIOS", "NOME", "HANDLE", "", $r);
                 $field->description = "Usuário";
-                $tabs->form->field[] = $field;
             } elseif ($campo == "nivel" && $tabela == "K_PD_USUARIOS") {
                 $field = new Fields();
                 $field->type = Fields::SELECT;
@@ -141,61 +159,46 @@ class cadastroFORM implements ControladoraFORM
                 $field->property = $r;
                 $field->description = "Nível";
                 $field->options = Options::byArray(array(1, 2, 3, 4), array("1 - Unidade", "2 - Regional", "3 - Secretaria", "4 - Global"));
-                $tabs->form->field[] = $field;
             } elseif ($campo == "grupo") {
                 $field = Fields::fromTable(Fields::SELECT, $tam, $campo, "K_FN_GRUPOUSUARIO", "NOME", "HANDLE", "", $r);
                 $field->description = "Grupo";
-                $tabs->form->field[] = $field;
             } elseif ($campo == "alcada") {
                 $field = Fields::fromTable(Fields::SELECT, $tam, $campo, "K_PD_ALCADAS", "NOME", "HANDLE", "", $r);
                 $field->description = "Alçada";
-                $tabs->form->field[] = $field;
             }  elseif ($campo == "area") {
                 $field = Fields::fromTable(Fields::SELECT, $tam, $campo, "K_FN_AREA", "NOME", "HANDLE", "", $r);
                 $field->description = "Área";
-                $tabs->form->field[] = $field;
             } elseif ($campo == "almoxarifado") {
                 $field = Fields::fromTable(Fields::SELECT, $tam, $campo, "K_FN_ALMOXARIFADO", "NOME", "HANDLE", "WHERE " . filtraFilial("FILIAL", "Almoxarifado"), $r);
                 $field->description = "Almoxarifado";
-                $tabs->form->field[] = $field;
             } elseif ($campo == "produto") {
                 $field = Fields::fromTable(Fields::SELECT, $tam, $campo, "PD_PRODUTOS", "NOME", "CODIGO", "WHERE " . filtraFilial("K_KFILIAL", "Produto"), $r);
                 $field->description = "Produto";
-                $tabs->form->field[] = $field;
             } elseif ($campo == "estado") {
                 $field = Fields::fromTable(Fields::SELECT, $tam, $campo, "ESTADOS", "NOME", "HANDLE", "WHERE HANDLE <= 48", $r);
-                $tabs->form->field[] = $field;
             } elseif ($campo == "cidade") {
                 $field = Fields::fromTable(Fields::SELECT, $tam, $campo, "MUNICIPIOS", "NOME", "HANDLE", "WHERE ESTADO = {$cadastro->itens[0]->ESTADO}", $r);
-                $tabs->form->field[] = $field;
             }
             elseif ($campo == "empresa") {
                 $field = Fields::fromTable(Fields::SELECT, $tam, $campo, "K_FN_PESSOA", "NOME", "HANDLE", "WHERE EMPRESA = 'S'", $r);
-                $tabs->form->field[] = $field;
             }
-            /*elseif ($campo == "cliente") {
-                if (!empty($_SESSION["cliente"])) {
+            elseif ($campo == "cliente") {
+                if (!empty($gui->$r)) {
                     $pessoa = new PessoaGUI();
-                    $pessoa->top = "TOP 10";
-                    $pessoa->pesquisa["pesq_codigo"] = $_SESSION["cliente"];
+                    $pessoa->pesquisa["pesq_num"] = $gui->$r;
                     $pessoa->fetch();
                     $pessoa = $pessoa->itens[0];
-
-                    $_SESSION["pesq_cliente"] = $pessoa->nome;
                 }
-                $tabs->form->field[] = Fields::novo(Fields::TEXT, $tam / 2, "Pessoa vinculada", $pessoa->nome);
-                $tabs->form->field[] = Fields::novo(Fields::TEXT, $tam / 2, "Código", $_SESSION["cliente"]);
-
-                unset($_SESSION["pesq_cliente"]);
-            }*/
+                $field = Fields::novo(Fields::TEXT, $tam / 2, "Pessoa vinculada", "", $pessoa->nome);
+                $div->field[] = $field;
+                $field = Fields::novo(Fields::LABEL, $tam / 2, "Código pessoa", $r);
+            }
             elseif ($campo == "formapagamento") {
                 $field = Fields::fromTable(Fields::SELECT, $tam, $campo, "FN_FORMASPAGAMENTO", "NOME", "HANDLE", "", $r);
                 $field->description = "Forma pagamento";
-                $tabs->form->field[] = $field;
             } elseif ($campo == "condicaopagamento" || $campo == "condicoespagamento") {
                 $field = Fields::fromTable(Fields::SELECT, $tam, $campo, "CP_CONDICOESPAGAMENTO", "DESCRICAO", "HANDLE", "", $r);
                 $field->description = "Condição pagto.";
-                $tabs->form->field[] = $field;
             } elseif (in_array($campo, array("usalimite", "bloqueio", "menu", "compartilhado", "ativa", "exclusiva", "k_docliquidez", "ativo", "padrao"))) {
                 $field = new Fields();
                 $field->type = Fields::SELECT;
@@ -203,11 +206,9 @@ class cadastroFORM implements ControladoraFORM
                 $field->property = $r;
                 $field->name = $campo;
                 $field->options = Options::byArray(array("N", "S"), array("Não", "Sim"));
-                $tabs->form->field[] = $field;
             } elseif ($campo == "notas") {
                 $field = Fields::novo(Fields::AREA, $tam, $campo, $r);
                 $field->description = "Notas";
-                $tabs->form->field[] = $field;
             } elseif ($campo == "timezone") {
                 $field = new Fields();
                 $field->type = Fields::SELECT;
@@ -217,18 +218,46 @@ class cadastroFORM implements ControladoraFORM
                 $field->description = "Fuso horário";
                 $field->options = Options::byArray(array("-02:00", "-03:00", "-04:00", "-05:00"),
                         array("-02:00 (Horário de verão, Fernando de Noronha)", "-03:00 (Horário de Brasília)", "-04:00 (Amazônia)", "-05:00 (Acre)"));
-                $tabs->form->field[] = $field;
 
             } else { // DEFAULT
-                $tabs->form->field[] = Fields::novo(Fields::TEXT, $tam, $campo, $r);
+                $field = Fields::novo(Fields::TEXT, $tam, $campo, $r);
             }
+            $div->field[] = $field;
+        }
+
+        $tabs->form->children[] = $div;
+
+        $div2 = new Component();
+        $div2->tag = "div";
+        $div2->attr = array("class" => "row");
+
+        $size = 12;
+        if($handle > 0 && !in_array($dados_tabela["table"], CadastroETT::$protegidos)){
+            $field = new Fields();
+            $field->name = "excluir";
+            $field->type = $field::HIDDEN;
+            $field->value = 0;
+            $div2->field[] = $field;
+
+            $field = new Fields();
+            $field->type = $field::BUTTON;
+            $field->name = "excluir";
+            $field->size = 6;
+            $field->function = "Form.excluir('#{$tabs->form->name}')";
+            $field->class = "btn-danger mt-3";
+            $div2->field[] = $field;
+
+            $size = 6;
         }
 
         $field = new Fields();
         $field->type = $field::SUBMIT;
         $field->name = "enviar";
-        $field->class = "float-right mt-3";
-        $tabs->form->field[] = $field;
+        $field->size = $size;
+        $field->class = "mt-3 float-right";
+        $div2->field[] = $field;
+
+        $tabs->form->children[] = $div2;
 
         $widget->body->tabs["Editar"] = $tabs;
 

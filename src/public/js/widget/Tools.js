@@ -1,5 +1,5 @@
 /**
- * ferramentas e coias para normalizaÁ„o de dados
+ * ferramentas e coias para normaliza√ß√£o de dados
  */
 class Tools{
     static capitalize(val){
@@ -46,7 +46,7 @@ class Tools{
 
         // retorno recebido da url
         else{
-            // quebra url, o importante ser· somente os parametros
+            // quebra url, o importante ser√° somente os parametros
             pagina = pagina.split("?");
 
             // abre a pagina requisitada
@@ -78,7 +78,7 @@ class Tools{
 
             document.title = valores.render.title;
 
-            // sÛ adiciona a lista se n„o for false
+            // s√≥ adiciona a lista se n√£o for false
             if(back === false) {
                 window.history.pushState({href: url}, "", url);
             }
@@ -87,7 +87,7 @@ class Tools{
         }).fail(function(){
             var popup = new Alert();
             popup.typo = "danger";
-            popup.texto = "P·gina n„o encontrada";
+            popup.texto = "P√°gina n√£o encontrada";
             popup.montaMensagem();
             spinner(false);
         });

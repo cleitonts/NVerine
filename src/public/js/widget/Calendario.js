@@ -7,7 +7,7 @@ class Calendario {
         $("#message-log").hide('slide', {}, 500, {});
 
 
-        // troca aÁ„o entre mostrar e ocultar
+        // troca a√ß√£o entre mostrar e ocultar
         if($(obj).hasClass("active")){
             $("#calendario-log").hide('slide', {}, 500, {});
         }
@@ -111,7 +111,7 @@ class Calendario {
         }).fail(function () {
             var popup = new Alert();
             popup.typo = "danger";
-            popup.texto = "Calendario n„o encontrado";
+            popup.texto = "Calendario n√£o encontrado";
             popup.montaMensagem();
             spinner(false);
         });
@@ -219,7 +219,7 @@ class Calendario {
 
         var contador = 1;
 
-        // chama funÁ„o que cria os dias da semana
+        // chama fun√ß√£o que cria os dias da semana
         Calendario.nomeDias(wrapper_dias);
 
         var dias_mes = Calendario.diasNoMes(mes, ano); // executar somente 1x
@@ -426,7 +426,7 @@ class CalendarioWrapper {
         $("#message-log").hide('slide', {}, 500, {});
 
 
-        // troca aÁ„o entre mostrar e ocultar
+        // troca a√ß√£o entre mostrar e ocultar
         if($(obj).hasClass("active")){
             $("#calendario-log").hide('slide', {}, 500, {});
         }
@@ -526,7 +526,7 @@ class CalendarioWrapper {
         }).fail(function () {
             var popup = new Alert();
             popup.typo = "danger";
-            popup.texto = "Calendario n„o encontrado";
+            popup.texto = "Calendario n√£o encontrado";
             popup.montaMensagem();
             spinner(false);
         });
@@ -635,7 +635,7 @@ class CalendarioWrapper {
 
         var contador = 1;
 
-        // chama funÁ„o que cria os dias da semana
+        // chama fun√ß√£o que cria os dias da semana
         CalendarioWrapper.nomeDias(wrapper_dias);
 
         var dias_mes = CalendarioWrapper.diasNoMes(mes, ano); // executar somente 1x

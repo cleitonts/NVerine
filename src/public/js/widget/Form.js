@@ -4,7 +4,7 @@
 class Form{
     /**
      *
-     * @param obj ponto de inserÁ„o
+     * @param obj ponto de inser√ß√£o
      * @param val valores a serem processados
      */
     static create(obj, val){
@@ -35,6 +35,9 @@ class Form{
      */
     static dictionary(obj, val, prefix){
         switch(val.type.toLowerCase()) {
+            case "password":
+                Field.input("password", obj, val, prefix);
+                break;
             case "text":
                 Field.input("text", obj, val, prefix);
                 break;
@@ -103,7 +106,7 @@ class Form{
             return this.value == 'NaN'
         }).val("");
 
-        // esse nome deve vir pad„o dos arquivos externos
+        // esse nome deve vir pad√£o dos arquivos externos
         if (typeof formUpdate === "function") {
             // alguns forms precisam ser atualizados antes de enviador
             formUpdate();
@@ -143,8 +146,32 @@ class Form{
                 spinner(false);
                 var popup = new Alert();
                 popup.typo = "danger";
-                popup.texto = "N„o foi possÌvel enviar os dados, tente atualizar a p·gina";
+                popup.texto = "N√£o foi poss√≠vel enviar os dados, tente atualizar a p√°gina";
                 popup.montaMensagem();
             });
+    }
+
+    static excluir(form){
+        $("#modal_confirmacao").remove();
+
+        var modal = new Modal();
+        modal.title = "Excluir";
+        modal.btnSuccess = "Excluir";
+        modal.btnCancel = "Cancelar";
+        modal.size = "modal-lg"; // "modal-lg, modal-sm";
+        modal.btnSuccessAct = function() {
+            $("#modal_confirmacao").modal("hide");
+            $("#campo_excluir").val(1);
+            Form.send($(form)[0]);
+        }; //function() {FieldTables.deleteLinha(modal)};
+        modal.btnCancelAct = function() {$("#campo_excluir").val(1)};
+        modal.name = "modal_confirmacao";
+        modal.no_footer = false;
+        modal.text = "Deseja excluir este item?";
+
+        var rendered = modal.render();
+        $("#main-content").append(rendered);
+
+        $("#modal_confirmacao").modal("show");
     }
 }

@@ -37,7 +37,7 @@ class SuporteDiagETT extends ObjectETT
 
         try {
             //Executa os SQL
-            $dbh = new PDO("mysql:host=" . $this->db_host, $this->db_user, $this->db_pass);
+            $dbh = new PDO("mysql:host=" . $this->db_host. ";", $this->db_user, $this->db_pass);
             $dbh->exec("CREATE DATABASE `$this->db_name`;") or die(print_r($dbh->errorInfo(), true));
         }
         catch(\PDOException $erro) {
@@ -45,7 +45,8 @@ class SuporteDiagETT extends ObjectETT
             finaliza();
         }
 
-        $conexao = new ExtPDO("mysql:host=".$this->db_host."; dbname=".$this->db_name.";", $this->db_user, $this->db_pass);
+        $conexao = new ExtPDO("mysql:host=".$this->db_host."; dbname=".$this->db_name, $this->db_user, $this->db_pass,
+            array(PDO::MYSQL_ATTR_FOUND_ROWS => true));
         self::parseScript("install.sql", $conexao);
         self::parseScript("locais.sql", $conexao);
         self::parseScript("conteudo-default.sql", $conexao);

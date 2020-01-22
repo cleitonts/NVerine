@@ -18,7 +18,7 @@ if(!isset($_SESSION["ID"])) {
 <head>
     <!--- basic page needs
     ================================================== -->
-    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#00acc1">
@@ -99,7 +99,7 @@ if(!isset($_SESSION["ID"])) {
     const __COMISSAO_FATOR__ = <?= (empty(__COMISSAO_FATOR__))? 0 : __COMISSAO_FATOR__; ?> ;
     const __COMISSAO_PERC__ = <?= (empty(__COMISSAO_PERC__))? 0 : __COMISSAO_PERC__; ?> ;
     const __CASAS_DECIMAIS__ = <?= (empty(__CASAS_DECIMAIS__))? 0 : __CASAS_DECIMAIS__; ?> ;
-    const __PASTA__ = '<?=_pasta?>' ;
+    const __PASTA__ = '' ;
     const __MAX_DESCONTO_VENDA__ = <?= (empty(__MAX_DESCONTO_VENDA__))? 0 : __MAX_DESCONTO_VENDA__; ?>;
     const __MODELO_NF__ = <?= (empty(__MODELO_NF__))? 0 : __MODELO_NF__;?>;
 
@@ -184,22 +184,10 @@ if(!isset($_SESSION["ID"])) {
                             </div>
                             <?php if($permissoes->libera("Master")) { ?>
                                 <div class="menu-body">
-                                    <h5 class="menu-header" onclick="destinoMenu('admin_dicionario')">Dicionário</h5>
-                                </div>
-                                <div class="menu-body">
                                     <h5 class="menu-header" onclick="destinoMenu('admin_auditoria')">Auditoria</h5>
                                 </div>
                                 <div class="menu-body">
                                     <h5 class="menu-header" onclick="destinoMenu('admin_config')">Editor de config.</h5>
-                                </div>
-                                <div class="menu-body">
-                                    <h5 class="menu-header" onclick="destinoMenu('admin_atualizacoes')">Atualizações</h5>
-                                </div>
-                                <div class="menu-body">
-                                    <h5 class="menu-header" onclick="destinoMenu('admin_upgrade')">Instalar novos módulos</h5>
-                                </div>
-                                <div class="menu-body">
-                                    <h5 class="menu-header" onclick="destinoMenu('admin_backup')">Importar backup</h5>
                                 </div>
                             <?php } ?>
                         </div>

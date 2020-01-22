@@ -127,7 +127,7 @@ $retorno = str_replace("?", "index.php?", getUrlRetorno());
                                     </span>
                                 </div>
                                 <div class="card-footer justify-content-center">
-                                    <button type="button" onclick="logar()" class="btn btn-info btn-block btn-link btn-lg">Entrar</button>
+                                    <button type="submit" class="btn btn-info btn-block btn-link btn-lg">Entrar</button>
                                 </div>
                             </div>
                         </form>
@@ -141,46 +141,49 @@ $retorno = str_replace("?", "index.php?", getUrlRetorno());
                     </div>
                 </div>
                 <script>
-                    function logar() {
-                        spinner(true);
+                    $(document).ready(function () {
+                        $("form").submit(function (e) {
+                            e.preventDefault();
+                            spinner(true);
 
-                        $.ajax({
-                            url: "actions.php",
-                            dataType: "json",
-                            type: 'POST',
-                            data: {
-                                act: "login",
-                                usuario: $("#campo_usuario").val(),
-                                senha: $("#campo_senha").val()
-                            }
-                        }).done(function (valores) {
-                            if (valores.retorno == "refresh") {
-                                location.reload();
-                            }
-                            if (valores.messages.length > 0) {
-                                for (var i = 0; i < valores.messages.length; i++){
-                                    var popup = new Alert();
-                                    popup.typo = valores.messages[i].typo;
-                                    popup.texto = valores.messages[i].text;
-                                    popup.act_close = valores.messages[i].onclose;
-                                    // instancia popup de erro
-                                    if(valores.messages[i].typo != "danger"){
-                                        popup.tempo = 5000;
-                                    }
-
-                                    popup.montaMensagem();
+                            $.ajax({
+                                url: "actions.php",
+                                dataType: "json",
+                                type: 'POST',
+                                data: {
+                                    act: "login",
+                                    usuario: $("#campo_usuario").val(),
+                                    senha: $("#campo_senha").val()
                                 }
-                            }
-                            spinner(false);
-                        })
-                            .fail(function () {
+                            }).done(function (valores) {
+                                if (valores.retorno == "refresh") {
+                                    location.reload();
+                                }
+                                if (valores.messages.length > 0) {
+                                    for (var i = 0; i < valores.messages.length; i++){
+                                        var popup = new Alert();
+                                        popup.typo = valores.messages[i].typo;
+                                        popup.texto = valores.messages[i].text;
+                                        popup.act_close = valores.messages[i].onclose;
+                                        // instancia popup de erro
+                                        if(valores.messages[i].typo != "danger"){
+                                            popup.tempo = 5000;
+                                        }
+
+                                        popup.montaMensagem();
+                                    }
+                                }
                                 spinner(false);
-                                var popup = new Alert();
-                                popup.typo = "danger";
-                                popup.texto = "Não foi possível enviar os dados, tente atualizar a página";
-                                popup.montaMensagem();
-                            });
-                    }
+                            })
+                                .fail(function () {
+                                    spinner(false);
+                                    var popup = new Alert();
+                                    popup.typo = "danger";
+                                    popup.texto = "Não foi possível enviar os dados, tente atualizar a página";
+                                    popup.montaMensagem();
+                                });
+                        });
+                    });
 
                     // exibe ou esconde o overlay de carregamento de paginas via ajax
                     function spinner(tipo = true) {

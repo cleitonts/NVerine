@@ -54,7 +54,7 @@ class Creator {
         for (var i in objs) {
             if (typeof cached_function[objs[i]] === "undefined") {
                 window[objs[i]] = function () {
-                    // funÁ„o vazia, reseta
+                    // fun√ß√£o vazia, reseta
                 }
             }
         }
@@ -197,12 +197,12 @@ class Creator {
 
         $(document).trigger("loaded");
 
-        // esse nome deve vir pad„o dos arquivos externos
+        // esse nome deve vir pad√£o dos arquivos externos
         if (typeof triggerUpdate === "function") {
             triggerUpdate();
         }
 
-        // esse nome deve vir pad„o dos arquivos externos
+        // esse nome deve vir pad√£o dos arquivos externos
         if (typeof pageUpdate === "function") {
             pageUpdate();
         }
@@ -211,7 +211,7 @@ class Creator {
 
     static atualizaTermos(){
         spinner(true);
-        // algumas paginas n„o usamos o dicionario
+        // algumas paginas n√£o usamos o dicionario
 
         if(Tools.getUrlParameter("tn") === "Termos" ){
             spinner(false);
@@ -238,7 +238,7 @@ class Creator {
         }).fail(function () {
             var popup = new Alert();
             popup.typo = "danger";
-            popup.texto = "N„o foi possÌvel atualizar os termos";
+            popup.texto = "N√£o foi poss√≠vel atualizar os termos";
             popup.montaMensagem();
             spinner(false);
         });

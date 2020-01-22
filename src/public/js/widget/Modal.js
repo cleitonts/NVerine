@@ -8,6 +8,7 @@ class Modal{
         this.btnCancelAct = ""; //function() {FieldTables.deleteLinha(this)};
         this.name = "myModal";
         this.no_footer = false;
+        this.text = "";
     }
 
     /**
@@ -50,6 +51,8 @@ class Modal{
 
         var body = document.createElement("div");
         body.className = "modal-body";
+
+        $(body).append(document.createTextNode(this.text));
 
         var footer = document.createElement("div");
         footer.className = "modal-footer";

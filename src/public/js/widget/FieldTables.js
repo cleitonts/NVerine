@@ -80,7 +80,7 @@ class FieldTables {
                         // edita o tipo para diferenciar no dictionary
                         var index_referencia = "templatex";
 
-                        // adiciona edita informaÁıes de template
+                        // adiciona edita informa√ß√µes de template
                         if (val.view == 4) {
                             if (i == 0) {
                                 campo_atual.name = campo_atual.name + "_templatex";
@@ -111,7 +111,7 @@ class FieldTables {
                 $(row).append(separator);
                 $(obj).append(row);
 
-                // esse È mais seguro
+                // esse √© mais seguro
                 $(document).trigger("trigger_dynamic_"+val.reference, [row, i]);
             }
             // adiciona ultima linha caso seja dinamico
@@ -134,7 +134,7 @@ class FieldTables {
                 $(btn).before(cont);
             }
             
-            // esse nome deve vir pad„o dos arquivos externos
+            // esse nome deve vir pad√£o dos arquivos externos
             if(typeof triggerUpdate === "function"){
                 triggerUpdate();
             }
@@ -198,7 +198,7 @@ class FieldTables {
                 campo_atual.type = "table-" + campo_atual.type;
                 var index_referencia = "templatex";
 
-                // adiciona edita informaÁıes de template
+                // adiciona edita informa√ß√µes de template
                 if (val.view == 2) {
                     if(i == 0) {
                         //campo_atual.value = "";
@@ -217,9 +217,9 @@ class FieldTables {
                 Form.dictionary(tr, campo_atual, val.reference + "[" + index_referencia + "]");
             }
 
-            // adiciona bot„o de controle
+            // adiciona bot√£o de controle
             if (val.view == 2) {
-                // adiciona bot„o de nova linha
+                // adiciona bot√£o de nova linha
                 var td = document.createElement("td");
                 td.className = "tabc";
 
@@ -256,13 +256,13 @@ class FieldTables {
             FieldTables.normalizeRow(tr);
             $(tbody).append(tr);
 
-            // esse È mais seguro
+            // esse √© mais seguro
             $(document).trigger("trigger_dynamic_"+val.reference, [tr, i]);
         }
 
         // adiciona ultima linha caso seja dinamico
         if (val.view == 2) {
-            // adiciona bot„o de nova linha
+            // adiciona bot√£o de nova linha
             var tr = document.createElement("tr");
             tr.className = "tabdiv";
             tr.id = "ultima_linha";
@@ -341,12 +341,12 @@ class FieldTables {
             $("#dynamic_"+name+" .novo_item").before(clone);
         }
 
-        // esse nome deve vir pad„o dos arquivos externos
+        // esse nome deve vir pad√£o dos arquivos externos
         if(typeof triggerUpdate === "function"){
             triggerUpdate(clone);
         }
 
-        // esse È mais seguro
+        // esse √© mais seguro
         $(document).trigger("trigger_dynamic_"+name, [clone, (num - 1)]);
 
         return clone;
@@ -366,10 +366,10 @@ class FieldTables {
             $(obj).toggleClass("btn-success btn-danger").toggleClass("fa-times fa-plus");
         }
 
-        // esse È mais seguro
+        // esse √© mais seguro
         //$(document).trigger("trigger_dynamic_"+val.reference, [row, - 1]);
         
-        // esse nome deve vir pad„o dos arquivos externos
+        // esse nome deve vir pad√£o dos arquivos externos
         if(typeof triggerUpdate === "function"){
             triggerUpdate();
         }
@@ -390,7 +390,7 @@ class FieldTables {
     }
 
     /**
-     * manter funÁıes recorrentes nas linhas aqui
+     * manter fun√ß√µes recorrentes nas linhas aqui
      * @param linha
      */
     static normalizeRow(linha){

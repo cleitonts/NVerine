@@ -40,12 +40,15 @@ class cadastroCONTROLLER implements ControladoraCONTROLLER
 
         $cadastro = new CadastroETT($table);
         if(!empty($obj->HANDLE)){
-            $cadastro->atualiza($obj);
+            if ($_REQUEST["excluir"] == 1){
+                $cadastro->exclui($obj);
+            }
+            else{
+                $cadastro->atualiza($obj);
+            }
         }
         else{
             $cadastro->cadastra($obj);
         }
-
-
     }
 }

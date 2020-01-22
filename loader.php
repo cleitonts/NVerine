@@ -4,42 +4,63 @@ include("src/services/Dates.php");
 
 use src\services\Transact\ExtPDO;
 
-ini_set("default_charset", "ISO-8859-1");
+ini_set("default_charset", "UTF-8");
 
 // identidade
 @define("__NOME_SISTEMA__",				"NVerine");
 @define("__DIR_IDENTIDADE__",			"");
 define("__MAKER__",						"TSBrothers");
 define("__MAKER_WEBSITE__",				"http://www.tsbrothers.com.br");
-define("_base_path",				    "uploads/");
 
 // versão do arquivo de configuração
 $versao_config_atual = 1;
 
 // constante para referenciar o endereço absoluto do sistema na rede
 $host = "http://{$_SERVER['HTTP_HOST']}";
-$pasta = preg_replace("#/[^/]*\.php$#simU", "/", $_SERVER["PHP_SELF"]); // remove script (*.php) do caminho
+$temp = explode("?", $_SERVER["REQUEST_URI"]);
+$pasta = preg_replace("#/[^/]*\.php$#simU", "/", $temp[0]); // remove script (*.php) do caminho
 $url = $host.$pasta;
 
-define("_pasta", $url); // essa constante é desnecessária em URLs porque aponta para a raiz do sistema.
+// =====================================================================================================================
+//verifica se foi digitado a pasta para o funcionamento correto
+if (strpos(dirname(__FILE__), 'releases_nverine') !== false) {
+    $arr = explode("/", $_SERVER["REDIRECT_URL"]);
+    if(empty($arr[1])) {
+        include("../../404.html");
+        die();
+    }
 
-// lê arquivo de configuração
-$ini = @parse_ini_file("uploads/config.ini.php", false);
+    define("_base_name", $arr[1]);
+    define("_base_root", "../../bases");
+    define("_base_path", _base_root."/"._base_name."/gestao/");
+    if(!is_dir(_base_path)) {
+        include("../../404.html");
+        die();
+    }
+    // lê arquivo de configuração
+    $ini = @parse_ini_file(_base_path."config.ini.php", false);
+}
+else{
+    define("_base_path", "uploads/");
+    // lê arquivo de configuração
+    $ini = @parse_ini_file(_base_path."config.ini.php", false);
 
-if(!$ini) {
-    // não temos um arquivo!
-    ini_set("display_errors", 1);
-    error_reporting(E_ERROR | E_PARSE | E_RECOVERABLE_ERROR);
-    include("instalador.php");
-    die();
+    // executa instalador
+    if(!$ini) {
+        // não temos um arquivo!
+        ini_set("display_errors", 1);
+        error_reporting(E_ERROR | E_PARSE | E_RECOVERABLE_ERROR);
+        include("instalador.php");
+        die();
+    }
 }
 
 // confere se arquivo de configuração está atualizado
 if($ini["versao"] < $versao_config_atual) {
-    echo("O arquivo <code>config.ini.php</code> de seu sistema está desatualizado.
+    echo('O arquivo <code>config.ini.php</code> de seu sistema está desatualizado.
 		Por favor, inclua as novas variáveis que foram criadas em <code>config.ini.php.sample</code>
-		para garantir o melhor funcionamento do sistema, ou inclua a linha <code>versao = ".$versao_config_atual."</code>
-		para desabilitar esta mensagem.");
+		para garantir o melhor funcionamento do sistema, ou inclua a linha <code>versao = '.$versao_config_atual.'</code>
+		para desabilitar esta mensagem.');
     die();
 }
 
@@ -141,7 +162,8 @@ try {
     elseif(__DB_DRIVER__ == "mysql") { // mysql tem suporte parcial ainda, mas é funcional.
         $pdo_string = "mysql:host=".__DB_HOST__."; dbname=".__DB_NAME__.";";
 
-        $conexao = new ExtPDO($pdo_string, __DB_USER__, __DB_PASS__, array(PDO::MYSQL_ATTR_FOUND_ROWS => true));
+        $conexao = new ExtPDO($pdo_string, __DB_USER__, __DB_PASS__,
+            array(PDO::MYSQL_ATTR_FOUND_ROWS => true));
     }
     elseif(__DB_DRIVER__ == "sqlsrv") { // sqlsrv não é testado/suportado há muito tempo!
         $pdo_string = "sqlsrv:Server=".__DB_HOST__."; Database=".__DB_NAME__.";";

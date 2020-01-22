@@ -89,7 +89,7 @@ class CadastroGUI extends ObjectGUI {
 
         // monta query completa
         else {
-            $select = "SELECT T.*";
+            $select = "SELECT {$this->top} T.*";
             $from = "\nFROM {$this->tabela->nome_tabela} T";
 
             foreach($this->tabela->campos as $r) {

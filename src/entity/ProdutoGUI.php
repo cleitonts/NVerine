@@ -89,8 +89,6 @@ class ProdutoGUI extends ObjectGUI implements InterfaceGUI{
 
 		// limite da query/paginação
 		$top = $this->top;
-		if(!empty($this->pesquisa["pesq_top"])) 		$top = "TOP {$this->pesquisa['pesq_top']}";
-		if(!empty($this->pesquisa["pesq_pagina"]))		$conexao->pagina = $this->pesquisa["pesq_pagina"];
 
 		// busca por preço
 		if(!empty($this->pesquisa["pesq_preco"])) {

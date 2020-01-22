@@ -16,7 +16,7 @@ class ExtPDO extends PDO {
     public $last_sql_statement;
 
     // implementa paginação cross-plataforma
-    public $pagina;
+    public $pagina = null;
 
     // ---------------------------------------------------------------------------------------------------------
     // construtor obrigatório
@@ -26,9 +26,6 @@ class ExtPDO extends PDO {
 
         // implementa nossa classe statement
         $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array("ExtPDOStatement", array($this)));
-
-        // por default, não usa paginação
-        $this->pagina = null;
     }
 
     /* extensão de prepare()
@@ -77,7 +74,7 @@ class ExtPDO extends PDO {
 
                 // se não encontrou TOP XXX, tente encontrar TOP XX
                 if(empty($valor)) $valor = intval(substr($sql, $pos + 4, 2));
-
+;
                 // só execute se encontrou um valor válido
                 if($valor > 1) {
                     // remove o valor encontrado da query

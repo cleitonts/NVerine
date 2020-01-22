@@ -1,5 +1,5 @@
 /**
- * Mostra as informações pertinentes aos desenvolvedores
+ * Mostra as informaÃ§Ãµes pertinentes aos desenvolvedores
  */
 class DevInfo {
     static init(limpar = true){

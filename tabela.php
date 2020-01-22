@@ -21,9 +21,6 @@ global $perfil;
 // guarda timestamp inicial
 $ts_inicio = time();
 
-// atribui o offset
-$conexao->pagina = intval($_REQUEST["pesq_pagina"]);
-
 // instancia pesquisa
 $gui = new $_REQUEST["class"]();
 if(strpos($_REQUEST["class"], "CadastroGUI") !== false){
@@ -53,10 +50,9 @@ if($_REQUEST["only_headers"] == "true"){    // recebe como uma String òò
 }
 
 $gui->setPesquisa();
+// atribui o offset
+$conexao->pagina = $_REQUEST["pesq_pagina"];
 $gui->fetch();
-
-// retorna para o padrão
-$conexao->pagina = null;
 
 getTabela($gui);
 

@@ -59,7 +59,7 @@ class Gallery {
                 spinner(false);
                 var popup = new Alert();
                 popup.typo = "danger";
-                popup.texto = "N„o foi possÌvel enviar os dados, tente atualizar a p·gina";
+                popup.texto = "N√£o foi poss√≠vel enviar os dados, tente atualizar a p√°gina";
                 popup.montaMensagem();
             }
         });
@@ -128,7 +128,7 @@ class Gallery {
             value: ""
         };
 
-        // carrega o bot„o para upload da imagem
+        // carrega o bot√£o para upload da imagem
         if(file_input) {
             Field.file("file", content, file);
             Field.input("text", content, nome);
@@ -136,7 +136,7 @@ class Gallery {
 
             $("#modal_galeria").modal('show');
 
-            // amarra aÁ„o do nome
+            // amarra a√ß√£o do nome
             $(content).find("#campo_imagem").change(function (e) {
                 $(content).find("#campo_nome").val(e.target.files[0].name)
                     .closest(".form-group.bmd-form-group").addClass("is-filled");

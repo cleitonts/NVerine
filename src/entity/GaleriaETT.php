@@ -19,7 +19,7 @@ class GaleriaETT extends ObjectETT
     const TARGET_FINANCEIRO = 2;
     const TARGET_SUPORTE = 3;
 
-    const _CAMINHO_ = "uploads/galeria/";
+    const _CAMINHO_ = _base_path."galeria/";
 
     public $referencia; // handle da tabela de referencia
     public $target;     // diretorio

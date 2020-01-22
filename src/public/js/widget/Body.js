@@ -6,7 +6,7 @@ var tabelas;
 class Body{
     /**
      *
-     * @param obj ponto de inserção
+     * @param obj ponto de inserÃ§Ã£o
      * @param val valores a serem processados
      */
     static create(obj, val) {
@@ -28,7 +28,7 @@ class Body{
 
             Body.content(html, atual, val);
 
-            // essa parte não é paginada
+            // essa parte nÃ£o Ã© paginada
             if(key.length > 1){
                 pane.className = "tab-pane";
                 pane.id = "sd" + i;

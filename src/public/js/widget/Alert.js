@@ -6,10 +6,10 @@
  *
  * sempre invocar 'Alerta'
  *
- * È somente uma classe que controla todas as mensagens e as views de cada uma,
+ * √© somente uma classe que controla todas as mensagens e as views de cada uma,
  * apos criado o controle deve ser feito no DOM
  *
- * preencher as aÁıes que os botoes ir„o executar, n„o È possivel usar return dentro da classe
+ * preencher as a√ß√µes que os botoes ir√£o executar, n√£o √© possivel usar return dentro da classe
  *
  * http://bootstrap-notify.remabledesigns.com/
  */
@@ -17,8 +17,8 @@
 //controla os alerts da pagina
 class Alert{
     constructor(){
-        // composiÁ„o da mensagem
-        this.tempo = null; // tempo em ms; se setado n„o exibe os botıes
+        // composi√ß√£o da mensagem
+        this.tempo = null; // tempo em ms; se setado n√£o exibe os bot√µes
         /**
          * Error
          * Info
@@ -73,14 +73,14 @@ class Alert{
             //onClosed: null,
             //icon_type: 'class',
             template:   '<div data-notify="container" class="col-12 col-sm-3 col-md-3 col-xs-3 alert alert-{0}" role="alert">' +
-                        '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">◊</button>' +
-                        '<i data-notify="icon" class="material-icons">notifications</i> ' +
-                        '<span data-notify="title">{1}</span> ' +
-                        '<span data-notify="message">{2}</span>' +
-                        '<div class="progress" data-notify="progressbar">' +
-                        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
-                        '</div>' +
-                        '<a href="{3}" target="{4}" data-notify="url"></a>' +
+                            '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">√ó</button>' +
+                            '<i data-notify="icon" class="material-icons">notifications</i> ' +
+                            '<span data-notify="title">{1}</span> ' +
+                            '<span data-notify="message">{2}</span>' +
+                            '<div class="progress" data-notify="progressbar">' +
+                                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+                            '</div>' +
+                            '<a href="{3}" target="{4}" data-notify="url"></a>' +
                         '</div>'
         };
 

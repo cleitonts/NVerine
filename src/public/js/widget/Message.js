@@ -4,7 +4,7 @@
  */
 class Message{
     static toggle(obj){
-        // troca ação entre mostrar e ocultar
+        // troca aÃ§Ã£o entre mostrar e ocultar
         if($(obj).hasClass("active")){
             $("#message-log").hide('slide', {}, 500, {});
         }
