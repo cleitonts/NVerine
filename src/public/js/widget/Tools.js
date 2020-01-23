@@ -1,5 +1,5 @@
 /**
- * ferramentas e coias para normaliza√ß√£o de dados
+ * ferramentas e coias para normalizaÁ„o de dados
  */
 class Tools{
     static capitalize(val){
@@ -46,7 +46,7 @@ class Tools{
 
         // retorno recebido da url
         else{
-            // quebra url, o importante ser√° somente os parametros
+            // quebra url, o importante ser· somente os parametros
             pagina = pagina.split("?");
 
             // abre a pagina requisitada
@@ -55,18 +55,27 @@ class Tools{
         spinner(false);
     }
 
-    static redirect(url, back = false, limpa_log){
+    static redirect(url, back = false, limpa_log = true){
         // pinta spinner
         spinner(true);
 
-        // se tem algum modal aberto, fechar
-        $(".modal.show").modal("hide");
+        if(url.includes("index.php") !== false){
+            destinoMenu(url);
+            return;
+        }
 
         $.ajax({
             url: "page.php" + url,
             dataType: "json",
             type: 'GET',
         }).done(function(valores){
+            // fechar dropdown
+            $("[data-toggle='dropdown'][aria-expanded='true']").click();
+            $(".dropdown-menu .menu-body.active h5").click();
+
+            // se tem algum modal aberto, fechar
+            $(".modal.show").modal("hide");
+
             // cria widget
             let widget = new Creator();
             widget.create(valores, limpa_log);
@@ -78,7 +87,7 @@ class Tools{
 
             document.title = valores.render.title;
 
-            // s√≥ adiciona a lista se n√£o for false
+            // sÛ adiciona a lista se n„o for false
             if(back === false) {
                 window.history.pushState({href: url}, "", url);
             }
@@ -87,7 +96,7 @@ class Tools{
         }).fail(function(){
             var popup = new Alert();
             popup.typo = "danger";
-            popup.texto = "P√°gina n√£o encontrada";
+            popup.texto = "P·gina n„o encontrada";
             popup.montaMensagem();
             spinner(false);
         });

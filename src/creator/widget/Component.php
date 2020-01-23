@@ -49,8 +49,12 @@ class Component
 
     /**
      * cria padrão de galeria
+     * $galeria = instancia da galeria
+     * $referencia = handle do item que gerará a galeria
+     * $target = atrelado a página que esta genrando ex: produtos
+     * $single = controla se pode somente uma ou mais imagens
      */
-    public function setGaleria($galeria, $referencia, $target)
+    public function setGaleria($galeria, $referencia, $target, $single = false)
     {
         $images = new Component();
         $images->tag = "div";
@@ -75,6 +79,7 @@ class Component
             "id" => "wrapper_galeria",
             "acao" => "gera_galeria",
             "target" => $target,
+            "single" => $single,
             "referencia" => $referencia
         );
     }

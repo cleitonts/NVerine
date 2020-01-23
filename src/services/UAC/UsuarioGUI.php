@@ -6,8 +6,11 @@
  * Time: 14:35
  */
 
-namespace src\entity;
+namespace src\services\UAC;
 
+use src\entity\GaleriaETT;
+use src\entity\GaleriaGUI;
+use src\entity\ObjectGUI;
 use src\services\Transact\ExtPDO as PDO;
 
 class UsuarioGUI extends ObjectGUI
@@ -24,7 +27,13 @@ class UsuarioGUI extends ObjectGUI
         // monta cláusula de busca por pessoa
         if (!empty($this->pessoa)) {
             $where = "WHERE P.HANDLE = {$this->pessoa}";
-        } // se não é por pessoa, busca só pode ser por usuário
+        }
+        elseif(!empty($this->pesquisa["pesq_vendedor"])){
+            $where = "WHERE U.NIVEL = 1";
+        }
+        elseif (!empty($this->pesquisa["pesq_supervisor"])) {
+            $where = "WHERE U.NIVEL IN (2, 3)";
+        }
         else {
             // se não possuir usuário definido, puxar do usuário logado
             if (empty($this->handle)) {
@@ -33,21 +42,14 @@ class UsuarioGUI extends ObjectGUI
 
             $where = "WHERE U.HANDLE = {$this->handle}";
         }
-
-        if(!empty($this->pesquisa["pesq_vendedor"])){
-            $where = "WHERE U.NIVEL = 1";
-        }
-
-        if (!empty($this->pesquisa["pesq_supervisor"])) {
-            $where = "WHERE U.NIVEL IN (2, 3)";
-        }
         // puxa dados de usuário
-        $sql = "SELECT U.*,
+        $sql = "SELECT U.*, F.FILIAL,
 				G.NOME AS NOMEGRUPO, G.PAGINAINICIAL,
 				P.NOME AS NOMECLIENTE
 				FROM K_PD_USUARIOS U
 				LEFT JOIN K_FN_GRUPOUSUARIO G ON U.GRUPO = G.HANDLE
 				LEFT JOIN K_FN_PESSOA P ON U.CLIENTE = P.HANDLE
+				LEFT JOIN K_FN_USUARIOFILIAL F ON F.USUARIO = U.HANDLE
 				{$where}";
         $stmt = $conexao->prepare($sql);
         $stmt->execute();
@@ -62,11 +64,11 @@ class UsuarioGUI extends ObjectGUI
             $item->senha = $r->SENHA;
             $item->email = $r->EMAIL;
             $item->terminal = $r->TERMINAL;
+            $item->filial = $r->FILIAL;
             $item->cpf = $r->CNPJCPF;
             $item->grupo = formataCase($r->NOMEGRUPO, true);
             $item->cod_grupo = $r->GRUPO;
             $item->cod_regiao = $r->REGIAO;
-            $item->avatar = $r->IMAGEM;
             $item->pagina_inicial = $r->PAGINAINICIAL;
             $item->cliente = formataCase($r->NOMECLIENTE, true);
             $item->cod_cliente = $r->CLIENTE;
@@ -74,6 +76,12 @@ class UsuarioGUI extends ObjectGUI
             $item->nivel = $r->NIVEL;
 
             // imagem fallback
+            $galeria = new GaleriaGUI();
+            $galeria->pesquisa["pesq_target"] = GaleriaETT::TARGET_USUARIO;
+            $galeria->pesquisa["pesq_referencia"] = $item->handle;
+            $galeria->fetch();
+
+            $item->avatar = $galeria->itens[0]->url;
             if (empty($item->avatar)) $item->avatar = "ui2/img/default-user.png";
 
             // monta string de último acesso
@@ -96,31 +104,5 @@ class UsuarioGUI extends ObjectGUI
             $item->primeiro_nome = $partes[0];
             $this->itens[] = $item;
         }
-    }
-
-    public static function getVendedor(){
-        $vendedor = new UsuarioGUI();
-        $vendedor->pesquisa["pesq_vendedor"] = 'S';
-        $vendedor->fetch();
-
-        $arr = array();
-        foreach ($vendedor->itens as $r){
-            $arr["handle"][] = $r->handle;
-            $arr["nome"][] = $r->nome;
-        }
-        return $arr;
-    }
-
-    public static function getSupervisor(){
-        $supervisor = new UsuarioGUI();
-        $supervisor->pesquisa["pesq_supervisor"] = 'S';
-        $supervisor->fetch();
-
-        $arr = array();
-        foreach ($supervisor->itens as $r){
-            $arr["handle"][] = $r->handle;
-            $arr["nome"][] = $r->nome;
-        }
-        return $arr;
     }
 }

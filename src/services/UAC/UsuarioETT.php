@@ -6,10 +6,10 @@
  * Time: 14:34
  */
 
-namespace src\entity;
+namespace src\services\UAC;
 
+use src\entity\ObjectETT;
 use src\services\Transact\ExtPDO as PDO;
-use Upload;
 
 class UsuarioETT extends ObjectETT
 {
@@ -83,9 +83,21 @@ class UsuarioETT extends ObjectETT
 
     public function atualiza()
     {
+        global $conexao;
+
         $senha = safercrypt($this->senha);
 
         if (!empty($this->senha)){
+            // verifica se a senha fornecida bate com a antiga
+            $gui = new UsuarioGUI();
+            $gui->fetch();
+            $gui = $gui->itens[0];
+
+            if($gui->senha != safercrypt($this->senha_atual)){
+                mensagem("A senha antiga está errada", MSG_ERRO);
+                finaliza();
+            }
+
             $stmt = $this->updateStatement("K_PD_USUARIOS",
                 array(
                     "HANDLE" => $this->handle,
@@ -104,7 +116,7 @@ class UsuarioETT extends ObjectETT
         retornoPadrao($stmt, "Dados de cadastro atualizados com sucesso.", "Por favor, certifique-se de que a senha digitada é correta.");
 
         // atualiza imagem
-        if (temArquivo($this->avatar)) {
+        if (1 == 2) {
             $up = new Upload();
             $up->anexo = $this->avatar;
             $url = $up->getUrl();
@@ -122,7 +134,7 @@ class UsuarioETT extends ObjectETT
         // atualiza filiais
         $this->deleteStatement("K_FN_USUARIOFILIAL", array("USUARIO" => $this->handle));
         $stmt = $this->insertStatement("K_FN_USUARIOFILIAL", array(
-            "HANDLE" => newHandle("K_FN_USUARIOFILIAL"),
+            "HANDLE" => newHandle("K_FN_USUARIOFILIAL", $conexao),
             "USUARIO" => $this->handle,
             "FILIAL" => $this->filial,
             "PRIORIDADE" => 1));
@@ -148,26 +160,26 @@ class UsuarioETT extends ObjectETT
         retornoPadrao($stmt, "Senha reiniciada com sucesso", "E-mail não encontrado");
     }
 
-    public function listaFiliais() {
+    public static function listaFiliais($gui) {
         global $conexao;
 
         // níveis de acesso
-        if($this->nivel == 1 && !__PRODUCAO__) {
+        if($gui->nivel == 1) {
             $sql = "SELECT F.*
 					FROM K_FN_FILIAL F
 					WHERE F.HANDLE = :filial";
             $stmt = $conexao->prepare($sql);
             $stmt->bindValue(":filial", __FILIAL__);
         }
-        elseif($this->nivel == 2 && !__PRODUCAO__) {
+        elseif($gui->nivel == 2) {
             $sql = "SELECT F.*
 					FROM K_FN_FILIAL F
 					LEFT JOIN K_FN_USUARIOFILIAL UF ON UF.USUARIO = :handle AND UF.FILIAL = F.HANDLE
 					WHERE F.REGIAO = :regiao
 					ORDER BY UF.PRIORIDADE DESC";
             $stmt = $conexao->prepare($sql);
-            $stmt->bindValue(":handle", $this->handle);
-            $stmt->bindValue(":regiao", $this->cod_regiao);
+            $stmt->bindValue(":handle", $gui->handle);
+            $stmt->bindValue(":regiao", $gui->cod_regiao);
         }
         else {
             $sql = "SELECT F.*
@@ -179,14 +191,13 @@ class UsuarioETT extends ObjectETT
         $f = $stmt->fetchAll(PDO::FETCH_OBJ);
 
         // monta array de filiais
-        $labels = array();
-        $values = array();
+        $arr = array();
 
         foreach($f as $r) {
-            $labels[] = $r->NOME;
-            $values[] = $r->HANDLE;
+            $arr["nome"][] = $r->NOME;
+            $arr["handle"][] = $r->HANDLE;
         }
 
-        return array($labels, $values);
+        return $arr;
     }
 }

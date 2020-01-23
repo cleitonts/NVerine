@@ -6,10 +6,10 @@
  *
  * sempre invocar 'Alerta'
  *
- * √© somente uma classe que controla todas as mensagens e as views de cada uma,
+ * È somente uma classe que controla todas as mensagens e as views de cada uma,
  * apos criado o controle deve ser feito no DOM
  *
- * preencher as a√ß√µes que os botoes ir√£o executar, n√£o √© possivel usar return dentro da classe
+ * preencher as aÁıes que os botoes ir„o executar, n„o È possivel usar return dentro da classe
  *
  * http://bootstrap-notify.remabledesigns.com/
  */
@@ -17,8 +17,8 @@
 //controla os alerts da pagina
 class Alert{
     constructor(){
-        // composi√ß√£o da mensagem
-        this.tempo = null; // tempo em ms; se setado n√£o exibe os bot√µes
+        // composiÁ„o da mensagem
+        this.tempo = null; // tempo em ms; se setado n„o exibe os botıes
         /**
          * Error
          * Info

@@ -29,7 +29,7 @@ class Transact
         global $mensagens;
 
         // temos que testar se o objeto mensagens existe, senão gera um erro fatal.
-        if (isset($mensagens)) $mensagens->set($msg, $tag);
+        if (get_class($mensagens) != "stdClass") $mensagens->set($msg, $tag);
     }
 
     public function filtraFilial($campo, $modulo, $inclui_newline = true){
@@ -245,7 +245,7 @@ class Transact
     public function getUrlRetorno()
     {
         // monta url
-        $url = _pasta . "index.php" . "?";
+        $url = "?";
 
         // filtra parâmetros vazios
         $params = explode("&", $_SERVER["QUERY_STRING"]);

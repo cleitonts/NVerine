@@ -139,7 +139,7 @@ function getMenu()
                 <?php
                 if (!empty($itens)) foreach ($itens as $titulo => $link) {
                     if (!$permissoes->bloqueia($titulo)) {
-                        echo "<li class='menu-list-item'><a href='{$link}' class='menu-link'>{$titulo}</a></li>";
+                        echo "<li class='menu-list-item'><a onclick='Tools.redirect(\"{$link}\", false, false)' class='menu-link'>{$titulo}</a></li>";
 
                         // guarda um registro de todos os itens gerados para pesquisa
                         $reg = array(

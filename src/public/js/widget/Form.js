@@ -4,7 +4,7 @@
 class Form{
     /**
      *
-     * @param obj ponto de inser√ß√£o
+     * @param obj ponto de inserÁ„o
      * @param val valores a serem processados
      */
     static create(obj, val){
@@ -106,7 +106,7 @@ class Form{
             return this.value == 'NaN'
         }).val("");
 
-        // esse nome deve vir pad√£o dos arquivos externos
+        // esse nome deve vir pad„o dos arquivos externos
         if (typeof formUpdate === "function") {
             // alguns forms precisam ser atualizados antes de enviador
             formUpdate();
@@ -146,7 +146,7 @@ class Form{
                 spinner(false);
                 var popup = new Alert();
                 popup.typo = "danger";
-                popup.texto = "N√£o foi poss√≠vel enviar os dados, tente atualizar a p√°gina";
+                popup.texto = "N„o foi possÌvel enviar os dados, tente atualizar a p·gina";
                 popup.montaMensagem();
             });
     }

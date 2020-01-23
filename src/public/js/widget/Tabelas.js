@@ -123,14 +123,14 @@ class Tabelas{
         //     elemento.send();
         // });
 
-        // a√ß√£o de ordena√ß√£o
+        // aÁ„o de ordenaÁ„o
         $("#tabela_"+this.id+" th").click(function(){
             elemento.ordena = $(this).attr("num");
             elemento.send();
         });
     }
 
-    // gera o bot√£o de edi√ß√£o
+    // gera o bot„o de ediÁ„o
     geraEdicao(){
         var elemento = this;
         var edicao = document.createElement('div');
@@ -152,7 +152,7 @@ class Tabelas{
 
         const select = {
             class: "",
-            description: "Registros por p√°gina",
+            description: "Registros por p·gina",
             function: "tabelas.setTop(this)",
             icon: "",
             name: "pesq_top",
@@ -199,7 +199,7 @@ class Tabelas{
         this.send();
     }
 
-    // gera o rodape de navega√ß√µes
+    // gera o rodape de navegaÁıes
     atualizaNavegacao(){
         var elemento = this;
 
@@ -208,7 +208,7 @@ class Tabelas{
             $("#pag-"+this.id).remove();
         }
 
-        // cria nova navega√ß√£o
+        // cria nova navegaÁ„o
         var navegacao = document.createElement("nav");
         navegacao.id = "pag-"+this.id;
 
@@ -252,7 +252,7 @@ class Tabelas{
         $(this.obj).append(navegacao);
     }
 
-    // chamar esta fun√ß√£o quando clicar no botao de pesquisa para serializar o formulario
+    // chamar esta funÁ„o quando clicar no botao de pesquisa para serializar o formulario
     send(){
         this.getDados();
     }
@@ -298,7 +298,7 @@ class Tabelas{
         // ajax nao funciona muito bem com o this
         let elemento = this;
 
-        // monta a pesquisa em fun√ß√£o separada
+        // monta a pesquisa em funÁ„o separada
         let pesquisa = elemento.montapesquisa();
 
         // completa com o formulario de pesquisa
@@ -330,7 +330,7 @@ class Tabelas{
 
                     // cria a wrapper da body
                     let body = document.createElement("tbody");
-                    elemento.montaBody(valores.render.itens, body);    // n√£o pode ser chamada static
+                    elemento.montaBody(valores.render.itens, body);    // n„o pode ser chamada static
 
                     //limpa dados antigos
                     elemento.tabela.innerHTML = "";
@@ -349,7 +349,7 @@ class Tabelas{
         }).fail(function () {
             var popup = new Alert();
             popup.typo = "danger";
-            popup.texto = "Tabela n√£o encontrada";
+            popup.texto = "Tabela n„o encontrada";
             popup.montaMensagem();
             spinner(false);
         });
@@ -462,7 +462,7 @@ class Tabelas{
         $("#modal_edita_tabela .modal-body").append(html_static);
         $("#modal_edita_tabela").modal("show");
 
-        // fun√ß√µes
+        // funÁıes
         $(".item_left").click(function(){
             const li = $(this).closest("li")[0];
             $(li).find(".item_control").toggleClass("d-block d-none");
@@ -547,7 +547,7 @@ class Tabelas{
                 spinner(false);
                 var popup = new Alert();
                 popup.typo = "danger";
-                popup.texto = "N√£o foi poss√≠vel enviar os dados, tente atualizar a p√°gina";
+                popup.texto = "N„o foi possÌvel enviar os dados, tente atualizar a p·gina";
                 popup.montaMensagem();
             });
     }

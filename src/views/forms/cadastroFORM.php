@@ -136,7 +136,7 @@ class cadastroFORM implements ControladoraFORM
                 $field = new Fields();
                 $field->type = $field::PASSWORD;
                 $field->property = $r;
-                $field->value = "sonha";
+                $field->value = "12345";
                 $field->size = $tam / 2;
                 $field->name = $campo;
                 $field->description = "Senha";

@@ -265,7 +265,7 @@ h4.dropdown-header{
 }
 
 .user-menu img{
-    height: 40px;
+    height: 80px;
     border-radius: 5px;
 }
 
@@ -779,6 +779,11 @@ table .bootstrap-select.btn-group .dropdown-menu{
 #wrapper_galeria img{
     max-width: 100px;
     max-height: 100px;
+    margin: auto;
+}
+[single]#wrapper_galeria img{
+    max-width: 100%;
+    max-height: 290px;
     margin: auto;
 }
 

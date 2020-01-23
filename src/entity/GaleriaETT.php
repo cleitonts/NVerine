@@ -18,6 +18,7 @@ class GaleriaETT extends ObjectETT
     const TARGET_PRODUTO = 1;
     const TARGET_FINANCEIRO = 2;
     const TARGET_SUPORTE = 3;
+    const TARGET_USUARIO = 4;
 
     const _CAMINHO_ = _base_path."galeria/";
 
@@ -227,6 +228,8 @@ class GaleriaETT extends ObjectETT
                 return "produto/";
             case self::TARGET_SUPORTE:
                 return "suporte/";
+            case self::TARGET_USUARIO:
+                return "usuario/";
             default:
                 return "Indefinido";
         }

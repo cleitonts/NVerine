@@ -312,11 +312,19 @@ class CadastroETT extends ObjectETT
         foreach($obj as $key => $value) {
             // filtrar tudo o que pode não ser um valor de campo
             if(!in_array($key, $this->campos_sistema)) {
-                if(!empty($update)) { $update .= ", "; }
+                if(!empty($update)) {
+                    $update .= ", ";
+                }
 
                 if ($key == "SENHA"){
+                    // não cadastra senha vazia
+                    if(empty($value) || $value == '12345') {
+                        $update = substr($update, 0, -2);
+                        continue;
+                    }
                     $value = safercrypt($value);
                 }
+
                 if($value == "")
                     $update .= strtoupper(anti_injection($key))." = NULL";
                 else

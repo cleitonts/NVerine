@@ -254,8 +254,9 @@ function dumper($arg){
 $permissoes = new \src\services\UAC\Permissions();
 
 // puxa as informações de perfil
-$perfil = new \src\services\UAC\Perfil();
+$perfil = new \src\services\UAC\UsuarioGUI();
 $perfil->fetch();
+$perfil = $perfil->itens[0];
 
 // puxa as notificações
 $notificacoes = new \src\services\Notifier\Notifier();

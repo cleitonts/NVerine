@@ -11,7 +11,12 @@ namespace src\services\UAC;
 use src\entity\ObjectETT;
 use src\services\Transact\ExtPDO as PDO;
 
-class Perfil extends ObjectETT {
+/**
+ * Class Perfil
+ * @package src\services\UAC
+ * Perfil !== Usuarios
+ */
+class Perfilold extends ObjectETT {
     // propriedades
     public $handle;					// código do usuário: para usuário atual, passar $_SESSION["ID"]
     public $pessoa;					// campo de busca pelo código da pessoa (não é a mesma coisa que cliente!)

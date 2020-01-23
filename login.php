@@ -4,6 +4,17 @@ spl_autoload_register(function ($class) {
     include str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
 });
 
+// limpa cookies para nao causar erro
+session_start();
+session_unset();
+session_destroy();
+// destrói o cookie
+$validade = time() - 3600;
+setcookie("gs_uid", "", $validade);
+setcookie("gs_usuario", "", $validade);
+setcookie("gs_senha", "", $validade);
+setcookie("gs_fingerprint", "", $validade);
+
 if(!include_once("loader.php")){
     include_once("loader.php");
 }
@@ -68,7 +79,6 @@ $retorno = str_replace("?", "index.php?", getUrlRetorno());
     <script src="<?php asset('js/adm/plugins/bootstrap-notify.js') ?>"></script>
     <script src="<?php asset('js/adm/plugins/bootstrap-selectpicker.js') ?>"></script>
     <script src="<?php asset('js/adm/material-dashboard.js?v=2.0.0') ?>"></script>
-    <script src="<?php asset('js/adm/demo.js') ?>"></script>
     <script src="<?php asset('js/adm/plugins/jquery.mask.min.js') ?>"></script>
     <script src="<?php asset('js/widget/Alert.js') ?>"></script>
     <script>

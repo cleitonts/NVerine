@@ -272,13 +272,11 @@ if(!isset($_SESSION["ID"])) {
                         <i class="material-icons">person</i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <h4 class="dropdown-header"><img src="<?=_pasta.$perfil->avatar?>"></h4>
+                        <h4 class="dropdown-header"><img src="<?=$perfil->avatar?>"></h4>
                         <div class="menu-body">
-                            <h5 onclick="destinoMenu('perfil&u=<?=urlencode(getUrlRetorno())?>')" class="menu-header">
+                            <h5 onclick="Tools.redirect('?pagina=perfil&pesq_num=0', false, true)" class="menu-header">
                                 <?=$perfil->nome?>
-                                <span class="misterio">
-                                            <?=$perfil->grupo?>
-                                        </span>
+                                <span class="misterio"><?=$perfil->grupo?></span>
                             </h5>
                         </div>
                         <div class="dropdown-divider"></div>
