@@ -13,7 +13,7 @@ header("access-control-allow-origin: *");
 include("loader.php");
 
 // puxa as permissões do usuário logado
-$permissoes = new \src\services\UAC\PermissionsDummy();
+$permissoes = new \src\services\UAC\PermissoesETT();
 
 // instancia conexão global
 global $conexao;

@@ -83,6 +83,9 @@ class Form{
             case "table-select":
                 Field.tableSelect(obj, val, prefix);
                 break;
+            case "table-checkbox":
+                Field.tableCheckbox(obj, val, prefix);
+                break;
             default:
                 return "burrice";
         }

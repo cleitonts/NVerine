@@ -191,6 +191,50 @@ class Field{
         $(obj).append(wrapper);
     }
 
+    static tableCheckbox(obj, val, prefix = ""){
+        // gera a parte comum
+        let wrapper = document.createElement("td");
+        wrapper.className = val.class;
+        wrapper.id = "wrapper_"+val.name;
+
+        var label_group = document.createElement("label");
+        label_group.className = "form-check-label";
+
+        var group = document.createElement("div");
+        group.className = "form-check";
+
+        var input = document.createElement("input");
+
+        input.name = val.name;
+        if(prefix == "pesq_"){
+            input.name = prefix + val.name;
+        }
+        else if(prefix.length > 0){
+            input.name = prefix + "["+val.name+"]";
+        }
+        input.id = "campo_"+val.name;
+        input.checked = false;
+
+        if(val.value == '1'){
+            input.checked = true;
+        }
+        input.type = "checkbox";
+        input.className = "form-check-input";
+
+        var span = document.createElement("span");
+        span.className = "form-check-sign";
+
+        var span_check = document.createElement("span");
+        span_check.className = "check";
+
+        $(span).append(span_check);
+        $(label_group).append(input);
+        $(label_group).append(span);
+        $(group).append(label_group);
+        $(wrapper).append(group);
+        $(obj).append(wrapper);
+    }
+
     static file(type, obj, val){
         let col = document.createElement("div");
         col.className = "col-md-" + val.size;

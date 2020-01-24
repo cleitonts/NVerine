@@ -58,6 +58,14 @@ class Tools {
      */
     public static function render($obj){
         global $dumper;
+        global $permissoes;
+        global $__MODULO__;
+
+        if(!$permissoes->valida()){
+            $__MODULO__ = "Principal";
+            self::render(self::returnError("Você não tem permissão para visualizar esta página."));
+            return;
+        }
 
         // faz o push dos prints com o retorno padrão
         if(!__DEVELOPER__) $dumper->dumped = "";

@@ -64,7 +64,9 @@ class Tabelas{
         icon.className = "material-icons";
         $(icon).append(document.createTextNode("edit"));
 
-        let retorno = window.location.href + "&" + $("#form_pesquisa").serialize();
+        let temp = window.location.href.split("?");
+
+        let retorno =  "?" + temp[1] + "&" + $("#form_pesquisa").serialize();
 
         let url = elemento.destino.replace("XhandleX", handle) + "&retorno=" + encodeURIComponent(retorno);
 

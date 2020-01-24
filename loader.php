@@ -251,7 +251,7 @@ function dumper($arg){
 }
 
 // puxa as permissões do usuário logado
-$permissoes = new \src\services\UAC\Permissions();
+$permissoes = new \src\services\UAC\PermissoesETT();
 
 // puxa as informações de perfil
 $perfil = new \src\services\UAC\UsuarioGUI();

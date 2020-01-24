@@ -10,6 +10,9 @@ global $dumper;
 global $permissoes;
 global $perfil;
 
+// nivel de visualizacao
+$permissoes->nivel = $permissoes::VISUALIZACAO;
+
 // so mostra se estive rlogado
 if(isset($_SESSION["ID"])) {
     // define página a incluir

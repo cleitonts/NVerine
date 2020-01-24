@@ -26,7 +26,7 @@ use src\entity\PessoaContatoETT;
 use src\entity\PessoaEnderecoETT;
 use src\entity\PessoaETT;
 use src\entity\PessoaGUI;
-use src\entity\UsuarioGUI;
+use src\services\UAC\UsuarioGUI;
 use src\views\ControladoraFORM;
 
 class pessoaFORM implements ControladoraFORM
@@ -271,18 +271,18 @@ class pessoaFORM implements ControladoraFORM
             $field->size = 3;
             $div->field[] = $field;
 
-            $vendedores = UsuarioGUI::getVendedor();
-            array_unshift($vendedores["handle"], "");
-            array_unshift($vendedores["nome"], "");
-
-            // cria novo campo
-            $field = new Fields();
-            $field->type = $field::SELECT;
-            $field->name = "Comercial";
-            $field->property = "cod_vendedor";
-            $field->options = Options::byArray($vendedores["handle"], $vendedores["nome"]);
-            $field->size = 4;
-            $div->field[] = $field;
+//            $vendedores = UsuarioGUI::getVendedor();
+//            array_unshift($vendedores["handle"], "");
+//            array_unshift($vendedores["nome"], "");
+//
+//            // cria novo campo
+//            $field = new Fields();
+//            $field->type = $field::SELECT;
+//            $field->name = "Comercial";
+//            $field->property = "cod_vendedor";
+//            $field->options = Options::byArray($vendedores["handle"], $vendedores["nome"]);
+//            $field->size = 4;
+//            $div->field[] = $field;
 
             $listas = PessoaETT::getListaPreco();
             // cria novo campo

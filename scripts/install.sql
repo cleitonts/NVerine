@@ -26,7 +26,7 @@ CREATE TABLE K_FN_PERMISSOES
     Z_GRUPO  int,
     GRUPO    int,
     ALCADA   int,
-    BLOQUEIO char(1)
+    NIVEL    int
 );
 
 CREATE TABLE K_FN_FILIAL

@@ -123,36 +123,34 @@ function getMenu()
 
         // trata nomes alternativos
         $termos = explode("|", $modulo);
-
-        if (count($termos) == 1) {
-            if (!$permissoes->libera($termos[0])) continue;
-        } elseif (count($termos) == 2) {
-            if (!$permissoes->libera($termos[0]) && !$permissoes->libera($termos[1])) continue;
-        }
-
         $modulo = $termos[0];
 
-        ?>
-        <div class="menu-body">
-            <h5 class="menu-header"><?= $modulo ?></h5>
-            <ul class="menu-list">
-                <?php
-                if (!empty($itens)) foreach ($itens as $titulo => $link) {
-                    if (!$permissoes->bloqueia($titulo)) {
-                        echo "<li class='menu-list-item'><a onclick='Tools.redirect(\"{$link}\", false, false)' class='menu-link'>{$titulo}</a></li>";
+        $header = true;
+        $footer = false;
 
-                        // guarda um registro de todos os itens gerados para pesquisa
-                        $reg = array(
-                            "titulo" => strip_tags($titulo),
-                            "icone" => "",
-                            "link" => $link,
-                            "modulo" => $modulo);
-                        array_push($_SESSION["menu_itens"], $reg);
+        if (!empty($itens)) {
+            foreach ($itens as $titulo => $link) {
+                if ($permissoes->libera($modulo, $titulo)) {
+                    if($header){
+                        $header = false;
+                        $footer = true;
+                        echo "<div class='menu-body'><h5 class='menu-header'>{$modulo}</h5><ul class='menu-list'>";
                     }
+                    echo "<li class='menu-list-item'><a onclick='Tools.redirect(\"{$link}\", false, false)' class='menu-link'>{$titulo}</a></li>";
+
+                    // guarda um registro de todos os itens gerados para pesquisa
+                    $reg = array(
+                        "titulo" => strip_tags($titulo),
+                        "icone" => "",
+                        "link" => $link,
+                        "modulo" => $modulo);
+                    array_push($_SESSION["menu_itens"], $reg);
                 }
-                ?>
-            </ul>
-        </div>
-        <?php
+            }
+        }
+
+        if($footer){
+            echo "</ul></div>";
+        }
     }
 }

@@ -7,6 +7,10 @@ include ("loader.php");
 
 global $conexao;
 global $dumper;
+global $permissoes;
+
+// nivel de visualizacao
+$permissoes->nivel = $permissoes::EDICAO;
 
 const __NO_ERROR_VIEW__ = true; // bloqueia erros que aparecem somente na view
 
@@ -125,6 +129,12 @@ elseif(isset($_SESSION["ID"])) {
     // se chegou aqui este arquivo deve existir também
     iniciaTransacao($conexao);
         include_once($arq2."php");
+        if(!$permissoes->valida()){
+            $mensagens->retorno = "?pagina=".$_REQUEST["pagina"];
+            $__MODULO__ = "Principal";
+            mensagem("Sem permissões para editar este formulário", MSG_ERRO);
+            finaliza();
+        }
         $temp2 = new $pagina2();
         $temp2->persist($traduzido);
     redir($conexao);

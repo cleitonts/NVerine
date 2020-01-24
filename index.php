@@ -11,6 +11,9 @@ if(!isset($_SESSION["ID"])) {
     include("login.php");
     return;
 }
+global $permissoes;
+$permissoes->nivel = $permissoes::VISUALIZACAO;
+
 ?>
 <!doctype html>
 <html lang="pt-br">
@@ -176,7 +179,7 @@ if(!isset($_SESSION["ID"])) {
                                 <h5 class="menu-header" onclick="destinoMenu('cadastro&tn=Alçadas&tabela=<?=encrypt("K_PD_ALCADAS")?>')">Alçadas</h5>
                             </div>
                             <div class="menu-body">
-                                <h5 class="menu-header" onclick="destinoMenu('admin_permissoes')">Permissões</h5>
+                                <h5 class="menu-header" onclick="destinoMenu('permissoes')">Permissões</h5>
                             </div>
                             <div class="menu-body">
                                 <h5 class="menu-header" onclick="destinoMenu('cadastro&tn=Região&tabela=<?=encrypt("K_REGIAO")?>')">Regiões</h5>
