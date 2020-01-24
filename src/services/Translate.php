@@ -16,6 +16,11 @@ class Translate
 {
     public function translate($foreign, $base)
     {
+        // checa se foi informado a entidade
+        if(empty($base->entity)){
+            return false;
+        }
+
         // instancia a classe base
         $temp = get_class($base->entity);
         $entity = new $temp();
