@@ -129,14 +129,16 @@ elseif(isset($_SESSION["ID"])) {
     // se chegou aqui este arquivo deve existir também
     iniciaTransacao($conexao);
         include_once($arq2."php");
+        $temp2 = new $pagina2();
+        $temp2->persist($traduzido);
+
         if(!$permissoes->valida()){
-            $mensagens->retorno = "?pagina=".$_REQUEST["pagina"];
+            global $__MODULO__;
             $__MODULO__ = "Principal";
+
+            $mensagens->retorno = "?pagina=".$_REQUEST["pagina"];
             mensagem("Sem permissões para editar este formulário", MSG_ERRO);
             finaliza();
         }
-        $temp2 = new $pagina2();
-        $temp2->persist($traduzido);
     redir($conexao);
-
 }

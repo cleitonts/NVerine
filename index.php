@@ -188,9 +188,6 @@ $permissoes->nivel = $permissoes::VISUALIZACAO;
                                 <div class="menu-body">
                                     <h5 class="menu-header" onclick="destinoMenu('admin_auditoria')">Auditoria</h5>
                                 </div>
-                                <div class="menu-body">
-                                    <h5 class="menu-header" onclick="destinoMenu('admin_config')">Editor de config.</h5>
-                                </div>
                             <?php } ?>
                         </div>
                     </li>

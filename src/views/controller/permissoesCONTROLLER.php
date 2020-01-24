@@ -14,7 +14,6 @@ use src\views\forms\permissoesFORM;
 $__MODULO__ = 'Administração';
 $__PAGINA__ = 'Permissões';
 
-
 class permissoesCONTROLLER implements ControladoraCONTROLLER
 {
 

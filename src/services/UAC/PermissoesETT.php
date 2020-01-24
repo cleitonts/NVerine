@@ -160,7 +160,7 @@ class PermissoesETT extends ObjectETT {
         global $__PAGINA__;
 
         if($this->libera($__MODULO__, $__PAGINA__)){
-           return true;
+            return true;
         }
 
         return false;
