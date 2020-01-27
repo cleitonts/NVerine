@@ -61,7 +61,9 @@ class SuporteDiagETT extends ObjectETT
 
         // cria os diretorios
         if($dir != "uploads/"){
-            $dir = _base_root . "/" . strtolower($this->handle) . "/erp";
+            $dir = _base_root . "/" . strtolower($this->handle);
+            mkdir($dir);
+            $dir .= "/erp";
         }
 
         mkdir($dir);
@@ -108,8 +110,6 @@ class SuporteDiagETT extends ObjectETT
     {
         // puxa script
         $script = @file_get_contents($path.$arq);
-
-        dumper($script);
 
         if ($script === false) { // manual diz para usar equivalência de tipo
             mensagem("Arquivo {$script} não foi encontrado!");
