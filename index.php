@@ -98,11 +98,8 @@ $permissoes->nivel = $permissoes::VISUALIZACAO;
 <script>
     // carrega alguns valores para o javascript
     const __FILIAL__ = <?=__FILIAL__?> ;
-    const __COMISSAO_FATOR__ = <?= (empty(__COMISSAO_FATOR__))? 0 : __COMISSAO_FATOR__; ?> ;
-    const __COMISSAO_PERC__ = <?= (empty(__COMISSAO_PERC__))? 0 : __COMISSAO_PERC__; ?> ;
     const __CASAS_DECIMAIS__ = <?= (empty(__CASAS_DECIMAIS__))? 0 : __CASAS_DECIMAIS__; ?> ;
     const __PASTA__ = <?= (empty(_pasta))? "\"\"" : _pasta; ?> ;
-    const __MAX_DESCONTO_VENDA__ = <?= (empty(__MAX_DESCONTO_VENDA__))? 0 : __MAX_DESCONTO_VENDA__; ?>;
     const __MODELO_NF__ = <?= (empty(__MODELO_NF__))? 0 : __MODELO_NF__;?>;
 
     // fix para smartphones
@@ -131,7 +128,7 @@ $permissoes->nivel = $permissoes::VISUALIZACAO;
 <nav class="navbar navbar-expand-lg sticky-top m-0">
     <div class="container-fluid">
         <div class="navbar-wrapper">
-            <a href="index.php"><img src="src/public/img/logo-nav.png"></a>
+            <a href="index.php"><img width="120" src="src/public/img/logo.png"></a>
         </div>
 
         <form class="navbar-form">

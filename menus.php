@@ -47,39 +47,39 @@ $menu = array(
         "Tipo de vínculo" => "?pagina=cadastro&tn=Tipo de vínculo&tabela=".encrypt("K_FN_TIPOVINCULO"),
     ),
 
-    "Compras" => array(
-        "Notas de compra" => "?pagina=faturamento_notas&pesq_tipo=E&pesq_data_inicial=".ontem()."&pesq_data_final=".date('d-m-Y'),
-        "Entrada de estoque" => "?pagina=faturamento_expedicao&pesq_tipo=E",
-        "Devolução" => "?pagina=faturamento_devolucao&pesq_tipo=E"
-    ),
-
-    "Vendas|Faturamento" => array(
-        "Notas de venda" => "?pagina=faturamento_notas&pesq_tipo=S&pesq_data_inicial=".ontem()."&pesq_data_final=".date('d-m-Y'),
-        "Caixa" => "?pagina=faturamento_duplicatas",
-        "Expedição" => "?pagina=faturamento_expedicao&pesq_tipo=S",
-        "Devolução" => "?pagina=faturamento_devolucao&pesq_tipo=S",
-        "Loja virtual" => "?pagina=config_loja",
-        "Contratos" => "?pagina=contrato"
-    ),
-
-    "Financeiro|Contábil" => array(
-        "Contas a pagar" => "?pagina=contabil_titulos&pesq_natureza=1",
-        "Contas a receber" => "?pagina=contabil_titulos&pesq_natureza=2",
-        "Plano de contas" => "?pagina=contabil",
-        "Movimento bancário" => "?pagina=contabil_movimento",
-        "Planejamento financeiro" => "?pagina=contabil_planejamento",
-        "Controle de cheque" => "?pagina=contabil_cheque",
-        "Tipo de documento" => "?pagina=cadastro&tn=Tipo de documento&tabela=".encrypt("K_TIPODOCUMENTO"),
-        "Centro de custo" => "?pagina=cadastro&tn=Centro de custo&tabela=".encrypt("K_FN_CENTROCUSTO")
-    ),
-
-    "Estoque" => array(
-        "Movimento de estoque" => "?pagina=estoque",
-        "Saldo de produtos" => "?pagina=estoque_produto",
-        "Inventário" => "?pagina=estoque_inventario",
-        "Almoxarifado" => "?pagina=cadastro&tn=Almoxarifado&tabela=".encrypt("K_FN_ALMOXARIFADO"),
-        "Endereço" => "?pagina=cadastro&tn=Endereço&tabela=".encrypt("K_FN_ENDERECO")
-    ),
+//    "Compras" => array(
+//        "Notas de compra" => "?pagina=faturamento_notas&pesq_tipo=E&pesq_data_inicial=".ontem()."&pesq_data_final=".date('d-m-Y'),
+//        "Entrada de estoque" => "?pagina=faturamento_expedicao&pesq_tipo=E",
+//        "Devolução" => "?pagina=faturamento_devolucao&pesq_tipo=E"
+//    ),
+//
+//    "Vendas|Faturamento" => array(
+//        "Notas de venda" => "?pagina=faturamento_notas&pesq_tipo=S&pesq_data_inicial=".ontem()."&pesq_data_final=".date('d-m-Y'),
+//        "Caixa" => "?pagina=faturamento_duplicatas",
+//        "Expedição" => "?pagina=faturamento_expedicao&pesq_tipo=S",
+//        "Devolução" => "?pagina=faturamento_devolucao&pesq_tipo=S",
+//        "Loja virtual" => "?pagina=config_loja",
+//        "Contratos" => "?pagina=contrato"
+//    ),
+//
+//    "Financeiro|Contábil" => array(
+//        "Contas a pagar" => "?pagina=contabil_titulos&pesq_natureza=1",
+//        "Contas a receber" => "?pagina=contabil_titulos&pesq_natureza=2",
+//        "Plano de contas" => "?pagina=contabil",
+//        "Movimento bancário" => "?pagina=contabil_movimento",
+//        "Planejamento financeiro" => "?pagina=contabil_planejamento",
+//        "Controle de cheque" => "?pagina=contabil_cheque",
+//        "Tipo de documento" => "?pagina=cadastro&tn=Tipo de documento&tabela=".encrypt("K_TIPODOCUMENTO"),
+//        "Centro de custo" => "?pagina=cadastro&tn=Centro de custo&tabela=".encrypt("K_FN_CENTROCUSTO")
+//    ),
+//
+//    "Estoque" => array(
+//        "Movimento de estoque" => "?pagina=estoque",
+//        "Saldo de produtos" => "?pagina=estoque_produto",
+//        "Inventário" => "?pagina=estoque_inventario",
+//        "Almoxarifado" => "?pagina=cadastro&tn=Almoxarifado&tabela=".encrypt("K_FN_ALMOXARIFADO"),
+//        "Endereço" => "?pagina=cadastro&tn=Endereço&tabela=".encrypt("K_FN_ENDERECO")
+//    ),
 
     "Suporte" => array(
         "Chamados" => "?pagina=suporte_chamados",
@@ -92,24 +92,24 @@ $menu = array(
         // "Banco de horas" => "?pagina=rh"
     ),
 
-    "CRM" => array(
-        "Negociação" => "?pagina=negociacao",
-        "Projeto" => "?pagina=cadastro&tn=Projeto&tabela=".encrypt("K_CRM_PROJETOS"),
-        "Fonte" => "?pagina=cadastro&tn=Fonte&tabela=".encrypt("K_CRM_FONTES"),
-        // "Campanha" => "?pagina=cadastro&tn=Campanha&tabela=".encrypt("K_CRM_CAMPANHAS"),
-        // "Motivo de perda" => "?pagina=cadastro&tn=Motivo de perda&tabela=".encrypt("K_CRM_MOTIVOSPERDA"),
-        "Status" => "?pagina=cadastro&tn=Status&tabela=".encrypt("K_CRM_ETAPAS"),
-        "Processo" => "?pagina=cadastro&tn=Processo&tabela=".encrypt("K_CRM_PROCESSOS"),
-        "Tarefa" => "?pagina=cadastro&tn=Tarefa&tabela=".encrypt("K_CRM_PROCESSOSTAREFAS")
-    ),
-    "Produção" => array(
-        "Fila" => "?pagina=producao_itens",
-        "Etapas" => "?pagina=cadastro&tn=Etapas&tabela=".encrypt("K_PRODUCAOETAPAS"),
-        "Terminal" => "?pagina=cadastro&tn=Terminal&tabela=".encrypt("K_PRODUCAOTERMINAL")
-    ),
-    "Requisição" => array(
-        "Requisição de estoque" => "?pagina=requisicao&novo=1&u=".urlencode(getUrlRetorno())
-    )
+//    "CRM" => array(
+//        "Negociação" => "?pagina=negociacao",
+//        "Projeto" => "?pagina=cadastro&tn=Projeto&tabela=".encrypt("K_CRM_PROJETOS"),
+//        "Fonte" => "?pagina=cadastro&tn=Fonte&tabela=".encrypt("K_CRM_FONTES"),
+//        // "Campanha" => "?pagina=cadastro&tn=Campanha&tabela=".encrypt("K_CRM_CAMPANHAS"),
+//        // "Motivo de perda" => "?pagina=cadastro&tn=Motivo de perda&tabela=".encrypt("K_CRM_MOTIVOSPERDA"),
+//        "Status" => "?pagina=cadastro&tn=Status&tabela=".encrypt("K_CRM_ETAPAS"),
+//        "Processo" => "?pagina=cadastro&tn=Processo&tabela=".encrypt("K_CRM_PROCESSOS"),
+//        "Tarefa" => "?pagina=cadastro&tn=Tarefa&tabela=".encrypt("K_CRM_PROCESSOSTAREFAS")
+//    ),
+//    "Produção" => array(
+//        "Fila" => "?pagina=producao_itens",
+//        "Etapas" => "?pagina=cadastro&tn=Etapas&tabela=".encrypt("K_PRODUCAOETAPAS"),
+//        "Terminal" => "?pagina=cadastro&tn=Terminal&tabela=".encrypt("K_PRODUCAOTERMINAL")
+//    ),
+//    "Requisição" => array(
+//        "Requisição de estoque" => "?pagina=requisicao&novo=1&u=".urlencode(getUrlRetorno())
+//    )
 );
 
 function getMenu()

@@ -50,7 +50,7 @@ class ProdutoEstruturadoETT extends ObjectETT
         // não uso retornoPadrão porque um delete que retornou vazio não é necessariamente um erro
         $err = $stmt->errorInfo();
         $msg = "Atualizando produto estruturado...";
-        if (__GLASS_DEBUG__) $msg .= " [" . $err[2] . "]";
+        if (__DEBUG__) $msg .= " [" . $err[2] . "]";
         mensagem($msg);
     }
 

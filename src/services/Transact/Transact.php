@@ -66,7 +66,7 @@ class Transact
     public function retornoPadrao($stmt, $sucesso = "Sucesso!", $erro = "Será que você deixou algum campo em branco?")
     {
         // para debug: guarda todas as queries executadas
-        if (__GLASS_DEBUG__) {
+        if (__DEBUG__) {
             global $conexao;
             $query = $conexao->last_sql_statement;
 

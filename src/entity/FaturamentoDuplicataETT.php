@@ -89,7 +89,7 @@ class FaturamentoDuplicataETT extends ObjectETT
                 "BAIXADO" => "N"
             ));
         // não precisa do retorno padrão aqui porque a falha nesse insert vai ocasionar uma falha no próximo update.
-        if (__GLASS_DEBUG__) retornoPadrao($stmt, "Alocando tabela de duplicatas...", "Não foi possível fazer o cadastro inicial da duplicata");
+        if (__DEBUG__) retornoPadrao($stmt, "Alocando tabela de duplicatas...", "Não foi possível fazer o cadastro inicial da duplicata");
 
         $this->atualiza();
     }

@@ -42,7 +42,7 @@ elseif(isset($_SESSION["ID"])) {
         switch ($_REQUEST["pagina"]) {
             case "toggledebug":
 
-                if(__GLASS_DEBUG__) {
+                if(__DEBUG__) {
                     $mensagem = "desligar";
                     $v1 = "true";
                     $v2 = "false";

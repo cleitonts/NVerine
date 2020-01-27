@@ -31,7 +31,7 @@ class SuporteDiagGUI extends ObjectGUI
         switch ($coluna)
         {
             case 0:        return campo($item->nome);
-            case 1:        return campo($item->banco_dados);
+            case 1:        return campo($item->db_name);
             case 2:        return 
                 campo("<a target='_blank' href='index.php?pagina=contrato&pesq_codigo={$item->contrato}'>".
                 $item->contrato."</a>");
@@ -63,17 +63,17 @@ class SuporteDiagGUI extends ObjectGUI
                     }
                 }
 
-                $atual_path = _base_root . "/" . $r . "/gestao";
+                $atual_path = _base_root . "/" . $r . "/erp";
                 $ini = @parse_ini_file($atual_path . "/config.ini.php", false);
 
                 $item = new SuporteDiagETT();
                 $item->cont = $i;
                 $item->handle = $r;
                 $item->nome = $r;
-                $item->banco_dados = $ini["dbname"];
+                $item->db_name = $ini["dbname"];
                 $item->contrato = $ini["contrato"];
                 $item->senha = $ini["senha"];
-                $item->url = "new.ambientesolido.com/".$r."/";
+                $item->url = "google.com/".$r."/";
                 
                 $http_code = $this->ping($item->url);
 

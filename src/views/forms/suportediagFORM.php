@@ -55,7 +55,7 @@ class suportediagFORM implements ControladoraFORM
         $tabs = new Tabs();
         $tabs->function = "Tools.redirect('?pagina=suportegit')";
         $tabs->icon = "fa fa-bitbucket";
-        $widget->body->tabs["GIT"] = $tabs;
+        //$widget->body->tabs["GIT"] = $tabs;
         
         $tabs = new Tabs();
         $tabs->function = "Tools.redirect('?pagina=suportediag&pesq_num=0')";
@@ -135,7 +135,7 @@ class suportediagFORM implements ControladoraFORM
         $field = new Fields();
         $field->type = $field::TEXT;
         $field->name = "Banco de dados";
-        $field->property = "banco_dados";
+        $field->property = "db_name";
         $field->size = 4;
         $tabs->form->field[] = $field;
 

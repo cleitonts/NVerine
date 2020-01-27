@@ -293,7 +293,7 @@ class CadastroETT extends ObjectETT
         $stmt = $conexao->prepare($sql);
         $stmt->execute();
 
-        if(__GLASS_DEBUG__) mensagem($sql, MSG_DEBUG);
+        if(__DEBUG__) mensagem($sql, MSG_DEBUG);
 
         // passa handle para retornoPadrao sem usar bindValue
 
@@ -338,7 +338,7 @@ class CadastroETT extends ObjectETT
         $stmt->bindValue(":handle", intval($obj->HANDLE));
         $stmt->execute();
 
-        if(__GLASS_DEBUG__) mensagem($sql, MSG_DEBUG);
+        if(__DEBUG__) mensagem($sql, MSG_DEBUG);
 
         retornoPadrao($stmt, "Valores atualizados com sucesso!", "Erro na atualização do registro");
     }

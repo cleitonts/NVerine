@@ -108,11 +108,10 @@ $retorno = str_replace("?", "index.php?", getUrlRetorno());
                         <form class="form">
                             <input type="hidden" name="url_retorno" value="<?=$retorno;?>">
                             <div class="card card-login">
-                                <div class="card-header card-header-success text-center">
-                                    <!--div class="img-wrapper" style="overflow: hidden;">
-                                        <img src="<?php asset('img/logo.png') ?>" alt="" style="width: 100%;margin-bottom: -23px;">
-                                    </div-->
-                                    <h2 class="card-title">NVerine</h2>
+                                <div class="card-header text-center">
+                                    <div class="img-wrapper" style="overflow: hidden;">
+                                        <img src="<?php asset('img/logo.png') ?>" alt="" style="width: 100%;">
+                                    </div>
                                 </div>
                                 <div class="card-body ">
                                     <span class="bmd-form-group">
@@ -147,7 +146,7 @@ $retorno = str_replace("?", "index.php?", getUrlRetorno());
             <footer class="footer">
                 <div class="container">
                     <div class="copyright">
-                        © 2019 NVerine.
+                        © <?= date("Y")?> <?= __MAKER__?>.
                     </div>
                 </div>
                 <script>

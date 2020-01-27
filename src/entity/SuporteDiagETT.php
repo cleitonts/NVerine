@@ -18,7 +18,7 @@ class SuporteDiagETT extends ObjectETT
     public $contrato;
     public $url;
     public $ping;
-    //public $senha;
+    public $senha = "senhamestre";
     public $segmento;
 
     public function cadastra()
@@ -27,13 +27,17 @@ class SuporteDiagETT extends ObjectETT
         $this->handle = sanitize($this->nome);
         $this->db_name = sanitize($this->db_name);
 
-        //$dir = _base_root . "/" . strtolower($this->handle);
+        $dir = _base_root;
+        if(_base_root != "uploads/"){
+            $dir = _base_root . "/" . strtolower($this->handle);
 
-        // bloqueia caso diretorio ja exista
-//        if (is_dir($dir) && 1 != 1){
-//            mensagem("Ja existe um diretório com este nome.", MSG_ERRO);
-//            finaliza();
-//        }
+            // bloqueia caso diretorio ja exista
+            if (is_dir($dir) && 1 != 1){
+                mensagem("Ja existe um diretório com este nome.", MSG_ERRO);
+                finaliza();
+            }
+        }
+
 
         try {
             //Executa os SQL
@@ -56,12 +60,11 @@ class SuporteDiagETT extends ObjectETT
         self::parseScript("constraints.sql", $conexao);
 
         // cria os diretorios
-        $dir = "uploads";
+        if($dir != "uploads/"){
+            $dir = _base_root . "/" . strtolower($this->handle) . "/erp";
+        }
+
         mkdir($dir);
-
-//        $dir = _base_root . "/" . strtolower($this->handle) . "/gestao";
-//        mkdir($dir);
-
         mkdir($dir . "/documentos", 0777);
         mkdir($dir . "/xml", 0777);
         mkdir($dir . "/certs", 0777);
@@ -76,7 +79,7 @@ class SuporteDiagETT extends ObjectETT
         /* sobrescreve valores
          * ATENÇÂO: mudar os defaults em config.ini.php.sample vai quebrar este script!
          */
-        //$config = str_replace("@@masterkey@@", $this->senha, $config);
+        $config = str_replace("@@masterkey@@", $this->senha, $config);
         $config = str_replace("@@host@@", $this->db_host, $config);
         $config = str_replace("@@database@@", $this->db_name, $config);
         $config = str_replace("@@user@@", $this->db_user, $config);

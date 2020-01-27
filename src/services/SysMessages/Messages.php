@@ -61,7 +61,7 @@ class Messages {
         /* só insere mensagem debug se tiver o parâmetro global.
          * assim não precisamos encapsular as mensagens com if(__GLASS_DEBUG__) {...}
          */
-        if($tipo != MSG_DEBUG || __GLASS_DEBUG__) {
+        if($tipo != MSG_DEBUG || __DEBUG__) {
             array_push($this->itens, $mensagem);
         }
 

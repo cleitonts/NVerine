@@ -65,7 +65,7 @@ class Message {
         }
 
         // exibe ou não timestamp?
-        if(__GLASS_DEBUG__) $msg = "<code>{$this->timestamp}</code>&ensp;{$msg}";
+        if(__DEBUG__) $msg = "<code>{$this->timestamp}</code>&ensp;{$msg}";
 
         // converte utf-8 para iso?
         // if(mb_detect_encoding($msg, "UTF-8", true)) $msg = utf8_decode($msg);

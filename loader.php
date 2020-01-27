@@ -7,11 +7,11 @@ use src\services\Transact\ExtPDO;
 ini_set("default_charset", "ISO-8859-1");
 
 // identidade
-@define("__NOME_SISTEMA__",				"NVerine");
-@define("__DIR_IDENTIDADE__",			"");
+define("__NOME_SISTEMA__",				"NVerine");
 define("__MAKER__",						"TSBrothers");
 define("__MAKER_WEBSITE__",				"http://www.tsbrothers.com.br");
-define("_pasta", "");
+define("_pasta",                        "");    // retirar de uma vez ou manter vazio
+
 // versão do arquivo de configuração
 $versao_config_atual = 1;
 
@@ -72,10 +72,8 @@ if($ini["manutencao"]) {
 
 // eventualmente podemos processar as seções para maior clareza
 @define("__SENHA__",					$ini["senha"]);
-@define("__GLASS_DEBUG__",				$ini["debug"]);
+@define("__DEBUG__",				    $ini["debug"]);
 @define("__HOMOLOGACAO__",				$ini["homologacao"]);
-@define("__LOG_EMAIL__",				$ini["log_email"]);
-@define("__VIDRACARIA__", 				$ini["vidracaria"]);
 @define("__DEVELOPER__",                $ini["developer"]);
 
 // db
@@ -84,12 +82,6 @@ if($ini["manutencao"]) {
 @define("__DB_NAME__",					$ini["dbname"]);
 @define("__DB_USER__",					$ini["dbuser"]);
 @define("__DB_PASS__",					$ini["dbpass"]);
-@define("__DB_FORCE_UTF8__",			$ini["dbforceutf8"]);
-
-// para os tipos diferenciados de comissão
-@define("__COMISSAO_TIPO__", 			$ini["comissao_tipo"]);
-@define("__COMISSAO_PERC__", 			$ini["comissao_perc"]);
-@define("__COMISSAO_DATA__",			$ini["dia_pag_comissao"]);
 
 // smtp
 @define("__SMTP_HOST__",				$ini["smtp_host"]);
@@ -98,51 +90,22 @@ if($ini["manutencao"]) {
 @define("__SMTP_PASS__",				$ini["smtp_pass"]);
 @define("__SMTP_SECURE__",				$ini["smtp_secure"]);
 
-// chaves deprecadas do current - remover?
-define("__PESQ_PORCENTO__", true);
-define("__TAB_PRECOS_USA_DESCONTO__", false);
-
-// novos parâmetros
-@define("__USA_CAIXA__",				$ini["usa_caixa"]);
-@define("__PROCESSA_EXPEDICAO__",		$ini["processa_expedicao"]);
 @define("__LIBERA_CPF__",				$ini["libera_cpf"]);
-@define("__UI_EXPERIMENTAL__",			$ini["ui_experimental"]);
-@define("__EDITOR_HTML__",				$ini["editor_html"]);
-@define("__LIBERA_CONDICAO_PAGTO__",	$ini["libera_condicao_pagto"]);
 @define("__MODELO_NF__", 				$ini["modelo_nf"]);
-@define("__PRODUCAO__", 				$ini["producao"]);
-// @define("__NFE_40__",				$ini["nfe_40"]);
-@define("__EDITA_NUM_NF__",				$ini["edita_num_nf"]);
 @define("__LOTE_BOLETOS__",				$ini["lote_boletos"]);
 @define("__CASAS_DECIMAIS__",			isset($ini["casas_decimais"]) ? $ini["casas_decimais"] : 2);
-@define("__PDV_RESERVA_ESTOQUE__",		$ini["pdv_reserva_estoque"]);
-@define("__OBSERVACOES__",				$ini["observacoes"]);
-@define("__LIBERA_DATA_NOTA__",         $ini["libera_data_nota"]);
-@define("__LIBERA_DATA_BAIXA__",		$ini["libera_data_baixa"]);
-@define("__LIBERA_LANCAMENTO__",        $ini["libera_lancamento"]);
-// regras de comissao
-@define("__MAX_DESCONTO_VENDA__",		$ini["max_desconto_venda"]);
-@define("__COMISSAO_FATOR__",			$ini["comissao_fator"]);
-@define("__COMISSAO_SOBREPRECO__", 		$ini["sobrepreco"]);
-@define("__COMISSAO_PARCELA__",			$ini["comissao_parcela"]);
+
 // verificar se e educacional
 @define("__EDUCACIONAL__",              $ini["educacional"]);
-
 
 // grade de produtos
 @define("__GRADE_TAMANHOS__", isset($ini["grade_tamanhos"]) ? $ini["grade_tamanhos"] : "P,M,G,GG");
 @define("__GRADE_CORES__", isset($ini["grade_cores"]) ? $ini["grade_cores"] : "Azul,Amarelo,Vermelho,Preto,Branco");
 
-// chaves que serão implementadas no arquivo no futuro, mas ainda não.
-define("__MAX_CAIXAS__", 10);
-
-// token para validação de captcha do google
-define("__CAPTCHA_SECRET_KEY__", "6LfzcxYUAAAAAPtejWdrWtIklaLvJKnKedGKOGiV");
-
 // configura php (isso é necessário?)
 date_default_timezone_set('America/Sao_Paulo');
 
-if(__GLASS_DEBUG__) {
+if(__DEBUG__) {
     ini_set("display_errors", 1);
     error_reporting(E_ERROR | E_PARSE | E_RECOVERABLE_ERROR);
 }

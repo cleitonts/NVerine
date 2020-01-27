@@ -399,7 +399,7 @@ class ProdutoETT extends ObjectETT
                 $valor_markup = $custo_base * $item->markup;
                 $preco_venda = $custo_base + $valor_markup;
 
-                if (__GLASS_DEBUG__) {
+                if (__DEBUG__) {
                     mensagem("Markup #{$item->cod_pai}: {$item->markup}", MSG_DEBUG);
                     mensagem("Preço venda #{$item->cod_pai}: {$preco_venda}", MSG_DEBUG);
                 }

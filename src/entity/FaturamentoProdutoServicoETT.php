@@ -179,7 +179,7 @@ class FaturamentoProdutoServicoETT extends ObjectETT
             ));
 
         // não precisa do retorno padrão aqui porque a falha nesse insert vai ocasionar uma falha no próximo update.
-        if (__GLASS_DEBUG__) retornoPadrao($stmt, "Alocando tabela de produtos e serviços...", "Não foi possível fazer o cadastro inicial do item");
+        if (__DEBUG__) retornoPadrao($stmt, "Alocando tabela de produtos e serviços...", "Não foi possível fazer o cadastro inicial do item");
 
         $this->atualiza();
     }

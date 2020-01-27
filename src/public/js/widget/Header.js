@@ -94,7 +94,7 @@ class Header{
             for(var i = 0; i < header.tabs.length; i++){
                 // cria a tab
                 var tab = document.createElement("li");
-                tab.className = "nav-item";
+                tab.className = "nav-item text-center";
 
                 var tab_link = document.createElement("a");
                 tab_link.className = "nav-link";
