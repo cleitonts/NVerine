@@ -65,7 +65,7 @@ class FilialGUI extends ObjectGUI
             $item->inscricao_estadual = $r->INSCRICAOESTADUAL;
             $item->inscricao_municipal = $r->INSCRICAOMUNICIPAL;
             $item->telefone = apenasNumeros($r->TELEFONE);
-            $item->logotipo = validaImagem($r->LOGOTIPO);
+//            $item->logotipo = validaImagem($r->LOGOTIPO);
             $item->sequencia_nota = intval($r->SEQUENCIANOTA);
             $item->informacoes_fisco = $r->TEXTOPADRAONFE;
             $item->timezone = empty($r->TIMEZONE) ? "-03:00" : $r->TIMEZONE;

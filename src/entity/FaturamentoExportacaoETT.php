@@ -8,12 +8,6 @@
 
 namespace src\entity;
 
-include_once("class/Atualizacoes.php");
-include_once("class/NotaFiscal.php");
-
-use NotaFiscal4\DocumentoXML;
-use Faturamento\NotaFiscal;
-use SVN\Atualizacoes;
 use XMLWriter;
 
 class FaturamentoExportacaoETT extends FaturamentoImportacaoETT
@@ -56,7 +50,7 @@ class FaturamentoExportacaoETT extends FaturamentoImportacaoETT
     // cópia dos objetos de exportação para interface interna e externa (envio de e-mails, cupom...)
     public $obj_empresa = FilialETT::class;
     public $obj_pessoa = PessoaEnderecoETT::class;
-    public $obj_sistema = Atualizacoes::class;            // descrição/versão do sistema (SVN)
+    //public $obj_sistema = Atualizacoes::class;            // descrição/versão do sistema (SVN)
 
     // ----------------------------------------------------------------------------
     // métodos públicos
@@ -94,14 +88,14 @@ class FaturamentoExportacaoETT extends FaturamentoImportacaoETT
         $empresa->fetch();
         $empresa = $empresa->itens[0];
 
-        $sistema = new Atualizacoes(1);
-        $sistema->fetch();
-        $sistema = intval($sistema->itens[0]->versao);
+//        $sistema = new Atualizacoes(1);
+//        $sistema->fetch();
+//        $sistema = intval($sistema->itens[0]->versao);
 
         // guarda cópias dos dados cadastrais para interface externa
         $this->obj_empresa = $empresa;
         $this->obj_pessoa = $pessoa;
-        $this->obj_sistema = $sistema;
+        //$this->obj_sistema = $sistema;
 
         // puxa responsável financeiro, se houver
         $vinculos = new PessoaVinculoGUI();

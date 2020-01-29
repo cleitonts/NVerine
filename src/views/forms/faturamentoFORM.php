@@ -8,9 +8,6 @@
 
 namespace src\views\forms;
 
-include_once("class/Contabil.php");
-
-use Contabil\ContaGUI;
 use src\creator\widget\Body;
 use src\creator\widget\Component;
 use src\creator\widget\Fields;
@@ -31,8 +28,6 @@ use src\entity\FaturamentoProdutoServicoETT;
 use src\entity\FaturamentoStatusETT;
 use src\entity\FaturamentoStatusTransicaoETT;
 use src\entity\PessoaEnderecoETT;
-use src\entity\ProdutoETT;
-use src\entity\UsuarioGUI;
 use src\views\ControladoraFORM;
 
 class faturamentoFORM implements ControladoraFORM
@@ -319,16 +314,6 @@ class faturamentoFORM implements ControladoraFORM
             return Tools::returnError("Nota/orçamento não encontrado.", "faturamento&pesq_tipo=" . $gui->cod_tipo);
         }
 
-        // opções de plano de contas
-        $contas = new ContaGUI();
-
-        // seta módulo e nome da página
-        if ($gui->cod_tipo == "S") {
-            $contas->pesquisa["pesq_contas_a_receber"] = 1;
-        } else {
-            $contas->pesquisa["pesq_contas_a_pagar"] = 1;
-        }
-
         // define nomes dinâmicos
         $nomes_entrada = array(
             "nome" => "Nota de entrada",
@@ -440,7 +425,7 @@ class faturamentoFORM implements ControladoraFORM
                 $field->type = $field::TEXT;
                 $field->class = "btn btn-success border-0";
                 $field->property = "total_produtos->valor_icms_st";
-                $row->field[] = $field;
+                //$row->field[] = $field;
 
                 // cria novo campo
                 $field = new Fields();
@@ -610,45 +595,7 @@ class faturamentoFORM implements ControladoraFORM
             $field->size = ($gui->cod_tipo == "S") ? 12 : 8;
             $tabs->form->field[] = $field;
 
-            $vendedores = UsuarioGUI::getVendedor();
-            array_unshift($vendedores["handle"], "");
-            array_unshift($vendedores["nome"], "");
-
-            // cria novo campo
-            $field = new Fields();
-            $field->name = "vendedor";
-            $field->description = $nomes[$gui->cod_tipo]["salesman"];
-            $field->type = $field::SELECT;
-            $field->options = Options::byArray($vendedores["handle"], $vendedores["nome"]);
-            $field->size = ($gui->cod_tipo == "S") ? 4 : 2;
-            $field->property = "cod_vendedor";
-            $tabs->form->field[] = $field;
-
-            if ($gui->cod_tipo == "S") {
-                $contas->fetch();
-
-                $supervisores = UsuarioGUI::getSupervisor();
-                array_unshift($supervisores["handle"], "");
-                array_unshift($supervisores["nome"], "");
-
-                // cria novo campo
-                $field = new Fields();
-                $field->name = "supervisor";
-                $field->type = $field::SELECT;
-                $field->options = Options::byArray($supervisores["handle"], $supervisores["nome"]);
-                $field->size = 4;
-                $field->property = "supervisor";
-                $tabs->form->field[] = $field;
-
-                // cria novo campo
-                $field = new Fields();
-                $field->name = "plano de contas";
-                $field->type = $field::SELECT;
-                $field->options = Options::byArray($contas->lista_values, $contas->lista_labels["N"]);
-                $field->size = 4;
-                $field->property = "cod_plano_contas";
-                $tabs->form->field[] = $field;
-            } else {
+            if($gui->cod_tipo == "E") {
                 // cria novo campo
                 $field = new Fields();
                 $field->type = $field::TEXT;
@@ -659,12 +606,7 @@ class faturamentoFORM implements ControladoraFORM
                 $tabs->form->field[] = $field;
             }
 
-
-            $field = new Fields();
-            $field->type = $field::SUBMIT;
-            $field->name = "enviar";
-            $field->class = "float-right";
-            $tabs->form->field[] = $field;
+            $tabs->form->field[] = $this->getEnviar();
 
             $widget->body->tabs["Cabeçalho"] = $tabs; // colocar o nome da tab
         }
@@ -863,7 +805,7 @@ class faturamentoFORM implements ControladoraFORM
                 $field->description = "% Desconto";
                 $field->name = "perc_desconto";
                 $field->class = "precision-5";
-                $field->type = $field::LABEL;
+                $field->type = $field::TEXT;
                 $field->property = "perc_desconto";
                 $row->field[] = $field;
 
@@ -873,13 +815,13 @@ class faturamentoFORM implements ControladoraFORM
                 $field->class = "precision-5";
                 $field->type = $field::HIDDEN;
                 $field->property = "perc_desconto";
-                $row->field[] = $field;
+                //$row->field[] = $field;
 
                 // cria novo campo
                 $field = new Fields();
                 $field->description = "$ Desconto";
                 $field->name = "valor_desconto";
-                $field->type = $field::LABEL;
+                $field->type = $field::TEXT;
                 $field->property = "valor_desconto";
                 $row->field[] = $field;
 
@@ -888,7 +830,7 @@ class faturamentoFORM implements ControladoraFORM
                 $field->name = "valor_desconto";
                 $field->type = $field::HIDDEN;
                 $field->property = "valor_desconto";
-                $row->field[] = $field;
+                //$row->field[] = $field;
 
                 // cria novo campo
                 $field = new Fields();
@@ -991,7 +933,7 @@ class faturamentoFORM implements ControladoraFORM
                 $field->name = "valor_icms_st";
                 $field->type = $field::TEXT;
                 $field->property = "valor_icms_st";
-                $row->field[] = $field;
+                //$row->field[] = $field;
 
                 // cria novo campo
                 $field = new Fields();
@@ -999,7 +941,7 @@ class faturamentoFORM implements ControladoraFORM
                 $field->name = "valor_bc_icms_st";
                 $field->type = $field::TEXT;
                 $field->property = "valor_bc_icms_st";
-                $row->field[] = $field;
+                //$row->field[] = $field;
 
                 // cria novo campo
                 $field = new Fields();
@@ -1131,11 +1073,7 @@ class faturamentoFORM implements ControladoraFORM
 
             $tabs->form->children[] = $div;
 
-            $field = new Fields();
-            $field->type = $field::SUBMIT;
-            $field->name = "enviar";
-            $field->class = "float-right";
-            $tabs->form->field[] = $field;
+            $tabs->form->field[] = $this->getEnviar();
 
             $widget->body->tabs["Produtos"] = $tabs; // colocar o nome da tab
         }
@@ -1243,10 +1181,12 @@ class faturamentoFORM implements ControladoraFORM
             $field->type = $field::BUTTON;
             $field->name = "Calcular parcelas";
             $field->function = "duplicatas.processa()";
-            $field->class = "float-right btn-warning mt-3";
+            $field->size = "4 float-right";
+            $field->class = "btn-warning mt-3";
             if (count($gui->duplicatas) > 0) {
                 $field->function = "";
-                $field->class = "float-right btn-default mt-3";
+                $field->class = "btn-default mt-3";
+                $field->size = "4 float-right";
             }
             $tabs->form->field[] = $field;
 
@@ -1388,11 +1328,7 @@ class faturamentoFORM implements ControladoraFORM
 
             $tabs->form->table[] = $table;
 
-            $field = new Fields();
-            $field->type = $field::SUBMIT;
-            $field->name = "enviar";
-            $field->class = "float-right";
-            $tabs->form->field[] = $field;
+            $tabs->form->field[] = $this->getEnviar();
 
             $widget->body->tabs["Duplicatas"] = $tabs; // colocar o nome da tab
         }
@@ -1651,11 +1587,7 @@ class faturamentoFORM implements ControladoraFORM
             $tabs->form->table[] = $table;
             // =========================================================================================================
 
-            $field = new Fields();
-            $field->type = $field::SUBMIT;
-            $field->name = "enviar";
-            $field->class = "float-right";
-            $tabs->form->field[] = $field;
+            $tabs->form->field[] = $this->getEnviar();
 
             $widget->body->tabs["Transporte"] = $tabs; // colocar o nome da tab
         }
@@ -1751,11 +1683,7 @@ class faturamentoFORM implements ControladoraFORM
             $field->description = "Cupom fiscal";
             $tabs->form->field[] = $field;
 
-            $field = new Fields();
-            $field->type = $field::SUBMIT;
-            $field->name = "enviar";
-            $field->class = "float-right";
-            $tabs->form->field[] = $field;
+            $tabs->form->field[] = $this->getEnviar();
 
             $widget->body->tabs["Painel NFE"] = $tabs; // colocar o nome da tab
         }
@@ -1769,19 +1697,28 @@ class faturamentoFORM implements ControladoraFORM
         return $widget;
     }
 
-    public function setTipo($tipo, $finalidade = null)
+    private function setTipo($tipo, $finalidade = null)
     {
         global $__MODULO__;
         global $__PAGINA__;
 
         if ($tipo == "S") {
-            $__MODULO__ = $finalidade == FaturamentoETT::FINALIDADE_DEVOLUCAO ? "Compras" : "Faturamento";
+            $__MODULO__ = $finalidade == FaturamentoETT::FINALIDADE_DEVOLUCAO ? "Compras" : "Vendas";
             $__PAGINA__ = $finalidade == FaturamentoETT::FINALIDADE_DEVOLUCAO ? "Nota de compra" : "Nota de venda";
         } elseif ($tipo == "E") {
-            $__MODULO__ = $finalidade == FaturamentoETT::FINALIDADE_DEVOLUCAO ? "Faturamento" : "Compras";
+            $__MODULO__ = $finalidade == FaturamentoETT::FINALIDADE_DEVOLUCAO ? "Vendas" : "Compras";
             $__PAGINA__ = $finalidade == FaturamentoETT::FINALIDADE_DEVOLUCAO ? "Nota de venda" : "Nota de compra";
         } else {
             return Tools::returnError("Tipo de nota não informado.");
         }
     }
+
+    private function getEnviar(){
+        $field = new Fields();
+        $field->type = $field::SUBMIT;
+        $field->name = "enviar";
+        $field->size = "4 float-right";
+        return $field;
+    }
+
 }

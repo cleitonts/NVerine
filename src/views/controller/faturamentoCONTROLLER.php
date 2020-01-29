@@ -33,9 +33,7 @@ class faturamentoCONTROLLER implements ControladoraCONTROLLER
     {
         global $mensagens;
 
-        $mensagens->retorno = '?pagina=faturamento';
-
-        $obj->setNota(intval($_POST["nota"]));
+        $mensagens->retorno = '?pagina=faturamento&pesq_tipo='.$obj->cod_tipo;
 
         $obj->status->handle = $_REQUEST["status"];
         $obj->cod_origem = FaturamentoETT::ORIGEM_SISTEMA;
@@ -44,8 +42,8 @@ class faturamentoCONTROLLER implements ControladoraCONTROLLER
         $obj->nota_fiscal->informacoes_fisco = $_REQUEST["informacoes_fisco"];
         $obj->nota_fiscal->chave_referencia = $_REQUEST["chave_referencia"];
 
-        dumper($obj);
-        dumper($_REQUEST);
+        //dumper($obj);
+        //dumper($_REQUEST);
 
         // se chegou ate aqui a rotina deve seguir normal
         if(empty($obj->nota)){
@@ -89,9 +87,5 @@ class faturamentoCONTROLLER implements ControladoraCONTROLLER
         }
 
         $mensagens->retorno .= '&pesq_num='.$obj->handle;
-
-
-        dumper($obj);
-        // TODO: Implement persiste() method.
     }
 }

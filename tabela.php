@@ -24,12 +24,11 @@ $ts_inicio = time();
 // instancia pesquisa
 $gui = new $_REQUEST["class"]();
 if(strpos($_REQUEST["class"], "CadastroGUI") !== false){
-    $arr = explode("&", $_SERVER["HTTP_REFERER"]);
-
-    foreach ($arr as $r){
-        if(strpos($r, "tabela=") !== false){
-            $nome = decrypt(substr($r, 7));
-        }
+    if(isset($_REQUEST["tabela"])){
+        $nome = decrypt($_REQUEST["tabela"]);
+    }
+    elseif (isset($_REQUEST["pesq_tabela"])){
+        $nome = decrypt($_REQUEST["pesq_tabela"]);
     }
     $gui = new $_REQUEST["class"]($nome);
 }

@@ -75,7 +75,7 @@ abstract class ObjectETT
          * (NÃO, você não pode ter uma chave primária que não se chame HANDLE. o nome disso é padrão.)
          */
         if(!isset($campos_valores["HANDLE"])) {
-            mensagem("updateStatement: HANDLE não foi definido", MSG_ERRO);
+            mensagem($tabela." | updateStatement: HANDLE não foi definido", MSG_ERRO);
             finaliza();
         }
 
@@ -83,7 +83,7 @@ abstract class ObjectETT
         unset($campos_valores["HANDLE"]);
 
         if(!is_numeric($handle) || $handle < 1) {
-            mensagem("updateStatement: HANDLE não é um valor numérico válido", MSG_ERRO);
+            mensagem($tabela." | updateStatement: HANDLE não é um valor numérico válido ".$handle, MSG_ERRO);
             finaliza();
         }
 

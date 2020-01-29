@@ -1,9 +1,6 @@
 <?php
 global $conexao;
 
-// puxa propriedades de compartilhamento
-$permissoes = new Permissoes();
-
 // pode pesquisae por três valores: código do produto, código alternativo e nome
 if(is_numeric($_GET["term"]))
     $where = "(P.CODIGO = '".anti_injection($_GET["term"])."'";

@@ -116,6 +116,8 @@ class FaturamentoETT extends ObjectETT
         // define se a entrada é uma nota de faturamento ou folha de pagamento (futuro)
         $this->fatura = "S";
 
+        dumper($this);
+
         // gera estrutura de objetos
         $this->produtos = array();
         $this->duplicatas = array();
@@ -159,6 +161,7 @@ class FaturamentoETT extends ObjectETT
 
             mensagem("Finalidade devolução: trocando tipo de nota para <b>{$this->tipo}</b>", MSG_AVISO);
         }
+
         // insere
         $stmt = $this->insertStatement("K_NOTA",
             array(
@@ -170,6 +173,7 @@ class FaturamentoETT extends ObjectETT
                 "ORIGEM" => $this->cod_origem,
             ));
 
+        dumper($this->handle);
         retornoPadrao($stmt, "Alocando tabela de faturamento...", "Não foi possível fazer o cadastro inicial do faturamento");
 
         $this->atualiza();

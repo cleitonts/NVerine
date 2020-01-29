@@ -8,9 +8,6 @@
 
 namespace src\entity;
 
-include_once("class/Contabil.php");
-
-use Contabil\Conta;
 use src\services\Transact\ExtPDO as PDO;
 
 class FaturamentoGUI extends ObjectGUI implements InterfaceGUI
@@ -486,29 +483,18 @@ class FaturamentoGUI extends ObjectGUI implements InterfaceGUI
 //                    $item->url_boleto_loja_virtual = $boleto_url;
 //                }
 
-                // trata defaults de plano de contas
-                if (empty($item->cod_plano_contas)) {
-                    if ($item->cod_tipo == "E") {
-                        $item->cod_plano_contas = Conta::CONTA_COMPRAS;
-                        $item->plano_contas = "Compras (Padrão)";
-                    } else {
-                        $item->cod_plano_contas = Conta::CONTA_VENDAS;
-                        $item->plano_contas = "Vendas (Padrão)";
-                    }
-                }
-
                 // e-mails de contato múltiplos
                 if (!empty($this->top)) {
                     $sql = "SELECT EMAIL FROM K_FN_CONTATO WHERE PESSOA = '{$item->cod_pessoa}' AND EMAIL <> '' AND EMAIL IS NOT NULL";
                     $stmt = $conexao->prepare($sql);
                     $stmt->execute();
-                    $f = $stmt->fetchAll(PDO::FETCH_OBJ);
+                    $ff = $stmt->fetchAll(PDO::FETCH_OBJ);
 
                     $item->email = "";
-                    if (!empty($f)) {
-                        foreach ($f as $r) {
+                    if (!empty($ff)) {
+                        foreach ($ff as $rr) {
                             if (!empty($item->email)) $item->email .= "; ";
-                            $item->email .= trim($r->EMAIL);
+                            $item->email .= trim($rr->EMAIL);
                         }
                     }
                 } else {

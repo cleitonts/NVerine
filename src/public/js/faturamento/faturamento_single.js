@@ -11,7 +11,6 @@ function pageUpdate() {
     nota = new Nota();
     duplicatas = Duplicatas;
 
-
     // corrige posição
     $("#card_total")[0].closest(".card-body").className = "";
     $("#main-content > .row").prepend($("#card_total")[0]);
@@ -26,9 +25,7 @@ function pageUpdate() {
         $(this).css("display", "none")
     });
 
-    // inicia modal para configuração de descontos
-    Desconto.criaModal();
-    Desconto.criaModalNFE();
+    Nota.criaModalNFE();
 
     // instancia produtos
     $("#dynamic_produtos [num]:not([num='templatex'])").each(function(){
@@ -46,175 +43,7 @@ function pageUpdate() {
         }
     });
 
-    notas();
-}
-
-function abreModalNFE() {
-    spinner(true);
-
-    // verifica a senha antes
-    const senha = $("#campo_senha").val();
-    const num_nf = $("#campo_num_nf").val();
-
-    if (senha == "") {
-        var popup = new Alert();
-        popup.typo = "danger";
-        popup.texto = "Por favor, preencha a senha para liberação";
-        popup.montaMensagem();
-        spinner(false);
-        return;
-    }
-
-    $.getJSON("json.php?pagina=liberacao&term=" + senha, "")
-        .done(function (resposta) {
-            if (resposta.valida) {
-                var content = $("#modal_nfe .modal-body");
-                var campo_chave = $("#campo_chave").val();
-                $(content).html("");
-
-                var tipo_evento = {
-                    class: "",
-                    description: "Tipo de evento",
-                    function: "",
-                    icon: "",
-                    options: [
-                        {
-                            value: "110111",
-                            description: "Cancelamento",
-                            checked: "N"
-                        },
-                        {
-                            value: "110110",
-                            description: "Carta de correção",
-                            checked: "N"
-                        },
-                        {
-                            value: "999990",
-                            description: "Inutilização",
-                            checked: "N"
-                        }
-                    ],
-                    name: "tipo_evento",
-                    size: "3",
-                    type: "SELECT",
-                    value: ""
-                };
-
-                var sequencia = {
-                    class: "",
-                    description: "Sequência",
-                    function: "",
-                    options: [],
-                    icon: "",
-                    name: "num_sequencia",
-                    size: "3",
-                    type: "SELECT",
-                    value: ""
-                };
-
-                var chave = {
-                    class: "",
-                    description: "Chave",
-                    function: "",
-                    icon: "",
-                    name: "valor_chave",
-                    size: "6",
-                    type: "LABEL",
-                    value: campo_chave
-                };
-
-                var motivo = {
-                    class: "",
-                    description: "Informe o motivo",
-                    function: "",
-                    icon: "",
-                    name: "justificativa",
-                    size: "12",
-                    type: "AREA",
-                    value: ""
-                };
-
-                var num_inicial = {
-                    class: "",
-                    description: "Nº inicial (inutilização)",
-                    function: "",
-                    icon: "",
-                    name: "inut_num_inicial",
-                    size: "6",
-                    type: "TEXT",
-                    value: num_nf
-                };
-
-                var num_final = {
-                    class: "",
-                    description: "Nº final (inutilização)",
-                    function: "",
-                    icon: "",
-                    name: "campo_inut_num_final",
-                    size: "6",
-                    type: "TEXT",
-                    value: num_nf
-                };
-
-                for (var i = 1; i <= 20; i++){
-                    sequencia.options.push({value: i, description: i, checked: "N"});
-                }
-
-                Field.select(content, tipo_evento);
-                Field.select(content, sequencia);
-                Field.input("label", content, chave);
-                Field.textArea(content, motivo);
-                Field.input("text", content, num_inicial);
-                Field.input("text", content, num_final);
-
-                $(content).find(".selectpicker").selectpicker();
-                $("#modal_nfe").modal('show');
-                spinner(false);
-            }
-            else {
-                var popup = new Alert();
-                popup.typo = "danger";
-                popup.texto = "Senha incorreta";
-                popup.montaMensagem();
-                spinner(false);
-            }
-
-        })
-        .fail(function (jqxhr) {
-            var popup = new Alert();
-            popup.typo = "danger";
-            popup.texto = "Não foi possível verificar a senha";
-            popup.montaMensagem();
-            spinner(false);
-        });
-}
-
-function notas(){
-    var xml = $(`#campo_xml`);
-    $(`#campo_xml`).hide();
-    $(`#wrapper_xml`).append(
-        `<div class="col-12 mb-2" style="overflow-y:scroll;height:500px;width:100%;overflow-x:hidden">
-            <xmp style="white-space: pre-wrap;">${xml.val()}</xmp>
-        </div>`
-    );
-
-    var txt = $(`#campo_txt_cupom`);
-    $(`#campo_txt_cupom`).hide();
-    $(`#wrapper_txt_cupom`).append(
-        `<div class="col-12" style="overflow:scroll;height:300px;width:100%;overflow:auto">
-            <xmp>${txt.val()}</xmp>
-        </div>`
-    );
-
-    var dados_retorno = $(`#campo_dados_retorno`);
-    $(`#campo_dados_retorno`).hide();
-    $(`#wrapper_dados_retorno`).append(
-        `<div class="col-12" style="overflow:scroll;height:300px;width:100%;overflow:auto">
-            <xmp>${dados_retorno.val()}</xmp>
-        </div>`
-    );
-
-    $("#campo_senha").prop("type", "password");
+    Nota.notas();
 }
 
 class Duplicatas{
@@ -228,19 +57,10 @@ class Duplicatas{
         var condicao_pagamento = parseInt($("#campo_condicao_pagamento").val());
 
         // validações
-        if (isNaN(forma_pagamento)) {
+        if (isNaN(forma_pagamento) || isNaN(condicao_pagamento)) {
             var popup = new Alert();
             popup.typo = "danger";
-            popup.texto = "Por favor, preencha a forma de pagamento";
-            popup.montaMensagem();
-            spinner(false);
-            return;
-        }
-
-        if (isNaN(condicao_pagamento)) {
-            var popup = new Alert();
-            popup.typo = "danger";
-            popup.texto = "Por favor, preencha a condição de pagamento";
+            popup.texto = "Por favor, preencha a forma/condição de pagamento";
             popup.montaMensagem();
             spinner(false);
             return;
@@ -365,33 +185,15 @@ class Produto {
         else{
             this.num = linha;	// número da linha
             this.linha = $("#dynamic_produtos tr[num='"+this.num+"']");
-            //this.id = this.getValor("cod_two_produto", "int");
-            //this.valor_desconto = this.getValor("valor_desconto", "float");
         }
-
-        // cria botão para abrir modal de percentagem
-        Desconto.criaBotao($(this.linha).find("[id^='label_perc_desconto']"));
-
 
         // mascaras
         this.getCampo("NCM").mask("9999.99.99");
         this.getCampo("cst_icms").mask("999");
-
-        // instancia changes obrigatorios
-        // var selector = $(this.getCampo("valor_unitario"))
-        //     .add(this.getCampo("perc_desconto"))
-        //     .add(this.getCampo("valor_desconto"));
-        //
-        // Funcoes.newChange(selector);
-
-
         this.acoes();							// instancia as ações dos imputs
         this.pesquisa();						// instancia pesquisa para produtos
 
         this.atualizaValores(false);
-
-        // instancia a classe de desconto
-        //_desconto[this.num] = new DescontoItens(this.num);
     }
 
     //retorna o objeto campos
@@ -407,7 +209,7 @@ class Produto {
             return 0;
         }
 
-        if(tipo == "int"){
+        if(tipo === "int"){
             if(valor.includes(",")) {
                 valor = valor.replace(".", "");
             }
@@ -415,12 +217,12 @@ class Produto {
             valor = parseInt(valor);
             if(isNaN(valor)) valor = 0;
         }
-        else if(tipo == "str"){
+        else if(tipo === "str"){
             valor = String.valueOf(valor);
             if(!isNaN(valor)) valor = 0;
         }
 
-        else if(tipo == "float"){
+        else if(tipo === "float"){
             valor = parseMoney(valor);
         }
 
@@ -603,35 +405,11 @@ class Produto {
             });
     }
 
-    // Calcula a metragem total do produto
-    calculaMetragem (){
-        // calcula arredondamenoto de acordo com unidade de medida
-        if(this.unidade == "M2") {
-            this.medida_t = (this.medida_x * this.medida_z * this.quantidade) / 1000000;
-        }
-        else if(this.unidade == "M") {
-            this.medida_t = (this.medida_z * this.quantidade) / 1000;
-        }
-        else {
-            this.valor_bruto = (this.quantidade * this.valor_unitario);
-        }
-        //para não causar erro de JS caso produto não use medidas
-        if(this.medida_t > 0){
-            this.setValor("medida_t", this.medida_t.toFixed(5));
-            this.valor_bruto = (this.medida_t * this.valor_unitario);
-        }
-
-        //se o produto for m2 ou m ele vai pegar os valores diretamente acima, senão ele pega o valor * quantidade
-        if(isNaN(this.valor_bruto) || this.valor_bruto == 0)	{
-            this.valor_bruto = (this.quantidade * this.valor_unitario);
-        }
-    }
-
     /*	Atualiza valores da linha do produto
      * 	calcula varias coisas, como valor total entre outros..
      * 	Desmembrar a função de arredondamento, pois assim a performance vai melhorar consideravelmente
      */
-    atualizaValores (salvar = true){
+    atualizaValores (salvar = true, obj = null){
         this.unidade = this.getValor("unidade");
         this.medida_x = this.getValor("medida_x", "int");
         this.medida_z = this.getValor("medida_z", "int");
@@ -641,19 +419,22 @@ class Produto {
         this.perc_ipi = this.getValor("perc_ipi", "float");
         this.perc_icms = this.getValor("perc_icms", "float");
         this.fator_bc_icms = this.getValor("fator_bc", "float");
-        this.margem_valor_agregado = this.getValor("mva", "float");
         this.valor_frete = this.getValor("valor_frete", "float");
-        this.emenda = this.getValor("emenda");
-        // por default o valor sera N
-        if(this.emenda == 0) this.emenda = "N";
+        this.valor_bruto = (this.quantidade * this.valor_unitario);
+        this.valor_desconto = 0;
+        this.perc_desconto = 0;
+        // se um foi alterado precisa refletir no outro
+        let campo_valor_desconto = this.getCampo("valor_desconto");
+        let campo_perc_desconto = this.getCampo("perc_desconto");
 
-        // seta apenas se for nulo
-        if(isNaN(parseInt(this.valor_desconto))){
+        if(campo_valor_desconto[0] === obj){
             this.valor_desconto = this.getValor("valor_desconto", "float");
-            this.perc_desconto = this.getValor("perc_desconto", "float");
+            this.perc_desconto = ((this.valor_desconto * 100) / this.valor_bruto).toFixed(5);
         }
-
-        this.calculaMetragem();
+        if(campo_perc_desconto[0] === obj){
+            this.perc_desconto = this.getValor("perc_desconto", "float");
+            this.valor_desconto = (this.perc_desconto / 100) * this.valor_bruto;
+        }
 
         this.valor_base = 		this.valor_bruto - this.valor_desconto;
         this.valor_bc_ipi = 	this.valor_base; // IPI não considera desconto?
@@ -665,28 +446,11 @@ class Produto {
         if(this.perc_ipi == 0) this.valor_bc_ipi = 0;
         if(this.perc_icms == 0) this.valor_bc_icms = 0;
 
-        // cálculo ICMS ST
-        this.valor_bc_icms_st = 0;
-        this.valor_icms_st = 0;
-
-        if(this.getValor("usa_st", "str") == "S") {
-            /* deve tratar por tipo de modalidade (MVA, pauta, tabelado, etc.)
-             * por enquanto SÓ implementamos o cálculo do MVA!
-             */
-            this.valor_bc_icms_st = this.valor_base + this.valor_ipi + this.valor_frete;
-            this.valor_bc_icms_st *= 1 + (this.margem_valor_agregado / 100);
-
-            var diferenca = this.valor_bc_icms_st - this.valor_bc_icms;
-            this.valor_icms_st = (diferenca / 100) * this.perc_icms;
-        }
-
-        this.valor_total = this.valor_bruto - this.valor_desconto + this.valor_ipi + this.valor_icms_st;
+        this.valor_total = this.valor_bruto - this.valor_desconto + this.valor_ipi;
 
         // zera base de cálculo se não houver alíquota
         if(this.perc_ipi == 0) this.valor_bc_ipi = 0;
         if(this.perc_icms == 0) this.valor_bc_icms = 0;
-
-        this.comissaoProduto();
 
         if(salvar){
             this.salvaValores();
@@ -699,9 +463,7 @@ class Produto {
         maskMoney($("#campo_valor_bruto_"+this.num), this.valor_bruto);
         maskMoney($("#label_valor_bruto_"+this.num), this.valor_bruto);
         $("#campo_perc_desconto_"+this.num).val(this.perc_desconto).mask('00,0000%', {reverse: true}).trigger('input');
-        $("#label_perc_desconto_"+this.num+" .btn").text(this.perc_desconto);
         maskMoney($("#campo_valor_desconto_"+this.num), this.valor_desconto);
-        maskMoney($("#label_valor_desconto_"+this.num), this.valor_desconto);
         maskMoney($("#campo_valor_ipi_"+this.num), this.valor_ipi);
         maskMoney($("#label_valor_ipi_"+this.num), this.valor_ipi);
         maskMoney($("#campo_valor_bc_ipi_"+this.num), this.valor_bc_ipi);
@@ -712,106 +474,26 @@ class Produto {
         maskMoney($("#label_valor_bc_icms_"+this.num), this.valor_bc_icms);
         maskMoney($("#campo_valor_icms_"+this.num), this.valor_icms);
         maskMoney($("#label_valor_icms_"+this.num), this.valor_icms);
-        maskMoney($("#campo_valor_bc_st_icms_"+this.num), this.valor_bc_icms_st);
-        maskMoney($("#campo_valor_st_icms_"+this.num), this.valor_icms_st);
-    }
-
-    //	Bloqueia alterações no campo de valor unitario para valores abaixo de tabela
-    valorUnitario (){
-        this.valor_unitario = this.getValor("valor_unitario");
-
-        if(this.valor_tabela >= this.valor_unitario){
-            $("#campo_valor_unitario_"+this.num).val(this.valor_tabela.toFixed(__CASAS_DECIMAIS__)).mask("#.##0,00", {reverse: true}).trigger('input');
-            this.sobrepreco = 0;
-        }
-        else{
-            if(!this.desconto_sobrepreco()){
-                this.valor_unitario = this.valor_tabela;
-                $("#campo_valor_unitario_"+this.num).val(this.valor_tabela.toFixed(__CASAS_DECIMAIS__)).mask("#.##0,00", {reverse: true}).trigger('input');
-                this.sobrepreco = 0;
-                return -1;
-            }
-            this.sobrePreco();
-        }
-        this.atualizaValores();
-    }
-
-    // verifica se tem desconto e sobrepreço na mesma linha
-    desconto_sobrepreco(desconto = false){
-
-        // se valor da tabela estiver zerado, não tem bloqueio
-        if(this.valor_tabela == 0){
-            return true;
-        }
-
-        this.valor_unitario = this.getValor("valor_unitario", "float");
-        var sobrepreco = this.valor_unitario - this.valor_tabela;   // se for maior que 0 tem sobrepreço
-
-        if(!desconto){
-            desconto = this.getValor("valor_desconto", "float");
-        }
-
-        if(sobrepreco > 0 && desconto > 0){
-            var popup = new Alert();
-            popup.typo = "danger";
-            popup.texto = "Não é possivel aplicar desconto em um produto que possui sobrepreço";
-            popup.montaMensagem();
-
-            return false;
-        }
-
-        return true;
-    }
-
-    // Atualiza o valor da comissão na linha do produto
-    comissaoProduto(){
-        var elemento = this;
-        //ate o momento a formula usada é sinonimo de: comissao = (valor_tabela * ((10 - (perc_desconto * __COMISSAO_FATOR__)) * (__PERC_COMISSAO__ / 10))) * quantidade;
-        if(elemento.perc_desconto > 0){
-            elemento.comissao = elemento.valor_base * ((10 - (elemento.perc_desconto * __COMISSAO_FATOR__)) / 100);
-        }
-        else{
-            elemento.comissao = elemento.valor_base * __COMISSAO_PERC__;
-        }
-        if(elemento.comissao < 0) elemento.comissao = 0;
-
-        elemento.setValor("comissao", parseFloat(elemento.comissao).toFixed(__CASAS_DECIMAIS__));
-    }
-
-    // esta função calcula o sobrePreco de cada produto individualmente e salva em um campo invisível
-    sobrePreco (){
-        this.sobrepreco = 0;
-
-        if(this.medida_t > 0){
-            this.sobrepreco = ((this.valor_unitario - this.valor_tabela) * this.medida_t);
-        }
-        else {
-            this.sobrepreco = ((this.valor_unitario - this.valor_tabela) * this.quantidade);
-        }
-
-        this.setValor("sobrepreco", this.sobrepreco.toFixed(__CASAS_DECIMAIS__))
     }
 
     acoes(){
         const elemento = this;
-
-        // executa bloqueio caso o valor unitario seja editado
-        $(this.getCampo("valor_unitario")).blur(function(){
-            elemento.valorUnitario();
-        });
 
         var selector = $(this.getCampo("quantidade")).add(this.getCampo("medida_x"));
         $(selector).change(() => {elemento.estoque_saldo()});
 
         selector = $(this.getCampo("quantidade"))
             .add(this.getCampo("medida_x"))
+            .add(this.getCampo("valor_unitario"))
+            .add(this.getCampo("perc_desconto"))
+            .add(this.getCampo("valor_desconto"))
             .add(this.getCampo("medida_z"))
             .add(this.getCampo("emenda"))
             .add(this.getCampo("valor"))
             .add($("[id^='campo_perc']:not([id^='campo_perc_desconto'])"));	// todos os percentuais serao atualizados
 
         $(selector).change(function() {
-            elemento.atualizaValores();
+            elemento.atualizaValores(true, this);
         });
 
         // atualiza valores com o json
@@ -825,16 +507,16 @@ class Produto {
 }
 
 // classe com objetos globais como totalizadores
-class Nota{
-    constructor (){
+class Nota {
+    constructor() {
         var elemento = this;
         // atualização de totais caso troque o vendedor
-        $("#campo_vendedor, #campo_supervisor").change(function(){
+        $("#campo_vendedor, #campo_supervisor").change(function () {
             elemento.totalProdutos();
         });
     }
 
-    totalProdutos (){
+    totalProdutos() {
         this.bruto = this.somaValor("campo_valor_bruto");
         this.desconto = this.somaValor("campo_valor_desconto");
         this.ipi = this.somaValor("campo_valor_ipi");
@@ -846,15 +528,15 @@ class Nota{
 
         var duplicatas = 0;
         // gera total de duplicatas
-        $("#dynamic_duplicatas [id^='campo_valor_total']").each(function() {
+        $("#dynamic_duplicatas [id^='campo_valor_total']").each(function () {
             var valor = $(this).val();
 
-            if(valor.includes(",")) {
+            if (valor.includes(",")) {
                 valor = valor.replace(".", "");
             }
             valor = valor.replace(",", ".");
             valor = parseFloat(valor);
-            if(isNaN(valor)) valor = 0;
+            if (isNaN(valor)) valor = 0;
             duplicatas += valor;
         });
 
@@ -868,22 +550,21 @@ class Nota{
         Nota.setTotal("comissao", this.comissao);
         Nota.setTotal("sobrepreco", this.sobrepreco);
 
-        Nota.rateio_comissao();
     }
 
     // soma os totais dos produtos
-    somaValor(id){
+    somaValor(id) {
         var total = 0;
 
-        $("#dynamic_produtos [id^='"+id+"']").each(function() {
+        $("#dynamic_produtos [id^='" + id + "']").each(function () {
             var valor = $(this).val();
 
-            if(valor.includes(",")) {
+            if (valor.includes(",")) {
                 valor = valor.replace(".", "");
             }
             valor = valor.replace(",", ".");
             valor = parseFloat(valor);
-            if(isNaN(valor)) valor = 0;
+            if (isNaN(valor)) valor = 0;
             total += valor;
         });
 
@@ -891,34 +572,17 @@ class Nota{
     }
 
     // igual a anterior, mas set o valor
-    static setTotal(campo, valor){
+    static setTotal(campo, valor) {
         let table = $("#dynamic_totais");
-        $(table).find("[id^='campo_"+campo+"']").val(valor.toFixed(__CASAS_DECIMAIS__));
-    }
-}
-
-class Desconto {
-    static criaModal(){
-        var modal = new Modal();
-        modal.title = "Desconto unitário";
-        modal.btnSuccess = "Aplicar";
-        modal.btnCancel = "Cancelar";
-        modal.size = ""; // "modal-lg, modal-sm";
-        modal.btnSuccessAct = function() {Desconto.verifica()}; //function() {FieldTables.deleteLinha(modal)};
-        modal.btnCancelAct = ""; //function() {FieldTables.deleteLinha(modal)};
-        modal.name = "modal_desconto";
-        modal.no_footer = false;
-
-        var rendered = modal.render();
-        $("#main-content").append(rendered);
+        $(table).find("[id^='campo_" + campo + "']").val(valor.toFixed(__CASAS_DECIMAIS__));
     }
 
-    static criaModalNFE(){
+    static criaModalNFE() {
         var modal = new Modal();
         modal.title = "Novo evento de nota fiscal";
         modal.btnSuccess = "Enviar Evento";
         modal.size = "modal-lg"; // "modal-lg, modal-sm";
-        modal.btnSuccessAct = function() {Desconto.verifica()}; //function() {FieldTables.deleteLinha(modal)};
+        //modal.btnSuccessAct =  //function() {FieldTables.deleteLinha(modal)};
         modal.btnCancelAct = ""; //function() {FieldTables.deleteLinha(modal)};
         modal.name = "modal_nfe";
         modal.no_footer = false;
@@ -927,185 +591,170 @@ class Desconto {
         $("#main-content").append(rendered);
     }
 
-    static abreModal(obj){
-        var num = $(obj).closest("[num]").attr("num");
-        var content = $("#modal_desconto .modal-body");
-
-        // checa primeiro
-        if(!produtos[num -1].desconto_sobrepreco(1)){
-            return -1;
-        }
-
-        $(content).html("");
-
-        var total = {   class: "",
-            description: "Valor bruto",
-            function: "",
-            icon: "",
-            name: "desc_valor_bruto",
-            size: "12",
-            type: "LABEL",
-            value: parseFloat(produtos[num -1].valor_bruto).toFixed(__CASAS_DECIMAIS__)
-        };
-
-        var valor = {   class: "",
-            description: "Valor desconto",
-            function: "",
-            icon: "",
-            name: "desc_valor_desconto",
-            size: "12",
-            type: "TEXT",
-            value: parseFloat(produtos[num -1].valor_desconto).toFixed(__CASAS_DECIMAIS__)
-        };
-
-        var desconto = {    class: "",
-            description: "Perc. desconto",
-            function: "",
-            icon: "",
-            name: "desc_perc_desconto",
-            size: "12",
-            type: "TEXT",
-            value: parseFloat(produtos[num -1].perc_desconto).toFixed(4)
-        };
-
-        var referencia = {      class: "",
-            description: "",
-            function: "",
-            icon: "",
-            name: "desc_referencia",
-            size: "12",
-            type: "HIDDEN",
-            value: num
-        };
-
-        var senha = {   class: "",
-            description: "Senha para liberação (mais de "+ (__MAX_DESCONTO_VENDA__  * 100) +"%)",
-            name: "senha_mestra",
-            function: "",
-            icon: "",
-            size: "12",
-            type: "PASSWORD",
-            value: ""
-        };
-
-        Field.input("label", content, total);
-        Field.input("text", content, valor);
-        Field.input("text", content, desconto);
-        Field.input("hidden", content, referencia);
-
-        // so mostra botão quando existir o bloqueio
-        if(__MAX_DESCONTO_VENDA__ < 1) {
-            Field.input("text", content, senha);
-        }
-
-        $(content).find("#campo_desc_valor_desconto").keyup(function(){Desconto.calcPerc(this)})
-            .mask("#.##0,00", {reverse: true});
-        $(content).find("#campo_desc_valor_bruto").mask("#.##0,00", {reverse: true});
-        $(content).find("#campo_desc_perc_desconto").keyup(function(){Desconto.calcVal(this)})
-            .mask('00,0000%', {reverse: true});
-
-        $("#modal_desconto").modal('show');
-    }
-
-    static calcPerc(obj){
-        var bruto = parseFloat($("#campo_desc_valor_bruto").val().replace(',', '.'));
-        var valor = parseFloat($(obj).val().replace(',', '.'));
-        var masked = $("#campo_desc_perc_desconto").masked((valor / bruto * 100).toFixed(4));
-
-        $("#campo_desc_perc_desconto").val(masked)
-            .closest(".form-group").addClass("is-filled");
-    }
-
-    static calcVal(obj){
-        var bruto = parseFloat($("#campo_desc_valor_bruto").val().replace(',', '.'));
-        var perc = parseFloat($(obj).val().replace(',', '.'));
-        var masked = $("#campo_desc_valor_desconto").masked((bruto * (perc / 100)).toFixed(2));
-
-        $("#campo_desc_valor_desconto").val(masked)
-            .closest(".form-group").addClass("is-filled");
-    }
-
-    static verifica(){
-        var perc = parseFloat($("#campo_desc_perc_desconto").val().replace(',', '.'));
+    static abreModalNFE() {
         spinner(true);
 
-        // faz a liberação
-        if(perc > (__MAX_DESCONTO_VENDA__ * 100)){
-            var senha = $("#campo_senha_mestra").val();
-            if(senha.length == 0){
+        // verifica a senha antes
+        const senha = $("#campo_senha").val();
+        const num_nf = $("#campo_num_nf").val();
+
+        if (senha == "") {
+            var popup = new Alert();
+            popup.typo = "danger";
+            popup.texto = "Por favor, preencha a senha para liberação";
+            popup.montaMensagem();
+            spinner(false);
+            return;
+        }
+
+        $.getJSON("json.php?pagina=liberacao&term=" + senha, "")
+            .done(function (resposta) {
+                if (resposta.valida) {
+                    var content = $("#modal_nfe .modal-body");
+                    var campo_chave = $("#campo_chave").val();
+                    $(content).html("");
+
+                    var tipo_evento = {
+                        class: "",
+                        description: "Tipo de evento",
+                        function: "",
+                        icon: "",
+                        options: [
+                            {
+                                value: "110111",
+                                description: "Cancelamento",
+                                checked: "N"
+                            },
+                            {
+                                value: "110110",
+                                description: "Carta de correção",
+                                checked: "N"
+                            },
+                            {
+                                value: "999990",
+                                description: "Inutilização",
+                                checked: "N"
+                            }
+                        ],
+                        name: "tipo_evento",
+                        size: "3",
+                        type: "SELECT",
+                        value: ""
+                    };
+
+                    var sequencia = {
+                        class: "",
+                        description: "Sequência",
+                        function: "",
+                        options: [],
+                        icon: "",
+                        name: "num_sequencia",
+                        size: "3",
+                        type: "SELECT",
+                        value: ""
+                    };
+
+                    var chave = {
+                        class: "",
+                        description: "Chave",
+                        function: "",
+                        icon: "",
+                        name: "valor_chave",
+                        size: "6",
+                        type: "LABEL",
+                        value: campo_chave
+                    };
+
+                    var motivo = {
+                        class: "",
+                        description: "Informe o motivo",
+                        function: "",
+                        icon: "",
+                        name: "justificativa",
+                        size: "12",
+                        type: "AREA",
+                        value: ""
+                    };
+
+                    var num_inicial = {
+                        class: "",
+                        description: "Nº inicial (inutilização)",
+                        function: "",
+                        icon: "",
+                        name: "inut_num_inicial",
+                        size: "6",
+                        type: "TEXT",
+                        value: num_nf
+                    };
+
+                    var num_final = {
+                        class: "",
+                        description: "Nº final (inutilização)",
+                        function: "",
+                        icon: "",
+                        name: "campo_inut_num_final",
+                        size: "6",
+                        type: "TEXT",
+                        value: num_nf
+                    };
+
+                    for (var i = 1; i <= 20; i++) {
+                        sequencia.options.push({value: i, description: i, checked: "N"});
+                    }
+
+                    Field.select(content, tipo_evento);
+                    Field.select(content, sequencia);
+                    Field.input("label", content, chave);
+                    Field.textArea(content, motivo);
+                    Field.input("text", content, num_inicial);
+                    Field.input("text", content, num_final);
+
+                    $(content).find(".selectpicker").selectpicker();
+                    $("#modal_nfe").modal('show');
+                    spinner(false);
+                } else {
+                    var popup = new Alert();
+                    popup.typo = "danger";
+                    popup.texto = "Senha incorreta";
+                    popup.montaMensagem();
+                    spinner(false);
+                }
+
+            })
+            .fail(function (jqxhr) {
                 var popup = new Alert();
                 popup.typo = "danger";
-                popup.texto = "Campo de senha não preenchido.";
+                popup.texto = "Não foi possível verificar a senha";
                 popup.montaMensagem();
                 spinner(false);
-            }
-            else{
-                $.getJSON(__PASTA__+"json.php?pagina=liberacao&term="+senha, "")
-                    .done(function(resposta){
-                        if(resposta.valida){
-                            $("#modal_desconto").modal('hide');
-                            Desconto.aplica();
-                            spinner(false);
-                        }
-                        else{
-                            var popup = new Alert();
-                            popup.typo = "danger";
-                            popup.texto = "Senha incorreta.";
-                            popup.montaMensagem();
-                            spinner(false);
-                        }
-                    })
-                    .fail(function(jqxhr){
-                        var popup = new Alert();
-                        popup.typo = "danger";
-                        popup.texto = "Campo de senha não preenchido.";
-                        popup.montaMensagem();
-                        spinner(false);
-                    });
-            }
-        }
-        else{
-            $("#modal_desconto").modal('hide');
-            Desconto.aplica();
-            spinner(false);
-        }
+            });
     }
 
-    static criaBotao(obj){
-        var texto = $(obj).text();
+    static notas() {
+        var xml = $(`#campo_xml`);
+        $(`#campo_xml`).hide();
+        $(`#wrapper_xml`).append(
+            `<div class="col-12 mb-2" style="overflow-y:scroll;height:500px;width:100%;overflow-x:hidden">
+            <xmp style="white-space: pre-wrap;">${xml.val()}</xmp>
+        </div>`
+        );
 
-        var btn = document.createElement("div");
-        btn.className = "btn btn-warning btn-sm btn-block";
-        btn.onclick = function(){
-            Desconto.abreModal(this);
-        };
-        btn.appendChild(document.createTextNode(texto));
+        var txt = $(`#campo_txt_cupom`);
+        $(`#campo_txt_cupom`).hide();
+        $(`#wrapper_txt_cupom`).append(
+            `<div class="col-12" style="overflow:scroll;height:300px;width:100%;overflow:auto">
+            <xmp>${txt.val()}</xmp>
+        </div>`
+        );
 
-        $(obj).html(btn);
-    }
+        var dados_retorno = $(`#campo_dados_retorno`);
+        $(`#campo_dados_retorno`).hide();
+        $(`#wrapper_dados_retorno`).append(
+            `<div class="col-12" style="overflow:scroll;height:300px;width:100%;overflow:auto">
+            <xmp>${dados_retorno.val()}</xmp>
+        </div>`
+        );
 
-    static aplica(){
-        var num = $("#campo_desc_referencia").val();
-
-        var perc = $("#campo_desc_perc_desconto").val();
-        perc = perc.replace(".", "");
-        perc = perc.replace(",", ".");
-        perc = parseFloat(perc);
-
-        var bruto = $("#campo_desc_valor_bruto").val();
-        bruto = bruto.replace(".", "");
-        bruto = bruto.replace(",", ".");
-        bruto = parseFloat(bruto);
-
-        var valor = (bruto * (perc / 100));
-
-        produtos[num-1].perc_desconto = perc;
-        produtos[num-1].valor_desconto = valor;
-        produtos[num-1].atualizaValores(true);
-
-        // $("#label_perc_desconto_"+num+" .btn").text(perc);
-        // $("#campo_perc_desconto_"+num).val(perc);
-        // $("#label_valor_desconto_"+num).text(valor.toFixed(__CASAS_DECIMAIS__)).mask("#.##0,00", {reverse: true}).trigger('input');
-        // $("#campo_valor_desconto_"+num).val(valor.toFixed(__CASAS_DECIMAIS__)).mask("#.##0,00", {reverse: true}).trigger('input');
+        $("#campo_senha").prop("type", "password");
     }
 }

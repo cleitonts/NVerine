@@ -43,6 +43,19 @@ class cadastroFORM implements ControladoraFORM
         $tabs = new Tabs();
         $tabs->icon = "fa fa-search";
 
+        // cria form
+        $tabs->form->method = "GET";
+        $tabs->form->prefix = "pesq_";
+        $tabs->form->name = "form_pesquisa";
+        //$tabs->form->action = "page.php?pagina=pessoa";
+
+        // cria novo campo
+        $field = new Fields();
+        $field->type = $field::HIDDEN;
+        $field->name = "tabela";
+        $field->value = $dados['table_enc'];
+        $tabs->form->field[] = $field;
+
         //cria tabelas
         $tabs->table->name = $dados["nome"];
         $tabs->table->target = "?pagina=cadastro&tn=" . urlencode($dados['nome']) . "&tabela=" . $dados['table_enc'];

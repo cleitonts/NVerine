@@ -410,3 +410,11 @@ function limpaString($texto, $preg = true){
     if($preg) $novoTexto = preg_replace("/[^a-zA-Z0-9 @,-.;:\/_]/", "", $novoTexto);
     return $novoTexto;
 }
+
+// gera uma timestamp UTC (padrão da nota fiscal) -- data e hora já devem vir formatados!
+function formataUTC($data = null, $hora = null, $timezone = null) {
+    if(empty($data)) $data = date("Y-m-d");
+    if(empty($hora)) $hora = date("H:i:s");
+    if(empty($timezone)) $timezone = __TIMEZONE__;
+    return "{$data}T{$hora}{$timezone}";
+}

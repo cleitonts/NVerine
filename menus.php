@@ -47,20 +47,20 @@ $menu = array(
         "Tipo de vínculo" => "?pagina=cadastro&tn=Tipo de vínculo&tabela=".encrypt("K_FN_TIPOVINCULO"),
     ),
 
-//    "Compras" => array(
-//        "Notas de compra" => "?pagina=faturamento_notas&pesq_tipo=E&pesq_data_inicial=".ontem()."&pesq_data_final=".date('d-m-Y'),
-//        "Entrada de estoque" => "?pagina=faturamento_expedicao&pesq_tipo=E",
-//        "Devolução" => "?pagina=faturamento_devolucao&pesq_tipo=E"
-//    ),
-//
-//    "Vendas|Faturamento" => array(
-//        "Notas de venda" => "?pagina=faturamento_notas&pesq_tipo=S&pesq_data_inicial=".ontem()."&pesq_data_final=".date('d-m-Y'),
-//        "Caixa" => "?pagina=faturamento_duplicatas",
-//        "Expedição" => "?pagina=faturamento_expedicao&pesq_tipo=S",
-//        "Devolução" => "?pagina=faturamento_devolucao&pesq_tipo=S",
-//        "Loja virtual" => "?pagina=config_loja",
-//        "Contratos" => "?pagina=contrato"
-//    ),
+    "Compras" => array(
+        "Notas de compra" => "?pagina=faturamento_notas&pesq_tipo=E&pesq_data_inicial=".ontem()."&pesq_data_final=".date('d-m-Y'),
+        "Entrada de estoque" => "?pagina=faturamento_expedicao&pesq_tipo=E",
+        "Devolução" => "?pagina=faturamento_devolucao&pesq_tipo=E"
+    ),
+
+    "Vendas|Faturamento" => array(
+        "Notas de venda" => "?pagina=faturamento_notas&pesq_tipo=S&pesq_data_inicial=".ontem()."&pesq_data_final=".date('d-m-Y'),
+        "Caixa" => "?pagina=faturamento_duplicatas",
+        "Expedição" => "?pagina=faturamento_expedicao&pesq_tipo=S",
+        "Devolução" => "?pagina=faturamento_devolucao&pesq_tipo=S",
+        "Loja virtual" => "?pagina=config_loja",
+        "Contratos" => "?pagina=contrato"
+    ),
 //
 //    "Financeiro|Contábil" => array(
 //        "Contas a pagar" => "?pagina=contabil_titulos&pesq_natureza=1",

@@ -261,10 +261,8 @@ class CadastroETT extends ObjectETT
         $campos = "";
         $valores = "";
 
-        dumper($_SESSION);
-
         // novo handle
-        $obj->HANDLE = newHandle($_SESSION['tabela']);
+        $obj->HANDLE = newHandle($_SESSION['tabela'], $conexao);
 
         // campos
         foreach($obj as $key => $value) {
